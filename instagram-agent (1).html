@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instagram Marketing Agent — @apaula.os</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f5;color:#111;min-height:100vh}
+  .header{background:#fff;border-bottom:1px solid #e5e5e5;padding:1rem 2rem;display:flex;align-items:center;gap:12px}
+  .logo{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:16px}
+  .badge{display:inline-block;font-size:11px;padding:3px 10px;border-radius:20px;font-weight:500;margin-left:auto}
+  .badge-warn{background:#fff3cd;color:#856404}
+  .badge-ok{background:#d1fae5;color:#065f46}
+  .container{max-width:900px;margin:2rem auto;padding:0 1.5rem}
+  .card{background:#fff;border-radius:12px;border:1px solid #e5e5e5;padding:1.5rem;margin-bottom:1rem}
+  .screen{display:none}.screen.active{display:block}
+  label{font-size:13px;color:#555;display:block;margin-bottom:4px;font-weight:500}
+  input[type=text],textarea{width:100%;border:1px solid #ddd;border-radius:8px;padding:.75rem;font-size:13px;outline:none;font-family:monospace}
+  input[type=text]:focus,textarea:focus{border-color:#833ab4}
+  textarea{resize:vertical}
+  .btn{width:100%;padding:.75rem;border-radius:8px;border:none;font-size:14px;font-weight:500;cursor:pointer;margin-bottom:.5rem;transition:opacity .15s}
+  .btn:hover{opacity:.85}
+  .btn-primary{background:linear-gradient(135deg,#833ab4,#fd1d1d);color:#fff}
+  .btn-secondary{background:#f5f5f5;color:#555}
+  .err{background:#fee2e2;color:#b91c1c;font-size:13px;padding:.6rem 1rem;border-radius:8px;margin:.5rem 0;display:none}
+  .info-box{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:.75rem 1rem;font-size:13px;color:#1e40af;margin-bottom:1rem;line-height:1.6}
+  .status-msg{font-size:12px;color:#888;min-height:18px;margin:.25rem 0}
+  .profile-bar{display:flex;align-items:center;gap:14px;background:#f9f9f9;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem;border:1px solid #eee}
+  .avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#833ab4,#fd1d1d);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:#fff}
+  .metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:1rem 0}
+  .metric{background:#f9f9f9;border-radius:10px;padding:1rem;border:1px solid #eee}
+  .metric-label{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+  .metric-value{font-size:24px;font-weight:700;color:#111}
+  .tabs{display:flex;border-bottom:2px solid #eee;margin-bottom:1.25rem}
+  .tab{padding:.6rem 1.5rem;font-size:14px;background:none;border:none;cursor:pointer;color:#888;border-bottom:2px solid transparent;margin-bottom:-2px;font-weight:500;transition:color .15s}
+  .tab.active{color:#833ab4;border-bottom-color:#833ab4}
+  .post-row{display:flex;align-items:center;gap:10px;padding:.875rem;background:#f9f9f9;border-radius:8px;margin-bottom:8px;border:1px solid #eee}
+  .post-type{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:600;min-width:64px;text-align:center}
+  .type-reel{background:#fef3c7;color:#92400e}
+  .type-carousel{background:#dbeafe;color:#1e40af}
+  .type-image{background:#f3f4f6;color:#374151}
+  .analysis-box{background:#f9f9f9;border-radius:10px;padding:1.25rem;font-size:14px;line-height:1.8;border:1px solid #eee}
+  .chat-wrap{border:1px solid #e5e5e5;border-radius:12px;overflow:hidden;margin-top:1rem}
+  .chat-msgs{min-height:200px;max-height:400px;overflow-y:auto;padding:1rem;background:#fff}
+  .msg{margin-bottom:.75rem;padding:.875rem 1rem;border-radius:10px;font-size:14px;line-height:1.65}
+  .msg.user{background:#ede9fe;color:#4c1d95;margin-left:3rem}
+  .msg.bot{background:#f3f4f6;margin-right:3rem}
+  .chat-input-row{display:flex;gap:8px;padding:.875rem;border-top:1px solid #eee;background:#fff}
+  .chat-input-row input{flex:1;border:1px solid #ddd;border-radius:8px;padding:.6rem .875rem;font-size:14px;outline:none;font-family:inherit}
+  .chat-input-row input:focus{border-color:#833ab4}
+  .chat-input-row button{padding:.6rem 1.25rem;background:linear-gradient(135deg,#833ab4,#fd1d1d);color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer;font-weight:500}
+  .spin{display:inline-block;width:14px;height:14px;border:2px solid #eee;border-top-color:#833ab4;border-radius:50%;animation:sp .7s linear infinite;vertical-align:middle;margin-right:6px}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  .section-title{font-size:13px;font-weight:600;color:#555;margin:1rem 0 .5rem}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">IG</div>
+  <div>
+    <div style="font-size:16px;font-weight:700">Instagram Marketing Agent</div>
+    <div style="font-size:12px;color:#888">Estrategista Senior · Powered by Claude</div>
+  </div>
+  <span class="badge badge-warn" id="conn-badge">Aguardando conexão</span>
+</div>
+
+<div class="container">
+
+  <div id="sc-setup" class="screen active">
+    <div class="card" style="max-width:540px;margin:2rem auto">
+      <h2 style="font-size:18px;font-weight:700;margin-bottom:.5rem">Conectar ao Instagram</h2>
+      <p style="font-size:13px;color:#666;margin-bottom:1.25rem;line-height:1.65">Cole seu Access Token e confirme o ID da sua conta Instagram.</p>
+
+      <div class="info-box">
+        O ID da sua conta <strong>@apaula.os</strong> já está preenchido automaticamente.<br>
+        Só precisa colar o seu Access Token do Graph API Explorer.
+      </div>
+
+      <label style="margin-bottom:4px">Access Token</label>
+      <textarea id="tok" rows="4" placeholder="EAABwzLixnjYBO..." style="margin-bottom:.75rem"></textarea>
+
+      <label style="margin-bottom:4px">ID da conta Instagram Business</label>
+      <input type="text" id="ig-id" value="17841450756552541" style="margin-bottom:.75rem">
+
+      <div class="status-msg" id="status-msg"></div>
+      <div class="err" id="err-msg"></div>
+      <button class="btn btn-primary" id="conn-btn" onclick="doConnect()">Conectar ao Instagram</button>
+      <button class="btn btn-secondary" onclick="loadDemo()">Carregar dados de demonstração</button>
+    </div>
+  </div>
+
+  <div id="sc-dash" class="screen">
+    <div class="profile-bar" id="profile-bar"></div>
+    <div class="tabs">
+      <button class="tab active" onclick="sw('overview',this)">Visão Geral</button>
+      <button class="tab" onclick="sw('content',this)">Conteúdo</button>
+      <button class="tab" onclick="sw('strategy',this)">Estratégia IA</button>
+    </div>
+    <div id="tab-overview">
+      <div class="metric-grid" id="mtr-grid"></div>
+      <div class="section-title">Análise rápida do agente</div>
+      <div class="analysis-box" id="quick-anal"><span class="spin"></span>Analisando seus dados...</div>
+    </div>
+    <div id="tab-content" style="display:none">
+      <div class="section-title">Publicações ordenadas por engajamento</div>
+      <div id="posts-list"></div>
+    </div>
+    <div id="tab-strategy" style="display:none">
+      <div id="strat-out"></div>
+      <div class="section-title">Converse com seu agente</div>
+      <div class="chat-wrap">
+        <div class="chat-msgs" id="chat-msgs"><p style="text-align:center;color:#888;padding:2rem 0;font-size:14px">Aguardando estratégia...</p></div>
+        <div class="chat-input-row">
+          <input type="text" id="chat-in" placeholder="Ex: Qual tipo de post devo priorizar?" onkeydown="if(event.key==='Enter')sendMsg()">
+          <button onclick="sendMsg()">Enviar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const BASE = 'https://graph.facebook.com/v19.0';
+let D = {}, hist = [];
+
+function setStatus(m){document.getElementById('status-msg').textContent=m;}
+function showErr(m){const e=document.getElementById('err-msg');e.textContent=m;e.style.display='block';}
+function hideErr(){document.getElementById('err-msg').style.display='none';}
+function setLoad(l){const b=document.getElementById('conn-btn');b.disabled=l;b.textContent=l?'Conectando...':'Conectar ao Instagram';}
+
+async function fbGet(path, token) {
+  const sep = path.includes('?') ? '&' : '?';
+  const res = await fetch(`${BASE}/${path}${sep}access_token=${token}`);
+  return res.json();
+}
+
+async function doConnect(){
+  const t = document.getElementById('tok').value.trim();
+  const igId = document.getElementById('ig-id').value.trim();
+  if(!t){showErr('Cole seu access token.');return;}
+  if(!igId){showErr('Informe o ID da conta Instagram.');return;}
+  hideErr();setLoad(true);setStatus('Buscando dados da conta...');
+  try{
+    // Busca perfil diretamente pelo ID
+    const profile = await fbGet(`${igId}?fields=id,username,name,biography,followers_count,follows_count,media_count,website`, t);
+    if(profile.error){
+      showErr('Erro: ' + profile.error.message);
+      setLoad(false);setStatus('');return;
+    }
+
+    setStatus('Carregando publicações...');
+    const mediaRes = await fbGet(`${igId}/media?fields=id,caption,media_type,timestamp,like_count,comments_count&limit=20`, t);
+    const media = (mediaRes.data||[]).map(m=>({
+      ...m,
+      engagement_rate: profile.followers_count ? +((m.like_count+m.comments_count)/profile.followers_count*100).toFixed(2) : 0
+    }));
+
+    setStatus('Carregando métricas...');
+    const since = Math.floor(Date.now()/1000) - 30*86400;
+    const until = Math.floor(Date.now()/1000);
+    const insRes = await fbGet(`${igId}/insights?metric=impressions,reach,profile_views,website_clicks&period=day&since=${since}&until=${until}`, t);
+    const insights = {};
+    if(insRes.data) insRes.data.forEach(m=>{insights[m.name]=m.values.reduce((s,v)=>s+v.value,0);});
+
+    D = {...profile, media, insights};
+    setLoad(false);setStatus('');render();
+  }catch(e){
+    showErr('Erro: '+e.message);
+    setLoad(false);setStatus('');
+  }
+}
+
+const DEMO={username:'apaula.os',name:'Ana Paula Carmo',followers_count:354700,follows_count:612,media_count:487,biography:'Especialista em Relacionamentos e Educação Íntima · Salvador BA',insights:{impressions:142400,reach:98200,profile_views:8940,website_clicks:1218},media:[{caption:'Nova aula disponível! Tudo que você precisa saber sobre comunicação no relacionamento',media_type:'REEL',like_count:8340,comments_count:620,engagement_rate:2.52},{caption:'Bastidores da minha semana de atendimentos',media_type:'CAROUSEL_ALBUM',like_count:4120,comments_count:330,engagement_rate:1.27},{caption:'Dica rápida: como resolver conflitos sem brigar',media_type:'VIDEO',like_count:6230,comments_count:470,engagement_rate:1.89},{caption:'Depoimento real de uma paciente que transformou seu relacionamento',media_type:'IMAGE',like_count:5670,comments_count:410,engagement_rate:1.71},{caption:'Tutorial: exercício prático para casais',media_type:'REEL',like_count:9450,comments_count:720,engagement_rate:2.86},{caption:'Reflexão de segunda: o que voce tem feito pelo seu relacionamento?',media_type:'IMAGE',like_count:3450,comments_count:290,engagement_rate:1.04}]};
+function loadDemo(){D={...DEMO};render();}
+
+function render(){
+  document.getElementById('sc-setup').classList.remove('active');
+  document.getElementById('sc-dash').classList.add('active');
+  document.getElementById('conn-badge').className='badge badge-ok';
+  document.getElementById('conn-badge').textContent='✓ Conectado';
+  renderProfile();renderMetrics();renderPosts();runQuickAnal();
+}
+
+function renderProfile(){
+  const el=document.getElementById('profile-bar');
+  const init=(D.name||D.username||'?')[0].toUpperCase();
+  el.innerHTML=`<div class="avatar">${init}</div><div style="flex:1"><div style="font-weight:700;font-size:16px">@${D.username||'perfil'}</div><div style="font-size:13px;color:#666">${D.biography||''}</div></div><span style="font-size:12px;background:#ede9fe;color:#4c1d95;padding:4px 12px;border-radius:20px;font-weight:600">Business</span>`;
+}
+
+function renderMetrics(){
+  const ins=D.insights||{};const med=D.media||[];
+  const avg=med.length>0?(med.reduce((s,m)=>s+(m.engagement_rate||0),0)/med.length).toFixed(2)+'%':'—';
+  const data=[['Seguidores',fmt(D.followers_count)],['Publicações',fmt(D.media_count)],['Alcance 30d',fmt(ins.reach)],['Impressões',fmt(ins.impressions)],['Visitas perfil',fmt(ins.profile_views)],['Cliques site',fmt(ins.website_clicks)],['Engaj. médio',avg],['Seguindo',fmt(D.follows_count)]];
+  document.getElementById('mtr-grid').innerHTML=data.map(([l,v])=>`<div class="metric"><div class="metric-label">${l}</div><div class="metric-value">${v}</div></div>`).join('');
+}
+
+function renderPosts(){
+  const med=D.media||[];
+  if(!med.length){document.getElementById('posts-list').innerHTML='<p style="color:#888">Nenhuma publicação encontrada.</p>';return;}
+  const sorted=[...med].sort((a,b)=>(b.engagement_rate||0)-(a.engagement_rate||0));
+  document.getElementById('posts-list').innerHTML=sorted.map((m,i)=>{
+    const isReel=m.media_type==='VIDEO'||m.media_type==='REEL';
+    const isCarousel=m.media_type==='CAROUSEL_ALBUM';
+    const type=isReel?'Video/Reel':isCarousel?'Carrossel':'Foto';
+    const cls=isReel?'type-reel':isCarousel?'type-carousel':'type-image';
+    return `<div class="post-row"><span style="font-size:12px;color:#999;min-width:26px;font-weight:600">#${i+1}</span><span class="post-type ${cls}">${type}</span><div style="flex:1;font-size:13px;color:#555;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${(m.caption||'Sem legenda').substring(0,65)}...</div><div style="display:flex;gap:12px;font-size:12px;color:#888"><span>❤ ${fmt(m.like_count)}</span><span>💬 ${fmt(m.comments_count)}</span><span style="font-weight:700;color:#111">${(m.engagement_rate||0).toFixed(2)}%</span></div></div>`;
+  }).join('');
+}
+
+async function runQuickAnal(){
+  const el=document.getElementById('quick-anal');
+  el.innerHTML='<span class="spin"></span>Analisando seus dados...';
+  try{
+    const r=await callClaude(sumData()+'\n\nFaca uma analise direta em 3-4 frases: o que esta indo bem, o maior problema e a melhor oportunidade imediata. Em portugues.');
+    el.innerHTML=r.replace(/\n/g,'<br>');
+  }catch(e){el.innerHTML='<span style="color:#888">Análise indisponível.</span>';}
+}
+
+async function genStrategy(){
+  const el=document.getElementById('strat-out');
+  el.innerHTML='<div class="analysis-box"><span class="spin"></span>Criando estratégia personalizada...</div>';
+  try{
+    const r=await callClaude(sumData()+'\n\nComo estrategista senior de marketing digital e growth, crie um plano completo com:\n**Diagnostico:** pontos fortes e fracos\n**Conteudo:** 3 formatos e temas prioritarios baseados no que funciona\n**Growth 30 dias:** 3 taticas especificas e mensuráveis\n**Engajamento:** como aumentar interacoes\n**5 acoes para comecar agora:** priorizadas\n\nUse ** para subtitulos. Direto e especifico. Em portugues.');
+    const f=r.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
+    el.innerHTML=`<div class="analysis-box" style="margin-bottom:1rem">${f}</div>`;
+    hist=[{role:'assistant',content:'Estratégia pronta! O que quer aprofundar?'}];
+    renderChat();
+  }catch(e){el.innerHTML='<p style="color:#888">Erro ao gerar estratégia.</p>';}
+}
+
+async function sendMsg(){
+  const inp=document.getElementById('chat-in');
+  const msg=inp.value.trim();if(!msg)return;
+  inp.value='';
+  hist.push({role:'user',content:msg});renderChat();
+  try{
+    const r=await callClaudeChat(`Estrategista senior de marketing digital e growth expert em Instagram. Dados:\n${sumData()}\nDireto, especifico e acionavel. Em portugues.`,hist);
+    hist.push({role:'assistant',content:r});renderChat();
+  }catch(e){hist.push({role:'assistant',content:'Erro. Tente novamente.'});renderChat();}
+}
+
+function renderChat(){
+  const c=document.getElementById('chat-msgs');
+  c.innerHTML=hist.map(m=>`<div class="msg ${m.role==='user'?'user':'bot'}">${m.content.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')}</div>`).join('');
+  c.scrollTop=c.scrollHeight;
+}
+
+function sw(tab,btn){
+  ['overview','content','strategy'].forEach(t=>document.getElementById('tab-'+t).style.display=t===tab?'block':'none');
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if(tab==='strategy'&&!document.getElementById('strat-out').innerHTML.includes('strong'))genStrategy();
+}
+
+function sumData(){
+  const ins=D.insights||{};const med=D.media||[];
+  const avg=med.length>0?(med.reduce((s,m)=>s+(m.engagement_rate||0),0)/med.length).toFixed(2):0;
+  const top=[...med].sort((a,b)=>(b.engagement_rate||0)-(a.engagement_rate||0)).slice(0,3);
+  return `Conta: @${D.username} (${D.name}) | Seguidores: ${D.followers_count} | Seguindo: ${D.follows_count} | Posts: ${D.media_count}\nBio: ${D.biography||''}\nMetricas 30d: Alcance ${fmt(ins.reach)} | Impressoes ${fmt(ins.impressions)} | Visitas ${fmt(ins.profile_views)} | Cliques ${fmt(ins.website_clicks)}\nEngaj. medio: ${avg}% | Posts analisados: ${med.length} | Tipos: ${[...new Set(med.map(m=>m.media_type))].join(', ')}\nTop 3:\n${top.map((p,i)=>`${i+1}. ${p.media_type} | ${(p.engagement_rate||0).toFixed(2)}% | ❤${p.like_count} 💬${p.comments_count} | "${(p.caption||'').substring(0,60)}"`).join('\n')}`;
+}
+
+async function callClaude(msg){
+  const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1200,messages:[{role:'user',content:msg}]})});
+  const d=await r.json();return d.content?.[0]?.text||'Erro.';
+}
+async function callClaudeChat(sys,msgs){
+  const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1200,system:sys,messages:msgs.map(h=>({role:h.role,content:h.content}))})});
+  const d=await r.json();return d.content?.[0]?.text||'Erro.';
+}
+function fmt(n){if(n===undefined||n===null||n==='')return'—';if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'K';return String(n);}
+</script>
+</body>
+</html>
