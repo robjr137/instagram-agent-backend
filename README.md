@@ -1,87 +1,125 @@
-# Instagram Marketing Agent — Backend
+const express = require('express');
+const cors = require('cors');
+const fetch = require('node-fetch');
+require('dotenv').config();
 
-Backend Node.js que resolve o problema de CORS e faz as chamadas à Instagram Graph API com segurança.
+const app = express();
+const PORT = process.env.PORT || 3001;
+const BASE = 'https://graph.facebook.com/v19.0';
 
----
+app.use(cors({ origin: '*' }));
+app.use(express.json());
 
-## Como fazer o deploy (grátis) no Railway
-
-### 1. Criar conta no Railway
-Acesse https://railway.app e crie uma conta gratuita (pode usar login pelo GitHub).
-
-### 2. Subir os arquivos para o GitHub
-1. Acesse https://github.com e crie uma conta se não tiver
-2. Clique em "New repository" → nome: `instagram-agent-backend` → Public → Create
-3. Clique em "uploading an existing file"
-4. Arraste os arquivos: `server.js`, `package.json`, `.gitignore`
-5. Clique em "Commit changes"
-
-### 3. Fazer deploy no Railway
-1. Acesse https://railway.app/new
-2. Clique em "Deploy from GitHub repo"
-3. Selecione o repositório `instagram-agent-backend`
-4. O Railway detecta automaticamente que é Node.js e faz o deploy
-5. Aguarde o deploy terminar (1-2 minutos)
-6. Clique em "Settings" → "Networking" → "Generate Domain"
-7. Copie a URL gerada (ex: `https://instagram-agent-backend-production.up.railway.app`)
-
-### 4. Testar o backend
-Acesse a URL copiada no navegador. Deve aparecer:
-```json
-{"status":"ok","message":"Instagram Agent Backend rodando!"}
-```
-
-### 5. Configurar no agente
-Cole a URL do Railway no campo "URL do Backend" no agente do Claude.
-
----
-
-## Endpoints disponíveis
-
-### GET /
-Health check — verifica se o servidor está rodando.
-
-### POST /connect
-Conecta à conta Instagram Business.
-
-**Body:**
-```json
-{ "token": "SEU_ACCESS_TOKEN" }
-```
-
-**Retorna:**
-```json
-{
-  "profile": { "username": "...", "followers_count": 0, ... },
-  "media": [ { "id": "...", "like_count": 0, ... } ],
-  "insights": { "impressions": 0, "reach": 0, ... },
-  "pageName": "Nome da Página"
+async function fbGet(path, token) {
+  const sep = path.includes('?') ? '&' : '?';
+  const res = await fetch(`${BASE}/${path}${sep}access_token=${token}`);
+  return res.json();
 }
-```
 
-### POST /refresh
-Atualiza métricas e posts sem reconectar.
+app.get('/', (req, res) => {
+  res.json({ status: 'ok', message: 'Instagram Agent Backend rodando!' });
+});
 
-**Body:**
-```json
-{ "token": "...", "ig_id": "...", "page_token": "..." }
-```
+app.post('/connect', async (req, res) => {
+  const { token } = req.body;
+  if (!token) return res.status(400).json({ error: 'Token obrigatório' });
 
----
+  try {
+    // 1. Verifica token
+    const me = await fbGet('me?fields=id,name', token);
+    if (me.error) return res.status(401).json({ error: 'Token inválido: ' + me.error.message });
 
-## Rodando localmente (opcional)
+    let igId = null;
+    let pageToken = token;
+    let pageName = null;
 
-```bash
-npm install
-cp .env.example .env
-npm run dev
-```
+    // 2. Tenta via Páginas pessoais (me/accounts)
+    const pages = await fbGet('me/accounts', token);
+    if (pages.data && pages.data.length > 0) {
+      for (const pg of pages.data) {
+        const pgData = await fbGet(`${pg.id}?fields=instagram_business_account`, pg.access_token || token);
+        if (pgData.instagram_business_account) {
+          igId = pgData.instagram_business_account.id;
+          pageToken = pg.access_token || token;
+          pageName = pg.name;
+          break;
+        }
+      }
+    }
 
-O servidor roda em http://localhost:3001
+    // 3. Se não achou, tenta via Business Manager
+    if (!igId) {
+      const businesses = await fbGet('me/businesses?fields=instagram_business_accounts{id,username}', token);
+      if (businesses.data && businesses.data.length > 0) {
+        for (const biz of businesses.data) {
+          if (biz.instagram_business_accounts && biz.instagram_business_accounts.data && biz.instagram_business_accounts.data.length > 0) {
+            igId = biz.instagram_business_accounts.data[0].id;
+            pageName = biz.name;
+            break;
+          }
+        }
+      }
+    }
 
----
+    // 4. Se não achou, tenta via owned_instagram_accounts
+    if (!igId) {
+      const owned = await fbGet('me/owned_instagram_accounts?fields=id,username', token);
+      if (owned.data && owned.data.length > 0) {
+        igId = owned.data[0].id;
+      }
+    }
 
-## Segurança
-- O token nunca é armazenado no servidor — ele é passado em cada requisição
-- Use HTTPS em produção (Railway fornece automaticamente)
-- Para uso em produção real, considere adicionar autenticação nas rotas
+    // 5. Último recurso: tenta buscar diretamente pelo ID do Instagram via business discovery
+    if (!igId) {
+      return res.status(404).json({
+        error: 'Conta Instagram Business não encontrada. Verifique se sua conta Instagram está vinculada a uma Página do Facebook e é do tipo Business ou Creator.'
+      });
+    }
+
+    // 6. Busca dados completos do perfil
+    const profile = await fbGet(
+      `${igId}?fields=id,username,name,biography,followers_count,follows_count,media_count,website`,
+      pageToken
+    );
+
+    if (profile.error) {
+      return res.status(403).json({ error: 'Erro ao buscar perfil: ' + profile.error.message });
+    }
+
+    // 7. Busca posts
+    const mediaRes = await fbGet(
+      `${igId}/media?fields=id,caption,media_type,timestamp,like_count,comments_count&limit=20`,
+      pageToken
+    );
+    const media = (mediaRes.data || []).map(m => ({
+      ...m,
+      engagement_rate: profile.followers_count
+        ? +((m.like_count + m.comments_count) / profile.followers_count * 100).toFixed(2)
+        : 0
+    }));
+
+    // 8. Busca insights
+    const since = Math.floor(Date.now() / 1000) - 30 * 86400;
+    const until = Math.floor(Date.now() / 1000);
+    const insightsRes = await fbGet(
+      `${igId}/insights?metric=impressions,reach,profile_views,website_clicks&period=day&since=${since}&until=${until}`,
+      pageToken
+    );
+    const insights = {};
+    if (insightsRes.data) {
+      insightsRes.data.forEach(m => {
+        insights[m.name] = m.values.reduce((s, v) => s + v.value, 0);
+      });
+    }
+
+    res.json({ profile, media, insights, pageName });
+
+  } catch (err) {
+    console.error('Erro /connect:', err);
+    res.status(500).json({ error: 'Erro interno: ' + err.message });
+  }
+});
+
+app.listen(PORT, () => {
+  console.log(`✅ Backend rodando na porta ${PORT}`);
+});
