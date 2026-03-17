@@ -136,6 +136,18 @@ app.post('/mentions', async (req, res) => {
   }
 });
 
+// ── GET TOKEN (auto-connect) ─────────────────────────────────────────────────
+app.get('/get-token', (req, res) => {
+  const secret = req.headers['x-agent-secret'];
+  if (process.env.AGENT_SECRET && secret !== process.env.AGENT_SECRET) {
+    return res.status(401).json({ error: 'Acesso não autorizado' });
+  }
+  const token = process.env.INSTAGRAM_TOKEN;
+  const igId = process.env.INSTAGRAM_IG_ID || '17841450756552541';
+  if (!token) return res.status(404).json({ error: 'Token não configurado' });
+  res.json({ token, ig_id: igId });
+});
+
 // ── CLAUDE PROXY ─────────────────────────────────────────────────────────────
 app.post('/claude', async (req, res) => {
   // Protect endpoint with secret key
