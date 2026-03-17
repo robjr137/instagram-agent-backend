@@ -3,6 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Agente IG">
+<meta name="theme-color" content="#833ab4">
+<link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2111/2111463.png">
 <title>Instagram Marketing Agent</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -81,6 +87,63 @@ textarea{resize:vertical}
     <div style="font-size:11px;color:#888">Estrategista Senior · Powered by Claude</div>
   </div>
   <span class="badge badge-warn" id="conn-badge">Aguardando</span>
+</div>
+
+<div id="install-banner" style="background:linear-gradient(135deg,#833ab4,#fd1d1d);padding:.75rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:12px">
+  <div style="color:#fff;font-size:13px">📱 <strong>Adicione à tela inicial</strong> para acessar como app</div>
+  <div style="display:flex;gap:8px">
+    <button id="install-btn" onclick="showInstallGuide()" style="padding:.4rem 1rem;background:rgba(255,255,255,0.2);color:#fff;border:1px solid rgba(255,255,255,0.4);border-radius:8px;font-size:12px;cursor:pointer;font-weight:500">Como fazer →</button>
+    <button onclick="document.getElementById('install-banner').style.display='none'" style="padding:.4rem .75rem;background:none;color:rgba(255,255,255,0.7);border:none;font-size:16px;cursor:pointer">✕</button>
+  </div>
+</div>
+
+<div id="install-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);z-index:1000;align-items:center;justify-content:center">
+  <div style="background:#fff;border-radius:16px;padding:1.5rem;max-width:360px;margin:1rem;width:100%">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+      <div style="font-size:16px;font-weight:700">Adicionar à tela inicial</div>
+      <button onclick="document.getElementById('install-modal').style.display='none'" style="background:none;border:none;font-size:20px;cursor:pointer;color:#888">✕</button>
+    </div>
+    
+    <div id="guide-ios" style="display:none">
+      <div style="font-size:13px;color:#555;margin-bottom:1rem">No <strong>Safari</strong> (iPhone/iPad):</div>
+      <div style="display:flex;flex-direction:column;gap:.75rem">
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px"><div style="width:28px;height:28px;border-radius:50%;background:#ede9fe;color:#4c1d95;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0">1</div>Toque no botão <strong>Compartilhar</strong> (quadrado com seta ↑) na barra inferior</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px"><div style="width:28px;height:28px;border-radius:50%;background:#ede9fe;color:#4c1d95;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0">2</div>Role para baixo e toque em <strong>"Adicionar à Tela de Início"</strong></div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px"><div style="width:28px;height:28px;border-radius:50%;background:#ede9fe;color:#4c1d95;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0">3</div>Toque em <strong>"Adicionar"</strong> no canto superior direito</div>
+      </div>
+      <div style="background:#f3f4f6;border-radius:8px;padding:.75rem;margin-top:1rem;font-size:12px;color:#555">✅ O ícone aparece na sua tela inicial como um app!</div>
+    </div>
+
+    <div id="guide-android" style="display:none">
+      <div style="font-size:13px;color:#555;margin-bottom:1rem">No <strong>Chrome</strong> (Android):</div>
+      <div style="display:flex;flex-direction:column;gap:.75rem">
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px"><div style="width:28px;height:28px;border-radius:50%;background:#ede9fe;color:#4c1d95;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0">1</div>Toque nos <strong>3 pontinhos</strong> no canto superior direito do Chrome</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px"><div style="width:28px;height:28px;border-radius:50%;background:#ede9fe;color:#4c1d95;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0">2</div>Toque em <strong>"Adicionar à tela inicial"</strong></div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px"><div style="width:28px;height:28px;border-radius:50%;background:#ede9fe;color:#4c1d95;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0">3</div>Toque em <strong>"Adicionar"</strong> na confirmação</div>
+      </div>
+      <div style="background:#f3f4f6;border-radius:8px;padding:.75rem;margin-top:1rem;font-size:12px;color:#555">✅ O ícone aparece na sua tela inicial como um app!</div>
+    </div>
+
+    <div id="guide-desktop" style="display:none">
+      <div style="font-size:13px;color:#555;margin-bottom:1rem">No <strong>Chrome</strong> (computador):</div>
+      <div style="display:flex;flex-direction:column;gap:.75rem">
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px"><div style="width:28px;height:28px;border-radius:50%;background:#ede9fe;color:#4c1d95;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0">1</div>Clique no ícone <strong>⊕</strong> que aparece na barra de endereço</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px"><div style="width:28px;height:28px;border-radius:50%;background:#ede9fe;color:#4c1d95;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0">2</div>Clique em <strong>"Instalar"</strong></div>
+      </div>
+      <div style="background:#f3f4f6;border-radius:8px;padding:.75rem;margin-top:1rem;font-size:12px;color:#555">✅ Abre como janela própria, sem barra do navegador!</div>
+    </div>
+
+    <div style="display:flex;gap:8px;margin-top:1.25rem">
+      <button onclick="showGuide('ios')" style="flex:1;padding:.5rem;border-radius:8px;border:1.5px solid #ddd;background:#fff;font-size:12px;cursor:pointer;font-weight:500">🍎 iPhone</button>
+      <button onclick="showGuide('android')" style="flex:1;padding:.5rem;border-radius:8px;border:1.5px solid #ddd;background:#fff;font-size:12px;cursor:pointer;font-weight:500">🤖 Android</button>
+      <button onclick="showGuide('desktop')" style="flex:1;padding:.5rem;border-radius:8px;border:1.5px solid #ddd;background:#fff;font-size:12px;cursor:pointer;font-weight:500">💻 PC</button>
+    </div>
+
+    <div style="margin-top:1rem;padding:.75rem;background:#f9f9f9;border-radius:8px;font-size:12px;color:#555;text-align:center">
+      Link do agente:<br>
+      <strong style="font-size:11px;word-break:break-all">robjr137.github.io/instagram-agent-backend/instagram-agent-v7.html</strong>
+    </div>
+  </div>
 </div>
 
 <div class="container">
@@ -504,6 +567,32 @@ function renderRoteiroChat(){
   if(!roteiroHist.length){c.innerHTML='<p style="text-align:center;color:#888;padding:1.5rem 0;font-size:14px">Selecione um formato acima para começar...</p>';return;}
   c.innerHTML=roteiroHist.map(m=>`<div class="msg ${m.role==='user'?'user':'bot'}">${m.content.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')}</div>`).join('');
   c.scrollTop=c.scrollHeight;
+}
+
+
+function showInstallGuide(){
+  document.getElementById('install-modal').style.display='flex';
+  // Auto-detect device
+  const ua=navigator.userAgent;
+  if(/iPhone|iPad|iPod/.test(ua)) showGuide('ios');
+  else if(/Android/.test(ua)) showGuide('android');
+  else showGuide('desktop');
+}
+
+function showGuide(type){
+  ['ios','android','desktop'].forEach(t=>{
+    document.getElementById('guide-'+t).style.display=t===type?'block':'none';
+  });
+}
+
+// Close modal clicking outside
+document.getElementById('install-modal').addEventListener('click',function(e){
+  if(e.target===this) this.style.display='none';
+});
+
+// Hide banner if already installed
+if(window.matchMedia('(display-mode: standalone)').matches){
+  document.getElementById('install-banner').style.display='none';
 }
 
 </script>
@@ -1219,6 +1308,32 @@ function renderRoteiroChat(){
   if(!roteiroHist.length){c.innerHTML='<p style="text-align:center;color:#888;padding:1.5rem 0;font-size:14px">Selecione um formato acima para começar...</p>';return;}
   c.innerHTML=roteiroHist.map(m=>`<div class="msg ${m.role==='user'?'user':'bot'}">${m.content.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')}</div>`).join('');
   c.scrollTop=c.scrollHeight;
+}
+
+
+function showInstallGuide(){
+  document.getElementById('install-modal').style.display='flex';
+  // Auto-detect device
+  const ua=navigator.userAgent;
+  if(/iPhone|iPad|iPod/.test(ua)) showGuide('ios');
+  else if(/Android/.test(ua)) showGuide('android');
+  else showGuide('desktop');
+}
+
+function showGuide(type){
+  ['ios','android','desktop'].forEach(t=>{
+    document.getElementById('guide-'+t).style.display=t===type?'block':'none';
+  });
+}
+
+// Close modal clicking outside
+document.getElementById('install-modal').addEventListener('click',function(e){
+  if(e.target===this) this.style.display='none';
+});
+
+// Hide banner if already installed
+if(window.matchMedia('(display-mode: standalone)').matches){
+  document.getElementById('install-banner').style.display='none';
 }
 
 </script>
