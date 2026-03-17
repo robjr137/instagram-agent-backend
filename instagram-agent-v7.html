@@ -676,12 +676,26 @@ async function loadPostInsights(mediaId, caption){
   }
 
   try{
-    const r=await fetch(`${BACKEND}/post-insights`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({media_id:mediaId,token:pageToken})});
+    const BASE='https://graph.facebook.com/v19.0';
+    const r=await fetch(`${BASE}/${mediaId}/insights?metric=impressions,reach,saved,video_views,total_interactions&access_token=${pageToken}`);
     const d=await r.json();
-    if(d.error){content.innerHTML=`<p style="color:#b91c1c;font-size:13px">⚠️ ${d.error}</p>`;return;}
+    if(d.error){
+      // Insights not available for this post type, show basic data from media object
+      const post=D.media.find(m=>m.id===mediaId)||{};
+      content.innerHTML=`<div style="font-weight:600;margin-bottom:.75rem">${caption}...</div>
+      <div class="insight-grid">
+        <div class="insight-card"><div class="insight-num">${fmt(post.like_count||0)}</div><div class="insight-lbl">Curtidas</div></div>
+        <div class="insight-card"><div class="insight-num">${fmt(post.comments_count||0)}</div><div class="insight-lbl">Comentários</div></div>
+        <div class="insight-card"><div class="insight-num">${(post.engagement_rate||0).toFixed(2)}%</div><div class="insight-lbl">Engajamento</div></div>
+      </div>
+      <div style="font-size:12px;color:#888;margin-top:.5rem">⚠️ Métricas avançadas (alcance, impressões) requerem conta Business vinculada a uma Página.</div>`;
+      return;
+    }
     const metrics=[['impressions','Impressões'],['reach','Alcance'],['saved','Salvos'],['video_views','Plays'],['total_interactions','Interações']];
+    const dataMap={};
+    if(d.data) d.data.forEach(m=>{dataMap[m.name]=m.values?m.values[0]?.value:m.value;});
     content.innerHTML=`<div style="font-weight:600;margin-bottom:.75rem">${caption}...</div>
-    <div class="insight-grid">${metrics.filter(([k])=>d[k]!==undefined).map(([k,l])=>`<div class="insight-card"><div class="insight-num">${fmt(d[k])}</div><div class="insight-lbl">${l}</div></div>`).join('')}</div>`;
+    <div class="insight-grid">${metrics.filter(([k])=>dataMap[k]!==undefined).map(([k,l])=>`<div class="insight-card"><div class="insight-num">${fmt(dataMap[k])}</div><div class="insight-lbl">${l}</div></div>`).join('')}</div>`;
   }catch(e){content.innerHTML=`<p style="color:#b91c1c;font-size:13px">Erro: ${e.message}</p>`;}
 }
 
@@ -702,19 +716,25 @@ async function loadStories(){
   }
 
   try{
-    const r=await fetch(`${BACKEND}/stories`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ig_id:igId,token:pageToken})});
+    const BASE='https://graph.facebook.com/v19.0';
+    const r=await fetch(`${BASE}/${igId}/stories?fields=id,media_type,timestamp,media_url&access_token=${pageToken}`);
     const d=await r.json();
     loading.style.display='none';
-    if(d.error){storiesContent.innerHTML=`<p style="color:#b91c1c;font-size:13px">⚠️ ${d.error}</p>`;return;}
-    const stories=d.stories||[];
-    if(!stories.length){storiesContent.innerHTML=`<p style="color:#888;font-size:14px">Nenhum story ativo no momento.</p>`;return;}
-    storiesContent.innerHTML=stories.map(s=>`
-      <div class="story-card">
-        <div class="story-thumb">${s.media_url?`<img src="${s.media_url}" onerror="this.parentNode.innerHTML='🎬'">`:s.media_type==='VIDEO'?'🎬':'📸'}</div>
-        <div style="font-size:11px;color:#555;white-space:normal">${new Date(s.timestamp).toLocaleDateString('pt-BR')}</div>
-      </div>`).join('');
-    // Analyze with AI
-    const aiRes=await callClaude(`Tenho ${stories.length} stories ativos. Contexto da conta:\n${sumData()}\nDê 3 dicas rápidas para melhorar meus stories. Em portugues.`);
+    if(d.error){
+      storiesContent.innerHTML=`<p style="color:#888;font-size:14px">Stories não disponíveis via API com este token.<br>Dica: use stories regularmente — eles aumentam o alcance orgânico em até 30%.</p>`;
+    } else {
+      const stories=d.data||[];
+      if(!stories.length){
+        storiesContent.innerHTML=`<p style="color:#888;font-size:14px">Nenhum story ativo no momento.</p>`;
+      } else {
+        storiesContent.innerHTML=stories.map(s=>`
+          <div class="story-card">
+            <div class="story-thumb">${s.media_url?`<img src="${s.media_url}" onerror="this.parentNode.innerHTML='🎬'">`:s.media_type==='VIDEO'?'🎬':'📸'}</div>
+            <div style="font-size:11px;color:#555;white-space:normal">${new Date(s.timestamp).toLocaleDateString('pt-BR')}</div>
+          </div>`).join('');
+      }
+    }
+    const aiRes=await callClaude(`Contexto da conta:\n${sumData()}\nDê 5 dicas estratégicas para stories no nicho de relacionamentos usando VTSD. Em portugues.`);
     analysis.innerHTML=`<div class="analysis-box" style="margin-top:.75rem">${aiRes.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')}</div>`;
   }catch(e){loading.style.display='none';storiesContent.innerHTML=`<p style="color:#b91c1c;font-size:13px">Erro: ${e.message}</p>`;}
 }
@@ -941,14 +961,16 @@ function sumData(){
   return `Conta: @${D.username} (${D.name}) | Seguidores: ${D.followers_count} | Seguindo: ${D.follows_count} | Posts: ${D.media_count}\nBio: ${D.biography||''}\nMétricas 30d: Alcance ${fmt(ins.reach)} | Impressões ${fmt(ins.impressions)} | Visitas ${fmt(ins.profile_views)} | Cliques ${fmt(ins.website_clicks)}\nEngaj. médio: ${avg}% | Posts: ${med.length}\nTop 3:\n${top.map((p,i)=>`${i+1}. ${p.media_type} | ${(p.engagement_rate||0).toFixed(2)}% | ❤${p.like_count} 💬${p.comments_count} | "${(p.caption||'').substring(0,50)}"`).join('\n')}`;
 }
 
+const AGENT_SECRET='igagent-apaula-2024-x9k';
+
 async function callClaude(msg, extraSystem=''){
   const sys = SYSTEM_PROMPT + (extraSystem ? '\n\n' + extraSystem : '');
-  const r=await fetch(`${BACKEND}/claude`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system:sys,messages:[{role:'user',content:msg}]})});
+  const r=await fetch(`${BACKEND}/claude`,{method:'POST',headers:{'Content-Type':'application/json','x-agent-secret':AGENT_SECRET},body:JSON.stringify({system:sys,messages:[{role:'user',content:msg}]})});
   const d=await r.json();if(d.error)throw new Error(d.error);return d.text||'';
 }
 async function callClaudeChat(sys,msgs){
   const fullSys = SYSTEM_PROMPT + (sys ? '\n\n' + sys : '');
-  const r=await fetch(`${BACKEND}/claude`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system:fullSys,messages:msgs.map(h=>({role:h.role,content:h.content}))})});
+  const r=await fetch(`${BACKEND}/claude`,{method:'POST',headers:{'Content-Type':'application/json','x-agent-secret':AGENT_SECRET},body:JSON.stringify({system:fullSys,messages:msgs.map(h=>({role:h.role,content:h.content}))})});
   const d=await r.json();if(d.error)throw new Error(d.error);return d.text||'';
 }
 
