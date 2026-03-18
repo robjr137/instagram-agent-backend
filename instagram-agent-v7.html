@@ -661,7 +661,9 @@ if(window.matchMedia('(display-mode: standalone)').matches){
 async function autoConnect(){
   try{
     const r=await fetch(`${BACKEND}/get-token`,{
-      headers:{'x-agent-secret':AGENT_SECRET}
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-agent-secret':AGENT_SECRET},
+      body:JSON.stringify({secret:AGENT_SECRET})
     });
     const d=await r.json();
     if(d.token && d.ig_id){
