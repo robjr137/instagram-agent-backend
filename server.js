@@ -139,8 +139,8 @@ app.post('/mentions', async (req, res) => {
 });
 
 // ── GET TOKEN (auto-connect) ─────────────────────────────────────────────────
-app.get('/get-token', (req, res) => {
-  const secret = req.headers['x-agent-secret'];
+app.post('/get-token', (req, res) => {
+  const secret = req.headers['x-agent-secret'] || req.body?.secret;
   if (process.env.AGENT_SECRET && secret !== process.env.AGENT_SECRET) {
     return res.status(401).json({ error: 'Acesso não autorizado' });
   }
