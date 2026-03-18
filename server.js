@@ -72,9 +72,11 @@ app.post('/connect', async (req, res) => {
 
     const since = Math.floor(Date.now() / 1000) - 30 * 86400;
     const until = Math.floor(Date.now() / 1000);
-    const insRes = await fbGet(`${igId}/insights?metric=impressions,reach,profile_views,website_clicks&period=day&since=${since}&until=${until}`, pageToken);
+    const insRes = await fbGet(`${igId}/insights?metric=reach,profile_views,website_clicks&metric_type=total_value&period=day&since=${since}&until=${until}`, pageToken);
     const insights = {};
-    if (insRes.data) insRes.data.forEach(m => { insights[m.name] = m.values.reduce((s, v) => s + v.value, 0); });
+    if (insRes.data) insRes.data.forEach(m => {
+      insights[m.name] = m.total_value ? m.total_value.value : (m.values ? m.values.reduce((s, v) => s + v.value, 0) : 0);
+    });
 
     res.json({ profile, media, insights, igId, pageToken });
   } catch (err) {
