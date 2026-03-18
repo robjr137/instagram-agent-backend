@@ -659,46 +659,48 @@ if(window.matchMedia('(display-mode: standalone)').matches){
 
 // Auto-connect on load using token from Railway backend
 async function autoConnect(){
+  const timeout = setTimeout(()=>{ showManualForm(); }, 10000);
   try{
     const r=await fetch(`${BACKEND}/get-token`,{
       method:'POST',
-      headers:{'Content-Type':'application/json','x-agent-secret':AGENT_SECRET},
+      headers:{'Content-Type':'application/json'},
       body:JSON.stringify({secret:AGENT_SECRET})
     });
+    if(!r.ok){ clearTimeout(timeout); showManualForm(); return; }
     const d=await r.json();
-    if(d.token && d.ig_id){
-      // Got token from backend, connect directly
-      const BASE='https://graph.facebook.com/v19.0';
-      const igId=d.ig_id;
-      const tok=d.token;
-      
-      const rProfile=await fetch(`${BASE}/${igId}?fields=id,username,name,biography,followers_count,follows_count,media_count,website&access_token=${tok}`);
-      const profile=await rProfile.json();
-      if(profile.error) throw new Error(profile.error.message);
-      
-      const rMedia=await fetch(`${BASE}/${igId}/media?fields=id,caption,media_type,timestamp,like_count,comments_count&limit=20&access_token=${tok}`);
-      const mediaData=await rMedia.json();
-      const media=(mediaData.data||[]).map(m=>({...m,engagement_rate:profile.followers_count?+((m.like_count+m.comments_count)/profile.followers_count*100).toFixed(2):0}));
-      
-      const since=Math.floor(Date.now()/1000)-30*86400;
-      const until=Math.floor(Date.now()/1000);
-      const rIns=await fetch(`${BASE}/${igId}/insights?metric=reach,profile_views,website_clicks&metric_type=total_value&period=day&since=${since}&until=${until}&access_token=${tok}`);
-      const insData=await rIns.json();
-      const insights={};
-      if(insData.data) insData.data.forEach(m=>{insights[m.name]=m.total_value?m.total_value.value:(m.values?m.values.reduce((s,v)=>s+v.value,0):0);});
-      
-      D={...profile,media,insights};
-      igId_global=igId;
-      pageToken=tok;
-      render();
-    } else {
-      // No token saved, show manual form
-      showManualForm();
-    }
+    if(!d.token){ clearTimeout(timeout); showManualForm(); return; }
+    await connectWithToken(d.token, d.ig_id||'17841450756552541');
+    clearTimeout(timeout);
   }catch(e){
-    // Auto-connect failed, show manual form
+    clearTimeout(timeout);
     showManualForm();
   }
+}
+
+async function connectWithToken(tok, igId){
+  const BASE='https://graph.facebook.com/v19.0';
+  const rProfile=await fetch(`${BASE}/${igId}?fields=id,username,name,biography,followers_count,follows_count,media_count,website&access_token=${tok}`);
+  const profile=await rProfile.json();
+  if(profile.error) throw new Error(profile.error.message);
+  const rMedia=await fetch(`${BASE}/${igId}/media?fields=id,caption,media_type,timestamp,like_count,comments_count,insights.metric(reach,saved)&limit=20&access_token=${tok}`);
+  const mediaData=await rMedia.json();
+  const media=(mediaData.data||[]).map(m=>{
+    const reach=m.insights?.data?.find(i=>i.name==='reach')?.values?.[0]?.value||0;
+    const saved=m.insights?.data?.find(i=>i.name==='saved')?.values?.[0]?.value||0;
+    const interactions=(m.like_count||0)+(m.comments_count||0)+saved;
+    const engagement_rate=reach>0?+(interactions/reach*100).toFixed(2):profile.followers_count?+(interactions/profile.followers_count*100).toFixed(2):0;
+    return{...m,reach,saved,engagement_rate};
+  });
+  const since=Math.floor(Date.now()/1000)-30*86400;
+  const until=Math.floor(Date.now()/1000);
+  const rIns=await fetch(`${BASE}/${igId}/insights?metric=reach,profile_views,website_clicks&metric_type=total_value&period=day&since=${since}&until=${until}&access_token=${tok}`);
+  const insData=await rIns.json();
+  const insights={};
+  if(insData.data) insData.data.forEach(m=>{insights[m.name]=m.total_value?m.total_value.value:(m.values?m.values.reduce((s,v)=>s+v.value,0):0);});
+  D={...profile,media,insights};
+  igId_global=igId;
+  pageToken=tok;
+  render();
 }
 
 let igId_global=null;
