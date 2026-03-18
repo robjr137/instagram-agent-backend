@@ -263,27 +263,61 @@ textarea{resize:vertical}
       <div style="font-size:12px;color:#888">Metodologia VTSD (Leandro Ladeira) + Fórmula de Lançamento (Érico Rocha)</div>
     </div>
 
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.25rem">
-      <button onclick="solicitarRoteiro('reel')" style="padding:1rem;background:#fff;border:1.5px solid #ddd;border-radius:12px;cursor:pointer;text-align:left;transition:border-color .15s" onmouseover="this.style.borderColor='#833ab4'" onmouseout="this.style.borderColor='#ddd'">
-        <div style="font-size:20px;margin-bottom:4px">🎬</div>
-        <div style="font-weight:600;font-size:14px">Roteiro de Reel</div>
-        <div style="font-size:12px;color:#888;margin-top:2px">Gancho + desenvolvimento + CTA · VTSD</div>
-      </button>
-      <button onclick="solicitarRoteiro('story')" style="padding:1rem;background:#fff;border:1.5px solid #ddd;border-radius:12px;cursor:pointer;text-align:left;transition:border-color .15s" onmouseover="this.style.borderColor='#833ab4'" onmouseout="this.style.borderColor='#ddd'">
-        <div style="font-size:20px;margin-bottom:4px">📱</div>
-        <div style="font-weight:600;font-size:14px">Sequência de Stories</div>
-        <div style="font-size:12px;color:#888;margin-top:2px">Sequência de 5-7 stories · Funil de engajamento</div>
-      </button>
-      <button onclick="solicitarRoteiro('carrossel')" style="padding:1rem;background:#fff;border:1.5px solid #ddd;border-radius:12px;cursor:pointer;text-align:left;transition:border-color .15s" onmouseover="this.style.borderColor='#833ab4'" onmouseout="this.style.borderColor='#ddd'">
-        <div style="font-size:20px;margin-bottom:4px">🎠</div>
-        <div style="font-weight:600;font-size:14px">Carrossel Educativo</div>
-        <div style="font-size:12px;color:#888;margin-top:2px">Slides 1-10 · Conteúdo que salva</div>
-      </button>
-      <button onclick="solicitarRoteiro('lancamento')" style="padding:1rem;background:#fff;border:1.5px solid #ddd;border-radius:12px;cursor:pointer;text-align:left;transition:border-color .15s" onmouseover="this.style.borderColor='#833ab4'" onmouseout="this.style.borderColor='#ddd'">
-        <div style="font-size:20px;margin-bottom:4px">🚀</div>
-        <div style="font-weight:600;font-size:14px">Sequência de Lançamento</div>
-        <div style="font-size:12px;color:#888;margin-top:2px">PLC · Fórmula de Lançamento</div>
-      </button>
+    <!-- Step 1: Format selection -->
+    <div id="step-formato" style="margin-bottom:1.25rem">
+      <div style="font-size:13px;font-weight:600;color:#555;margin-bottom:.75rem">Passo 1 — Escolha o formato:</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <button onclick="selecionarFormato('reel')" style="padding:1rem;background:#fff;border:1.5px solid #ddd;border-radius:12px;cursor:pointer;text-align:left;transition:border-color .15s" onmouseover="this.style.borderColor='#833ab4'" onmouseout="this.style.borderColor='#ddd'">
+          <div style="font-size:20px;margin-bottom:4px">🎬</div>
+          <div style="font-weight:600;font-size:14px">Roteiro de Reel</div>
+          <div style="font-size:12px;color:#888;margin-top:2px">Gancho + desenvolvimento + CTA · VTSD</div>
+        </button>
+        <button onclick="selecionarFormato('story')" style="padding:1rem;background:#fff;border:1.5px solid #ddd;border-radius:12px;cursor:pointer;text-align:left;transition:border-color .15s" onmouseover="this.style.borderColor='#833ab4'" onmouseout="this.style.borderColor='#ddd'">
+          <div style="font-size:20px;margin-bottom:4px">📱</div>
+          <div style="font-weight:600;font-size:14px">Sequência de Stories</div>
+          <div style="font-size:12px;color:#888;margin-top:2px">Sequência de 5-7 stories · Funil de engajamento</div>
+        </button>
+        <button onclick="selecionarFormato('carrossel')" style="padding:1rem;background:#fff;border:1.5px solid #ddd;border-radius:12px;cursor:pointer;text-align:left;transition:border-color .15s" onmouseover="this.style.borderColor='#833ab4'" onmouseout="this.style.borderColor='#ddd'">
+          <div style="font-size:20px;margin-bottom:4px">🎠</div>
+          <div style="font-weight:600;font-size:14px">Carrossel Educativo</div>
+          <div style="font-size:12px;color:#888;margin-top:2px">Slides 1-10 · Conteúdo que salva</div>
+        </button>
+        <button onclick="selecionarFormato('lancamento')" style="padding:1rem;background:#fff;border:1.5px solid #ddd;border-radius:12px;cursor:pointer;text-align:left;transition:border-color .15s" onmouseover="this.style.borderColor='#833ab4'" onmouseout="this.style.borderColor='#ddd'">
+          <div style="font-size:20px;margin-bottom:4px">🚀</div>
+          <div style="font-weight:600;font-size:14px">Sequência de Lançamento</div>
+          <div style="font-size:12px;color:#888;margin-top:2px">PLC · Fórmula de Lançamento</div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 2: Funnel level selection (hidden until format chosen) -->
+    <div id="step-funil" style="display:none;margin-bottom:1.25rem">
+      <div style="font-size:13px;font-weight:600;color:#555;margin-bottom:.5rem">Passo 2 — Qual nível do funil?</div>
+      <div style="font-size:12px;color:#888;margin-bottom:.75rem">Isso define o objetivo e a CTA do conteúdo.</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <button onclick="solicitarRoteiro(formatoSelecionado,'topo')" style="padding:.875rem 1rem;background:#fff;border:1.5px solid #ddd;border-radius:10px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:12px" onmouseover="this.style.borderColor='#833ab4'" onmouseout="this.style.borderColor='#ddd'">
+          <div style="font-size:22px">🔝</div>
+          <div>
+            <div style="font-weight:600;font-size:14px">Topo de funil — Viralização e alcance</div>
+            <div style="font-size:12px;color:#888;margin-top:2px">Objetivo: novos seguidores, salvamentos, compartilhamentos · CTA: salvar / seguir / mandar no Direct</div>
+          </div>
+        </button>
+        <button onclick="solicitarRoteiro(formatoSelecionado,'meio')" style="padding:.875rem 1rem;background:#fff;border:1.5px solid #ddd;border-radius:10px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:12px" onmouseover="this.style.borderColor='#833ab4'" onmouseout="this.style.borderColor='#ddd'">
+          <div style="font-size:22px">🎯</div>
+          <div>
+            <div style="font-weight:600;font-size:14px">Meio de funil — Autoridade e engajamento</div>
+            <div style="font-size:12px;color:#888;margin-top:2px">Objetivo: comentários, conexão, construir autoridade clínica · CTA: comentar / mandar DM</div>
+          </div>
+        </button>
+        <button onclick="solicitarRoteiro(formatoSelecionado,'fundo')" style="padding:.875rem 1rem;background:#fff;border:1.5px solid #ddd;border-radius:10px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:12px" onmouseover="this.style.borderColor='#833ab4'" onmouseout="this.style.borderColor='#ddd'">
+          <div style="font-size:22px">💰</div>
+          <div>
+            <div style="font-weight:600;font-size:14px">Fundo de funil — Conversão</div>
+            <div style="font-size:12px;color:#888;margin-top:2px">Objetivo: vender atendimento (R$250/R$420) ou infoproduto (R$497-597) · CTA: agendar / link na bio</div>
+          </div>
+        </button>
+      </div>
+      <button onclick="voltarFormato()" style="margin-top:.75rem;font-size:12px;color:#888;background:none;border:none;cursor:pointer">← Voltar ao formato</button>
     </div>
 
     <div id="roteiro-out" style="display:none">
@@ -442,7 +476,7 @@ Use os dados reais. Seja direto, específico e acionável. Em português.`;
 let roteiroHist=[];
 let roteiroTipo='';
 
-async function solicitarRoteiro(tipo){
+async function solicitarRoteiro(tipo, funil){
   roteiroTipo=tipo;
   roteiroHist=[];
   const tipoLabel={reel:'Reel',story:'Sequência de Stories',carrossel:'Carrossel Educativo',lancamento:'Sequência de Lançamento'}[tipo];
@@ -450,22 +484,30 @@ async function solicitarRoteiro(tipo){
   document.getElementById('roteiro-content').innerHTML='';
   document.getElementById('roteiro-temas').innerHTML=`<div style="font-size:14px;font-weight:600;margin-bottom:.5rem">📋 ${tipoLabel}</div><span class="spin"></span> Gerando opções de pauta estratégica...`;
 
+  const funilLabel = funil==='topo'?'Topo de Funil (viralização/alcance)':funil==='meio'?'Meio de Funil (autoridade/engajamento)':'Fundo de Funil (conversão)';
+  const funilCTA = funil==='topo'?'CTA deve ser: salvar o vídeo, seguir o perfil ou mandar no Direct para alguém':funil==='meio'?'CTA deve ser: comentar uma resposta específica ou mandar DM com palavra-chave':'CTA deve ser: agendar atendimento online (R$250 individual / R$420 casal) ou comprar infoproduto (R$497-597) via link na bio — criar urgência real com vagas limitadas';
   const dadosComentarios=document.getElementById('comments-list')?.innerText?.substring(0,1000)||'';
   const prompt=`Vou criar um roteiro de ${tipoLabel} para @apaula.os.
+
+NÍVEL DO FUNIL ESCOLHIDO: ${funilLabel}
+${funilCTA}
 
 DADOS DA CONTA: ${sumData()}
 ${dadosComentarios?'COMENTÁRIOS RECENTES DO PÚBLICO:\n'+dadosComentarios:''}
 
-Seguindo o protocolo de trabalho obrigatório:
-Liste 5 opções de temas/pautas estratégicas para ${tipoLabel}.
+Seguindo o protocolo obrigatório:
+1. Confirme o nível do funil e o que isso significa para a CTA
+2. Liste 5 opções de temas/pautas estratégicas para ${tipoLabel} no nível ${funilLabel}
 
-Para cada opção, entregue:
-- **Tema**: título do conteúdo (em linguagem do público)
-- **Dor/Gatilho**: qual dor específica do público esse tema toca
-- **Potencial de viralização**: por que esse tema será compartilhado no Direct
-- **Metodologia**: qual elemento do VTSD ou Fórmula de Lançamento será o eixo central
+Para cada opção entregue:
+- **Tema**: título em linguagem do público (com palavra-chave de dor)
+- **Conceito âncora**: qual conceito clínico (sexologia/psicologia) sustenta o tema
+- **Dor/Gatilho**: qual dor específica esse tema toca
+- **Potencial Dark Social**: por que esse tema será mandado no Direct ou WhatsApp
+- **VTSD check**: qual elemento do VTSD é o eixo central
+- **CTA prevista**: como será a chamada para ação coerente com ${funilLabel}
 
-Baseie as sugestões nos dados reais da conta e nas palavras-chave de dor do nicho.`;
+Baseie nas palavras-chave de dor do nicho e nos dados reais da conta.`;
 
   try{
     const r=await callClaude(prompt);
@@ -625,10 +667,10 @@ async function autoConnect(){
       
       const since=Math.floor(Date.now()/1000)-30*86400;
       const until=Math.floor(Date.now()/1000);
-      const rIns=await fetch(`${BASE}/${igId}/insights?metric=impressions,reach,profile_views,website_clicks&period=day&since=${since}&until=${until}&access_token=${tok}`);
+      const rIns=await fetch(`${BASE}/${igId}/insights?metric=reach,profile_views,website_clicks&metric_type=total_value&period=day&since=${since}&until=${until}&access_token=${tok}`);
       const insData=await rIns.json();
       const insights={};
-      if(insData.data) insData.data.forEach(m=>{insights[m.name]=m.values.reduce((s,v)=>s+v.value,0);});
+      if(insData.data) insData.data.forEach(m=>{insights[m.name]=m.total_value?m.total_value.value:(m.values?m.values.reduce((s,v)=>s+v.value,0):0);});
       
       D={...profile,media,insights};
       igId_global=igId;
@@ -667,68 +709,121 @@ function switchAccount(){
 // Run auto-connect when page loads
 window.addEventListener('load', autoConnect);
 
+
+let formatoSelecionado = '';
+
+function selecionarFormato(formato) {
+  formatoSelecionado = formato;
+  document.getElementById('step-formato').style.display = 'none';
+  document.getElementById('step-funil').style.display = 'block';
+}
+
+function voltarFormato() {
+  formatoSelecionado = '';
+  document.getElementById('step-funil').style.display = 'none';
+  document.getElementById('step-formato').style.display = 'block';
+}
+
 </script>
 <script>
 const BACKEND='https://instagram-agent-backend-production-37c7.up.railway.app';
 
-const SYSTEM_PROMPT=`Você é um Estrategista de Marketing Digital e Growth Marketing Sênior especializado no nicho de Relacionamento e Sexualidade. Você assessora a @apaula.os, Sexóloga e Terapeuta de Relacionamentos com 354K seguidores.
+const SYSTEM_PROMPT=`Você é um Estrategista de Marketing Digital e Growth Marketing Sênior com especialização em funis de venda para criadores de conteúdo no nicho de Sexualidade e Relacionamentos. Você assessora exclusivamente a @apaula.os — Ana Paula Carmo, Sexóloga titulada, Associada ABRASEX, Terapeuta Sexual, com 355K seguidores e +2.000 casais atendidos.
 
-## TOM DE VOZ E POSTURA
-- Racional, cirúrgico, honesto e direto. Sem rodeios.
-- Foco 100% em ROI e métricas. Toda sugestão deve ter base em dados.
-- Postura crítica: audite suas próprias sugestões e conteste qualquer ideia sem evidência.
-- Nunca elogie por elogiar. Se algo não tem dados que justifiquem, diga claramente.
+## IDENTIDADE E POSTURA
+- Tom: racional, cirúrgico, honesto, direto. Zero enrolação.
+- Foco absoluto em ROI, conversão e métricas reais.
+- Postura crítica obrigatória: questione qualquer sugestão sem base em dados ou sem lógica de funil.
+- Nunca elogie por elogiar. Se uma ideia é fraca, diga claramente e por quê.
+- Você não é um assistente genérico. Você é o estrategista sênior desta conta específica.
+
+## ARQUITETURA DE FUNIL — REGRA MÁSTER
+Todo conteúdo deve ser posicionado em um dos três níveis e a CTA deve ser coerente com ele:
+
+### TOPO DE FUNIL (awareness/viralização)
+- Objetivo: alcance, salvamentos, compartilhamentos, novos seguidores
+- CTA obrigatória: "Salva esse vídeo" / "Manda pra quem precisa ver isso" / "Segue pra mais"
+- Formato ideal: Reel curto, gancho de dor, Dark Social
+
+### MEIO DE FUNIL (autoridade/engajamento)
+- Objetivo: construir autoridade, gerar comentários, criar conexão
+- CTA obrigatória: "Comenta aqui [pergunta específica]" / "Me manda uma DM com [palavra-chave]"
+- Formato ideal: Carrossel educativo, Reel com profundidade, Lives
+
+### FUNDO DE FUNIL (conversão)
+- Objetivo: vender atendimento online (R$250 individual / R$420 casal) ou infoproduto (R$497-597)
+- CTA obrigatória: "Me manda uma DM com a palavra TERAPIA" / "Clica no link da bio para agendar" / "Vagas limitadas esta semana — link na bio"
+- NUNCA use CTA genérica de fundo de funil. Sempre especifique o produto e crie urgência real.
 
 ## METODOLOGIAS OBRIGATÓRIAS
 
-### VTSD (Leandro Ladeira)
-Aplique obrigatoriamente em todo conteúdo:
-- Espetacularização do Banal: transforme assuntos cotidianos em conteúdo irresistível
-- Retenção acima de tudo: os primeiros 3 segundos definem tudo — gancho brutal
-- Dark Social: crie conteúdo feito para ser compartilhado no privado (Direct, WhatsApp)
-- Conteúdo que gera identificação imediata: "isso sou eu" ou "isso é meu parceiro"
-- Villain Frame: identifique o vilão da história (comportamento, crença limitante, situação)
+### VTSD (Leandro Ladeira) — CHECKLIST DE VALIDAÇÃO
+Antes de entregar qualquer roteiro, valide cada item:
+☐ GANCHO: Para o scroll nos primeiros 2 segundos? Cria identificação imediata ("isso sou eu")?
+☐ VILLAIN FRAME: Há um vilão claro? (crença limitante, comportamento, situação, sistema)
+☐ ESPETACULARIZAÇÃO DO BANAL: O assunto cotidiano foi transformado em algo irresistível?
+☐ DARK SOCIAL: A pessoa vai querer mandar isso no Direct ou WhatsApp para alguém específico?
+☐ RETENÇÃO: Há pelo menos um pico de tensão ou reviravolta que prende até o final?
+☐ IDENTIFICAÇÃO: O público reconhece a própria dor sem se sentir atacado?
+Se qualquer item falhar, o roteiro não está aprovado. Refaça.
 
-### Fórmula de Lançamento (Érico Rocha)
-Aplique em roteiros e planejamentos:
-- Gatilhos mentais: escassez, autoridade, prova social, reciprocidade, antecipação
-- Estrutura de aquecimento de audiência antes de qualquer oferta
-- Sequência PLC (Pré-Lançamento de Conteúdo): educar → engajar → converter
-- Quebra de objeções dentro do próprio conteúdo orgânico
-- CTA com micro-compromisso progressivo
+### Fórmula de Lançamento (Érico Rocha) — APLICAÇÃO OBRIGATÓRIA
+- Gatilhos mentais ativos em todo roteiro: autoridade (dados, titulação, casos clínicos), prova social (2.000 casais atendidos), escassez (vagas limitadas), antecipação (o que vem a seguir)
+- Sequência PLC no planejamento semanal: Conteúdo 1 (educa) → Conteúdo 2 (engaja/debate) → Conteúdo 3 (converte)
+- Quebra de objeção dentro do conteúdo orgânico: antecipe a resistência do público e dissolva antes da CTA
+- Micro-compromisso progressivo: cada CTA prepara para a próxima ação mais profunda
 
 ### REGRA DE OURO
-Todo conteúdo deve gerar uma micro-ação prática imediata para a audiência. Sempre termine com uma ação que o seguidor pode fazer agora.
+Todo conteúdo deve gerar UMA micro-ação prática imediata. Uma. Não duas, não três. Uma ação clara, específica e coerente com o nível do funil.
+
+## PROFUNDIDADE DE NICHO — OBRIGATÓRIO EM ROTEIROS
+Antes de criar qualquer roteiro, o agente deve:
+1. Identificar o conceito psicológico ou sexológico central do tema
+2. Ancorar o roteiro em pelo menos um destes campos: Sexologia clínica, Psicologia do relacionamento, Neurociência do comportamento sexual, Terapia sistêmica de casais, Apego e vínculo emocional
+3. Usar terminologia técnica traduzida para linguagem popular (ex: "resposta de excitação não-concordante" → "seu corpo quer mas sua cabeça não deixa")
+4. Nunca criar roteiro sobre tema que possa ser tratado por qualquer influencer genérico — sempre trazer o diferencial clínico da Ana Paula
+
+## PALAVRAS-CHAVE DE DOR DO NICHO (SEO obrigatório)
+Use no gancho, legenda ou título:
+libido baixa, falta de tesão, sexo na rotina, desconexão do casal, carga mental feminina, libido pós-parto, comunicação no relacionamento, traição emocional, desejo sexual inibido, anorgasmia, vaginismo, dor na relação sexual, ciúme patológico, relacionamento abusivo, sexo doloroso, frigidez (e por que esse termo está errado), parceiro que não seduz, casamento sem sexo.
 
 ## PROTOCOLOS DE ENTREGA
 
-### Daily Growth Review
-Formato: Diagnóstico → O que os dados dizem → Ação de correção → Ajuste de estratégia → Métrica de acompanhamento.
+### Roteiros (One-Sheet) — FORMATO OBRIGATÓRIO
+Estrutura única sem tabelas:
+GANCHO (0-3s): frase que para o scroll
+TRADUÇÃO EMOCIONAL DO GANCHO: o que o público está sentindo ao ver isso
+CONCEITO ÂNCORA: qual teoria/conceito clínico sustenta o roteiro
+DESENVOLVIMENTO: com pico de tensão e villain frame ativo
+VIRADA: o insight que só uma especialista daria
+CTA: específica para o nível do funil (topo/meio/fundo)
+LEGENDA SEO: texto completo com palavra-chave de dor + chamada para Dark Social + hashtags
+INDICAÇÕES DE PRODUÇÃO: expressão corporal, ritmo, cortes
 
-### Roteiros (One-Sheet)
-- Formato lauda única, sem tabelas
-- Estrutura: GANCHO | DESENVOLVIMENTO | VIRADA | CTA
-- Sempre incluir Tradução Emocional (subtexto psicológico do que a audiência sente)
-- Linguagem da audiência: use as palavras exatas que seu público usa nos comentários
-- Para Reels: incluir indicação de corte, ritmo e expressão corporal
+### Daily Growth Review
+Diagnóstico → O que os dados dizem → Causa raiz → Ação de correção → Métrica de acompanhamento em 7 dias
 
 ### SEO & Viralização
-- Priorize palavras-chave de "dor" no nicho: carga mental, libido pós-parto, ciúme patológico, comunicação no relacionamento, traição emocional, sexo na rotina, desconexão do casal
-- Legendas devem incentivar compartilhamento via Direct ("manda pra quem precisa ver isso")
-- Hashtags: mix de nicho (alta competição) + cauda longa (baixa competição)
+- Legendas sempre com palavra-chave de dor nas primeiras 3 palavras
+- Incentivar Dark Social: "Manda isso pra sua amiga que precisa ouvir" / "Encaminha no grupo do casal"
+- Hashtags: 3 de nicho grande + 3 de cauda longa + 1 de localização (Salvador/Brasil)
 
 ## FLUXO DE TRABALHO OBRIGATÓRIO PARA ROTEIROS
-Quando solicitado um roteiro ou planejamento de conteúdo, NUNCA gere diretamente.
-Siga este protocolo:
-1. Liste de 3 a 5 opções de temas/pautas estratégicas com justificativa baseada em dados
-2. Aguarde a escolha
-3. Só então desenvolva o roteiro completo após aprovação do tema
+NUNCA gere roteiro direto. Protocolo obrigatório:
+1. Identificar nível do funil do tema solicitado
+2. Pesquisar conceito clínico âncora
+3. Listar 5 opções de pautas com: nível do funil + conceito âncora + potencial de Dark Social
+4. Aguardar escolha
+5. Validar contra checklist VTSD antes de entregar
+6. Entregar roteiro completo no formato One-Sheet
 
 ## CONTEXTO DA CONTA
-Nicho: Relacionamento e Sexualidade (Educação Sexual, Terapia de Casais)
-Público: Mulheres 25-45 anos, casais em crise, pessoas buscando reconexão
-Produto: Cursos online, atendimentos, terapia de casal
-Benchmark de engajamento para o nicho: 2-4% (conta está em 0.41% — crítico)`;
+Conta: @apaula.os | Sexóloga e Terapeuta Sexual
+Seguidores: 355K | Engajamento atual: 0,41% (benchmark do nicho: 2-4% — estado crítico)
+Público principal: Mulheres 25-45, casais em crise, pessoas com bloqueios sexuais
+Produtos: Atendimento individual R$250 | Atendimento casal R$420 | Infoproduto R$497-597
+Diferencial: Titulação ABRASEX + experiência clínica real com +2.000 casais
+Tom da conta: especialista acessível, sem julgamento, direta, baseada em ciência`;
 
 let D={},hist=[],igId=null,pageToken=null,attachedFile=null,selectedPostId=null;
 
@@ -1250,7 +1345,7 @@ Use os dados reais. Seja direto, específico e acionável. Em português.`;
 let roteiroHist=[];
 let roteiroTipo='';
 
-async function solicitarRoteiro(tipo){
+async function solicitarRoteiro(tipo, funil){
   roteiroTipo=tipo;
   roteiroHist=[];
   const tipoLabel={reel:'Reel',story:'Sequência de Stories',carrossel:'Carrossel Educativo',lancamento:'Sequência de Lançamento'}[tipo];
@@ -1258,22 +1353,30 @@ async function solicitarRoteiro(tipo){
   document.getElementById('roteiro-content').innerHTML='';
   document.getElementById('roteiro-temas').innerHTML=`<div style="font-size:14px;font-weight:600;margin-bottom:.5rem">📋 ${tipoLabel}</div><span class="spin"></span> Gerando opções de pauta estratégica...`;
 
+  const funilLabel = funil==='topo'?'Topo de Funil (viralização/alcance)':funil==='meio'?'Meio de Funil (autoridade/engajamento)':'Fundo de Funil (conversão)';
+  const funilCTA = funil==='topo'?'CTA deve ser: salvar o vídeo, seguir o perfil ou mandar no Direct para alguém':funil==='meio'?'CTA deve ser: comentar uma resposta específica ou mandar DM com palavra-chave':'CTA deve ser: agendar atendimento online (R$250 individual / R$420 casal) ou comprar infoproduto (R$497-597) via link na bio — criar urgência real com vagas limitadas';
   const dadosComentarios=document.getElementById('comments-list')?.innerText?.substring(0,1000)||'';
   const prompt=`Vou criar um roteiro de ${tipoLabel} para @apaula.os.
+
+NÍVEL DO FUNIL ESCOLHIDO: ${funilLabel}
+${funilCTA}
 
 DADOS DA CONTA: ${sumData()}
 ${dadosComentarios?'COMENTÁRIOS RECENTES DO PÚBLICO:\n'+dadosComentarios:''}
 
-Seguindo o protocolo de trabalho obrigatório:
-Liste 5 opções de temas/pautas estratégicas para ${tipoLabel}.
+Seguindo o protocolo obrigatório:
+1. Confirme o nível do funil e o que isso significa para a CTA
+2. Liste 5 opções de temas/pautas estratégicas para ${tipoLabel} no nível ${funilLabel}
 
-Para cada opção, entregue:
-- **Tema**: título do conteúdo (em linguagem do público)
-- **Dor/Gatilho**: qual dor específica do público esse tema toca
-- **Potencial de viralização**: por que esse tema será compartilhado no Direct
-- **Metodologia**: qual elemento do VTSD ou Fórmula de Lançamento será o eixo central
+Para cada opção entregue:
+- **Tema**: título em linguagem do público (com palavra-chave de dor)
+- **Conceito âncora**: qual conceito clínico (sexologia/psicologia) sustenta o tema
+- **Dor/Gatilho**: qual dor específica esse tema toca
+- **Potencial Dark Social**: por que esse tema será mandado no Direct ou WhatsApp
+- **VTSD check**: qual elemento do VTSD é o eixo central
+- **CTA prevista**: como será a chamada para ação coerente com ${funilLabel}
 
-Baseie as sugestões nos dados reais da conta e nas palavras-chave de dor do nicho.`;
+Baseie nas palavras-chave de dor do nicho e nos dados reais da conta.`;
 
   try{
     const r=await callClaude(prompt);
@@ -1433,10 +1536,10 @@ async function autoConnect(){
       
       const since=Math.floor(Date.now()/1000)-30*86400;
       const until=Math.floor(Date.now()/1000);
-      const rIns=await fetch(`${BASE}/${igId}/insights?metric=impressions,reach,profile_views,website_clicks&period=day&since=${since}&until=${until}&access_token=${tok}`);
+      const rIns=await fetch(`${BASE}/${igId}/insights?metric=reach,profile_views,website_clicks&metric_type=total_value&period=day&since=${since}&until=${until}&access_token=${tok}`);
       const insData=await rIns.json();
       const insights={};
-      if(insData.data) insData.data.forEach(m=>{insights[m.name]=m.values.reduce((s,v)=>s+v.value,0);});
+      if(insData.data) insData.data.forEach(m=>{insights[m.name]=m.total_value?m.total_value.value:(m.values?m.values.reduce((s,v)=>s+v.value,0):0);});
       
       D={...profile,media,insights};
       igId_global=igId;
@@ -1474,6 +1577,21 @@ function switchAccount(){
 
 // Run auto-connect when page loads
 window.addEventListener('load', autoConnect);
+
+
+let formatoSelecionado = '';
+
+function selecionarFormato(formato) {
+  formatoSelecionado = formato;
+  document.getElementById('step-formato').style.display = 'none';
+  document.getElementById('step-funil').style.display = 'block';
+}
+
+function voltarFormato() {
+  formatoSelecionado = '';
+  document.getElementById('step-funil').style.display = 'none';
+  document.getElementById('step-formato').style.display = 'block';
+}
 
 </script>
 </body>
