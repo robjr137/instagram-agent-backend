@@ -3,12 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Agente IG">
-<meta name="theme-color" content="#833ab4">
-<link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2111/2111463.png">
 <title>Instagram Marketing Agent</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -89,95 +83,30 @@ textarea{resize:vertical}
   <span class="badge badge-warn" id="conn-badge">Aguardando</span>
 </div>
 
-<div id="install-banner" style="background:linear-gradient(135deg,#833ab4,#fd1d1d);padding:.75rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:12px">
-  <div style="color:#fff;font-size:13px">📱 <strong>Adicione à tela inicial</strong> para acessar como app</div>
-  <div style="display:flex;gap:8px">
-    <button id="install-btn" onclick="showInstallGuide()" style="padding:.4rem 1rem;background:rgba(255,255,255,0.2);color:#fff;border:1px solid rgba(255,255,255,0.4);border-radius:8px;font-size:12px;cursor:pointer;font-weight:500">Como fazer →</button>
-    <button onclick="document.getElementById('install-banner').style.display='none'" style="padding:.4rem .75rem;background:none;color:rgba(255,255,255,0.7);border:none;font-size:16px;cursor:pointer">✕</button>
-  </div>
-</div>
-
-<div id="install-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);z-index:1000;align-items:center;justify-content:center">
-  <div style="background:#fff;border-radius:16px;padding:1.5rem;max-width:360px;margin:1rem;width:100%">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
-      <div style="font-size:16px;font-weight:700">Adicionar à tela inicial</div>
-      <button onclick="document.getElementById('install-modal').style.display='none'" style="background:none;border:none;font-size:20px;cursor:pointer;color:#888">✕</button>
-    </div>
-    
-    <div id="guide-ios" style="display:none">
-      <div style="font-size:13px;color:#555;margin-bottom:1rem">No <strong>Safari</strong> (iPhone/iPad):</div>
-      <div style="display:flex;flex-direction:column;gap:.75rem">
-        <div style="display:flex;align-items:center;gap:10px;font-size:13px"><div style="width:28px;height:28px;border-radius:50%;background:#ede9fe;color:#4c1d95;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0">1</div>Toque no botão <strong>Compartilhar</strong> (quadrado com seta ↑) na barra inferior</div>
-        <div style="display:flex;align-items:center;gap:10px;font-size:13px"><div style="width:28px;height:28px;border-radius:50%;background:#ede9fe;color:#4c1d95;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0">2</div>Role para baixo e toque em <strong>"Adicionar à Tela de Início"</strong></div>
-        <div style="display:flex;align-items:center;gap:10px;font-size:13px"><div style="width:28px;height:28px;border-radius:50%;background:#ede9fe;color:#4c1d95;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0">3</div>Toque em <strong>"Adicionar"</strong> no canto superior direito</div>
-      </div>
-      <div style="background:#f3f4f6;border-radius:8px;padding:.75rem;margin-top:1rem;font-size:12px;color:#555">✅ O ícone aparece na sua tela inicial como um app!</div>
-    </div>
-
-    <div id="guide-android" style="display:none">
-      <div style="font-size:13px;color:#555;margin-bottom:1rem">No <strong>Chrome</strong> (Android):</div>
-      <div style="display:flex;flex-direction:column;gap:.75rem">
-        <div style="display:flex;align-items:center;gap:10px;font-size:13px"><div style="width:28px;height:28px;border-radius:50%;background:#ede9fe;color:#4c1d95;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0">1</div>Toque nos <strong>3 pontinhos</strong> no canto superior direito do Chrome</div>
-        <div style="display:flex;align-items:center;gap:10px;font-size:13px"><div style="width:28px;height:28px;border-radius:50%;background:#ede9fe;color:#4c1d95;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0">2</div>Toque em <strong>"Adicionar à tela inicial"</strong></div>
-        <div style="display:flex;align-items:center;gap:10px;font-size:13px"><div style="width:28px;height:28px;border-radius:50%;background:#ede9fe;color:#4c1d95;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0">3</div>Toque em <strong>"Adicionar"</strong> na confirmação</div>
-      </div>
-      <div style="background:#f3f4f6;border-radius:8px;padding:.75rem;margin-top:1rem;font-size:12px;color:#555">✅ O ícone aparece na sua tela inicial como um app!</div>
-    </div>
-
-    <div id="guide-desktop" style="display:none">
-      <div style="font-size:13px;color:#555;margin-bottom:1rem">No <strong>Chrome</strong> (computador):</div>
-      <div style="display:flex;flex-direction:column;gap:.75rem">
-        <div style="display:flex;align-items:center;gap:10px;font-size:13px"><div style="width:28px;height:28px;border-radius:50%;background:#ede9fe;color:#4c1d95;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0">1</div>Clique no ícone <strong>⊕</strong> que aparece na barra de endereço</div>
-        <div style="display:flex;align-items:center;gap:10px;font-size:13px"><div style="width:28px;height:28px;border-radius:50%;background:#ede9fe;color:#4c1d95;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0">2</div>Clique em <strong>"Instalar"</strong></div>
-      </div>
-      <div style="background:#f3f4f6;border-radius:8px;padding:.75rem;margin-top:1rem;font-size:12px;color:#555">✅ Abre como janela própria, sem barra do navegador!</div>
-    </div>
-
-    <div style="display:flex;gap:8px;margin-top:1.25rem">
-      <button onclick="showGuide('ios')" style="flex:1;padding:.5rem;border-radius:8px;border:1.5px solid #ddd;background:#fff;font-size:12px;cursor:pointer;font-weight:500">🍎 iPhone</button>
-      <button onclick="showGuide('android')" style="flex:1;padding:.5rem;border-radius:8px;border:1.5px solid #ddd;background:#fff;font-size:12px;cursor:pointer;font-weight:500">🤖 Android</button>
-      <button onclick="showGuide('desktop')" style="flex:1;padding:.5rem;border-radius:8px;border:1.5px solid #ddd;background:#fff;font-size:12px;cursor:pointer;font-weight:500">💻 PC</button>
-    </div>
-
-    <div style="margin-top:1rem;padding:.75rem;background:#f9f9f9;border-radius:8px;font-size:12px;color:#555;text-align:center">
-      Link do agente:<br>
-      <strong style="font-size:11px;word-break:break-all">robjr137.github.io/instagram-agent-backend/instagram-agent-v7.html</strong>
-    </div>
-  </div>
-</div>
-
 <div class="container">
 
 <!-- LOGIN -->
 <div id="sc-setup" class="screen active">
   <div class="card" style="max-width:520px;margin:2rem auto">
-    <h2 style="font-size:18px;font-weight:700;margin-bottom:.5rem">Conectar ao Instagram</h2>
-    <p style="font-size:13px;color:#666;margin-bottom:1.25rem;line-height:1.65">Cole seu Access Token do Graph API Explorer para conectar <strong>@apaula.os</strong>.</p>
     <div id="auto-connecting" style="text-align:center;padding:2rem 0">
-      <div style="margin-bottom:1.25rem">
-        <div style="font-size:32px">📊</div>
-      </div>
-      <div style="font-size:20px;font-weight:700;color:#1F2937;margin-bottom:.5rem">
-        Olá, Ana Paula!
-      </div>
+      <div style="margin-bottom:1rem"><div style="font-size:40px">📊</div></div>
+      <div style="font-size:20px;font-weight:700;color:#1F2937;margin-bottom:.5rem">Olá, Ana Paula!</div>
       <div style="font-size:14px;color:#6B7280;margin-bottom:1.5rem;line-height:1.7">
         Seu agente estrategista está carregando os dados do <strong>@apaula.os</strong>.<br>
         Em instantes você terá acesso às análises que vão<br>
         <span style="color:#833ab4;font-weight:600">transformar dados em decisões e decisões em resultado.</span>
       </div>
       <div style="display:flex;align-items:center;justify-content:center;gap:8px;color:#9CA3AF;font-size:13px">
-        <span class="spin"></span>
-        <span>Conectando à sua conta...</span>
+        <span class="spin"></span><span>Conectando à sua conta...</span>
       </div>
     </div>
     <div id="manual-form" style="display:none">
-      <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:.75rem 1rem;font-size:13px;color:#1e40af;margin-bottom:1rem">
-        Cole o Access Token do Graph API Explorer para conectar manualmente.
-      </div>
+      <h2 style="font-size:18px;font-weight:700;margin-bottom:.5rem">Conectar manualmente</h2>
+      <p style="font-size:13px;color:#666;margin-bottom:1.25rem;line-height:1.65">Cole seu Access Token do Graph API Explorer.</p>
       <label>Access Token</label>
       <textarea id="tok" rows="4" placeholder="EAABwzLixnjYBO..." style="margin-bottom:.75rem"></textarea>
       <label>ID da conta Instagram</label>
-      <input type="text" id="ig-id-input" value="17841450756552541" style="margin-bottom:.75rem;font-family:monospace">
+      <input type="text" id="ig-id-input" value="17841450756552541" style="margin-bottom:.75rem;font-family:monospace;width:100%;padding:.5rem;border:1px solid #ddd;border-radius:8px">
       <div class="status-msg" id="status-msg"></div>
       <div class="err" id="err-msg"></div>
       <button class="btn btn-primary" id="conn-btn" onclick="doConnect()">Conectar ao Instagram</button>
@@ -255,16 +184,12 @@ textarea{resize:vertical}
 
   <!-- GROWTH REPORT -->
   <div id="tab-growth" style="display:none">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:.75rem">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
       <div>
         <div style="font-size:15px;font-weight:700">Growth Marketing Report</div>
-        <div style="font-size:12px;color:#888">Resumo 7 dias + Consolidado 30 dias</div>
+        <div style="font-size:12px;color:#888">Análise completa dos últimos 30 dias</div>
       </div>
-      <div style="display:flex;gap:8px">
-        <button onclick="genGrowthReport('7')" style="padding:.5rem 1rem;background:#f3f4f6;border:1px solid #ddd;border-radius:8px;font-size:13px;cursor:pointer;font-weight:500">📅 7 dias</button>
-        <button onclick="genGrowthReport('30')" style="padding:.5rem 1rem;background:#f3f4f6;border:1px solid #ddd;border-radius:8px;font-size:13px;cursor:pointer;font-weight:500">📆 30 dias</button>
-        <button onclick="genGrowthReport('both')" style="padding:.5rem 1.25rem;background:linear-gradient(135deg,#833ab4,#fd1d1d);color:#fff;border:none;border-radius:8px;font-size:13px;cursor:pointer;font-weight:500">🔄 Relatório Completo</button>
-      </div>
+      <button onclick="genGrowthReport()" style="padding:.5rem 1.25rem;background:linear-gradient(135deg,#833ab4,#fd1d1d);color:#fff;border:none;border-radius:8px;font-size:13px;cursor:pointer;font-weight:500">🔄 Gerar Relatório</button>
     </div>
     <div id="growth-out"><div class="analysis-box" style="text-align:center;color:#888;padding:2rem">Clique em "Gerar Relatório" para criar sua análise de growth marketing personalizada.</div></div>
   </div>
@@ -273,81 +198,32 @@ textarea{resize:vertical}
   <div id="tab-roteiros" style="display:none">
     <div style="margin-bottom:1.25rem">
       <div style="font-size:15px;font-weight:700;margin-bottom:.25rem">Criação de Roteiros</div>
-      <div style="font-size:12px;color:#888">Metodologia VTSD (Leandro Ladeira) + Fórmula de Lançamento (Érico Rocha)</div>
+      <div style="font-size:12px;color:#888">VTSD (Leandro Ladeira) + Fórmula de Lançamento (Érico Rocha)</div>
     </div>
-
-    <!-- Step 1: Format selection -->
     <div id="step-formato" style="margin-bottom:1.25rem">
       <div style="font-size:13px;font-weight:600;color:#555;margin-bottom:.75rem">Passo 1 — Escolha o formato:</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-        <button onclick="selecionarFormato('reel')" style="padding:1rem;background:#fff;border:1.5px solid #ddd;border-radius:12px;cursor:pointer;text-align:left;transition:border-color .15s" onmouseover="this.style.borderColor='#833ab4'" onmouseout="this.style.borderColor='#ddd'">
-          <div style="font-size:20px;margin-bottom:4px">🎬</div>
-          <div style="font-weight:600;font-size:14px">Roteiro de Reel</div>
-          <div style="font-size:12px;color:#888;margin-top:2px">Gancho + desenvolvimento + CTA · VTSD</div>
-        </button>
-        <button onclick="selecionarFormato('story')" style="padding:1rem;background:#fff;border:1.5px solid #ddd;border-radius:12px;cursor:pointer;text-align:left;transition:border-color .15s" onmouseover="this.style.borderColor='#833ab4'" onmouseout="this.style.borderColor='#ddd'">
-          <div style="font-size:20px;margin-bottom:4px">📱</div>
-          <div style="font-weight:600;font-size:14px">Sequência de Stories</div>
-          <div style="font-size:12px;color:#888;margin-top:2px">Sequência de 5-7 stories · Funil de engajamento</div>
-        </button>
-        <button onclick="selecionarFormato('carrossel')" style="padding:1rem;background:#fff;border:1.5px solid #ddd;border-radius:12px;cursor:pointer;text-align:left;transition:border-color .15s" onmouseover="this.style.borderColor='#833ab4'" onmouseout="this.style.borderColor='#ddd'">
-          <div style="font-size:20px;margin-bottom:4px">🎠</div>
-          <div style="font-weight:600;font-size:14px">Carrossel Educativo</div>
-          <div style="font-size:12px;color:#888;margin-top:2px">Slides 1-10 · Conteúdo que salva</div>
-        </button>
-        <button onclick="selecionarFormato('lancamento')" style="padding:1rem;background:#fff;border:1.5px solid #ddd;border-radius:12px;cursor:pointer;text-align:left;transition:border-color .15s" onmouseover="this.style.borderColor='#833ab4'" onmouseout="this.style.borderColor='#ddd'">
-          <div style="font-size:20px;margin-bottom:4px">🚀</div>
-          <div style="font-weight:600;font-size:14px">Sequência de Lançamento</div>
-          <div style="font-size:12px;color:#888;margin-top:2px">PLC · Fórmula de Lançamento</div>
-        </button>
+        <button onclick="selecionarFormato('reel')" style="padding:1rem;background:#fff;border:1.5px solid #ddd;border-radius:12px;cursor:pointer;text-align:left" onmouseover="this.style.borderColor='#833ab4'" onmouseout="this.style.borderColor='#ddd'"><div style="font-size:20px;margin-bottom:4px">🎬</div><div style="font-weight:600;font-size:14px">Roteiro de Reel</div><div style="font-size:12px;color:#888;margin-top:2px">Gancho + desenvolvimento + CTA · VTSD</div></button>
+        <button onclick="selecionarFormato('story')" style="padding:1rem;background:#fff;border:1.5px solid #ddd;border-radius:12px;cursor:pointer;text-align:left" onmouseover="this.style.borderColor='#833ab4'" onmouseout="this.style.borderColor='#ddd'"><div style="font-size:20px;margin-bottom:4px">📱</div><div style="font-weight:600;font-size:14px">Sequência de Stories</div><div style="font-size:12px;color:#888;margin-top:2px">5-7 stories · Funil de engajamento</div></button>
+        <button onclick="selecionarFormato('carrossel')" style="padding:1rem;background:#fff;border:1.5px solid #ddd;border-radius:12px;cursor:pointer;text-align:left" onmouseover="this.style.borderColor='#833ab4'" onmouseout="this.style.borderColor='#ddd'"><div style="font-size:20px;margin-bottom:4px">🎠</div><div style="font-weight:600;font-size:14px">Carrossel Educativo</div><div style="font-size:12px;color:#888;margin-top:2px">Slides 1-10 · Conteúdo que salva</div></button>
+        <button onclick="selecionarFormato('lancamento')" style="padding:1rem;background:#fff;border:1.5px solid #ddd;border-radius:12px;cursor:pointer;text-align:left" onmouseover="this.style.borderColor='#833ab4'" onmouseout="this.style.borderColor='#ddd'"><div style="font-size:20px;margin-bottom:4px">🚀</div><div style="font-weight:600;font-size:14px">Sequência de Lançamento</div><div style="font-size:12px;color:#888;margin-top:2px">PLC · Fórmula de Lançamento</div></button>
       </div>
     </div>
-
-    <!-- Step 2: Funnel level selection (hidden until format chosen) -->
     <div id="step-funil" style="display:none;margin-bottom:1.25rem">
       <div style="font-size:13px;font-weight:600;color:#555;margin-bottom:.5rem">Passo 2 — Qual nível do funil?</div>
-      <div style="font-size:12px;color:#888;margin-bottom:.75rem">Isso define o objetivo e a CTA do conteúdo.</div>
       <div style="display:flex;flex-direction:column;gap:10px">
-        <button onclick="solicitarRoteiro(formatoSelecionado,'topo')" style="padding:.875rem 1rem;background:#fff;border:1.5px solid #ddd;border-radius:10px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:12px" onmouseover="this.style.borderColor='#833ab4'" onmouseout="this.style.borderColor='#ddd'">
-          <div style="font-size:22px">🔝</div>
-          <div>
-            <div style="font-weight:600;font-size:14px">Topo de funil — Viralização e alcance</div>
-            <div style="font-size:12px;color:#888;margin-top:2px">Objetivo: novos seguidores, salvamentos, compartilhamentos · CTA: salvar / seguir / mandar no Direct</div>
-          </div>
-        </button>
-        <button onclick="solicitarRoteiro(formatoSelecionado,'meio')" style="padding:.875rem 1rem;background:#fff;border:1.5px solid #ddd;border-radius:10px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:12px" onmouseover="this.style.borderColor='#833ab4'" onmouseout="this.style.borderColor='#ddd'">
-          <div style="font-size:22px">🎯</div>
-          <div>
-            <div style="font-weight:600;font-size:14px">Meio de funil — Autoridade e engajamento</div>
-            <div style="font-size:12px;color:#888;margin-top:2px">Objetivo: comentários, conexão, construir autoridade clínica · CTA: comentar / mandar DM</div>
-          </div>
-        </button>
-        <button onclick="solicitarRoteiro(formatoSelecionado,'fundo')" style="padding:.875rem 1rem;background:#fff;border:1.5px solid #ddd;border-radius:10px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:12px" onmouseover="this.style.borderColor='#833ab4'" onmouseout="this.style.borderColor='#ddd'">
-          <div style="font-size:22px">💰</div>
-          <div>
-            <div style="font-weight:600;font-size:14px">Fundo de funil — Conversão</div>
-            <div style="font-size:12px;color:#888;margin-top:2px">Objetivo: vender atendimento (R$250/R$420) ou infoproduto (R$497-597) · CTA: agendar / link na bio</div>
-          </div>
-        </button>
+        <button onclick="solicitarRoteiro(formatoSelecionado,'topo')" style="padding:.875rem 1rem;background:#fff;border:1.5px solid #ddd;border-radius:10px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:12px" onmouseover="this.style.borderColor='#833ab4'" onmouseout="this.style.borderColor='#ddd'"><div style="font-size:22px">🔝</div><div><div style="font-weight:600;font-size:14px">Topo — Viralização e alcance</div><div style="font-size:12px;color:#888;margin-top:2px">CTA: salvar / seguir / mandar no Direct</div></div></button>
+        <button onclick="solicitarRoteiro(formatoSelecionado,'meio')" style="padding:.875rem 1rem;background:#fff;border:1.5px solid #ddd;border-radius:10px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:12px" onmouseover="this.style.borderColor='#833ab4'" onmouseout="this.style.borderColor='#ddd'"><div style="font-size:22px">🎯</div><div><div style="font-weight:600;font-size:14px">Meio — Autoridade e engajamento</div><div style="font-size:12px;color:#888;margin-top:2px">CTA: comentar / DM com palavra-chave</div></div></button>
+        <button onclick="solicitarRoteiro(formatoSelecionado,'fundo')" style="padding:.875rem 1rem;background:#fff;border:1.5px solid #ddd;border-radius:10px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:12px" onmouseover="this.style.borderColor='#833ab4'" onmouseout="this.style.borderColor='#ddd'"><div style="font-size:22px">💰</div><div><div style="font-weight:600;font-size:14px">Fundo — Conversão</div><div style="font-size:12px;color:#888;margin-top:2px">CTA: agendar / link bio · R$250/R$420/R$497</div></div></button>
       </div>
-      <button onclick="voltarFormato()" style="margin-top:.75rem;font-size:12px;color:#888;background:none;border:none;cursor:pointer">← Voltar ao formato</button>
+      <button onclick="voltarFormato()" style="margin-top:.75rem;font-size:12px;color:#888;background:none;border:none;cursor:pointer">← Voltar</button>
     </div>
-
-    <div id="roteiro-out" style="display:none">
-      <div class="card">
-        <div id="roteiro-temas"></div>
-        <div id="roteiro-content" style="margin-top:1rem"></div>
-      </div>
-    </div>
-
+    <div id="roteiro-out" style="display:none"><div class="card"><div id="roteiro-temas"></div><div id="roteiro-content" style="margin-top:1rem"></div></div></div>
     <div style="margin-top:1.25rem">
       <div class="section-title">Chat com o Roteirista</div>
       <div class="chat-wrap">
-        <div class="chat-msgs" id="roteiro-chat-msgs" style="min-height:150px;max-height:350px;overflow-y:auto;padding:1rem;background:#fff"><p style="text-align:center;color:#888;padding:1.5rem 0;font-size:14px">Selecione um formato acima para começar ou escreva diretamente...</p></div>
-        <div class="chat-input-row">
-          <input type="text" id="roteiro-chat-in" placeholder="Ex: quero um roteiro sobre libido pós-parto..." onkeydown="if(event.key==='Enter')sendRoteiroMsg()">
-          <button class="send-btn" onclick="sendRoteiroMsg()">Enviar</button>
-        </div>
+        <div class="chat-msgs" id="roteiro-chat-msgs" style="min-height:150px;max-height:350px;overflow-y:auto;padding:1rem;background:#fff"><p style="text-align:center;color:#888;padding:1.5rem 0;font-size:14px">Selecione um formato acima para começar...</p></div>
+        <div class="chat-input-row"><input type="text" id="roteiro-chat-in" placeholder="Ex: roteiro sobre libido pós-parto..." onkeydown="if(event.key==='Enter')sendRoteiroMsg()"><button class="send-btn" onclick="sendRoteiroMsg()">Enviar</button></div>
       </div>
     </div>
   </div>
@@ -374,8 +250,9 @@ textarea{resize:vertical}
 </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/mammoth@1.6.0/mammoth.browser.min.js">
-async function genGrowthReport(period='both'){
+<script src="https://cdn.jsdelivr.net/npm/mammoth@1.6.0/mammoth.browser.min.js"></script>
+<script>
+async function genGrowthReport(){
   const el=document.getElementById('growth-out');
   el.innerHTML='<div class="analysis-box"><span class="spin"></span> Gerando Growth Marketing Report dos últimos 30 dias...</div>';
   
@@ -413,61 +290,132 @@ ${losers.map((p,i)=>`${i+1}. ${p.media_type} | ${(p.engagement_rate||0).toFixed(
 Nicho: Sexologia, Terapia de Relacionamentos, Educação Sexual
 Público: Casais e indivíduos buscando melhorar relacionamentos`;
 
-  // Filter posts by period
-  const now=Date.now();
-  const posts7d=med.filter(m=>m.timestamp&&(now-new Date(m.timestamp).getTime())<7*86400*1000);
-  const posts30d=med;
-  const avg7d=posts7d.length>0?(posts7d.reduce((s,m)=>s+(m.engagement_rate||0),0)/posts7d.length).toFixed(2):0;
-  
-  const periodLabel=period==='7'?'7 dias':period==='30'?'30 dias':'7 e 30 dias';
-  
-  let periodData='';
-  if(period==='7'||period==='both'){
-    const w=posts7d.filter(m=>(m.engagement_rate||0)>avgEng*1.5).slice(0,2);
-    periodData+=`\nÚLTIMOS 7 DIAS (${posts7d.length} posts):
-Taxa de engajamento média: ${avg7d}%
-${w.length?'Destaques da semana:\n'+w.map(p=>`- ${p.media_type} | ${(p.engagement_rate||0).toFixed(2)}% | "${(p.caption||'').substring(0,60)}"`).join('\n'):'Sem destaques significativos'}`;
-  }
-  if(period==='30'||period==='both'){
-    periodData+=`\n\nÚLTIMOS 30 DIAS (${med.length} posts):
-Taxa de engajamento média: ${avgEng.toFixed(2)}%
-Top posts:\n${winners.map(p=>`- ${p.media_type} | ${(p.engagement_rate||0).toFixed(2)}% | "${(p.caption||'').substring(0,60)}"`).join('\n')}
-Piores posts:\n${losers.map(p=>`- ${p.media_type} | ${(p.engagement_rate||0).toFixed(2)}% | "${(p.caption||'').substring(0,60)}"`).join('\n')}`;
-  }
+  const prompt=dataContext+`
 
-  const prompt=dataContext+periodData+`
+Gere um GROWTH MARKETING REPORT completo e acionável com a seguinte estrutura:
 
-Gere um GROWTH MARKETING REPORT para o período de ${periodLabel} com esta estrutura:
+## 📊 DIAGNÓSTICO EXECUTIVO
+Resumo em 3 linhas do estado atual da conta. Nota geral de performance (0-10) com justificativa.
 
-${period==='both'?`## ⚡ RESUMO EXECUTIVO — 7 DIAS
-O que aconteceu esta semana? Performance vs média histórica. Nota da semana (0-10).
-O que foi bem esta semana e o que precisa de atenção imediata.
-
-## 📊 CONSOLIDADO — 30 DIAS`:'## 📊 ANÁLISE DO PERÍODO'}
-
-## ✅ O QUE FUNCIONOU
-- Quais formatos performaram melhor e por quê (use dados reais)
+## ✅ O QUE FUNCIONOU (últimos 30 dias)
+Analise os dados e explique com precisão:
+- Quais formatos performaram melhor e por quê
 - Quais temas/abordagens geraram mais engajamento
-- Padrões identificados nos posts de sucesso
+- Padrões nos posts de sucesso (hora, formato, estilo de legenda)
+- O que o algoritmo está favorecendo para esta conta
 
 ## ❌ O QUE NÃO DEU CERTO
-- Formatos ou temas com baixo retorno e motivo
-- Erros estratégicos identificados
-- O que evitar no próximo período
+- Formatos ou temas com baixo retorno
+- Erros estratégicos identificados nos dados
+- Oportunidades perdidas
+- Por que esses posts não performaram
 
-## 🚀 PLANO — PRÓXIMOS 30 DIAS
-- **Meta realista**: crescimento esperado em seguidores e engajamento
-- **Mix de conteúdo**: quantos posts de cada formato por semana
-- **3 experimentos**: o que testar com base nos dados
-- **Frequência ideal** de postagem
+## 🚀 PLANO DE AÇÃO — PRÓXIMOS 30 DIAS
+Baseado nos dados, crie um plano específico:
+- **Meta realista** de crescimento (seguidores + engajamento)
+- **Mix de conteúdo ideal** (% de cada formato por semana)
+- **3 experimentos** para testar no próximo mês
+- **Frequência de postagem** recomendada
 
-## 💡 5 AÇÕES DESTA SEMANA
-Ações específicas e práticas em ordem de impacto esperado.
+## 💡 5 AÇÕES IMEDIATAS (esta semana)
+Liste 5 ações específicas e práticas para implementar agora, em ordem de impacto.
 
-## 📈 PROJEÇÃO 30/60/90 DIAS
-Se implementar as recomendações, o que esperar em cada prazo?
+## 📈 PROJEÇÃO
+Se implementar as recomendações, qual crescimento esperado em 30/60/90 dias?
 
-Use os dados reais. Seja direto, específico e acionável. Em português.`;
+Use dados reais da conta na análise. Seja específico, direto e acionável. Em português.`;
+
+  try{
+    const r=await callClaude(prompt);
+    const f=r.replace(/## (.*?)\n/g,'<h3 style="font-size:15px;font-weight:700;margin:1.25rem 0 .5rem;color:#111">$1</h3>\n')
+             .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
+             .replace(/\n/g,'<br>');
+    el.innerHTML=`
+      <div style="display:flex;gap:10px;margin-bottom:1rem;flex-wrap:wrap">
+        <div class="metric" style="flex:1;min-width:120px;text-align:center"><div class="metric-label">Engaj. Médio</div><div class="metric-value">${avgEng.toFixed(2)}%</div></div>
+        <div class="metric" style="flex:1;min-width:120px;text-align:center"><div class="metric-label">Melhor formato</div><div class="metric-value" style="font-size:16px">${avgReel>=avgCarousel&&avgReel>=avgImage?'Reels':avgCarousel>=avgImage?'Carrossel':'Fotos'}</div></div>
+        <div class="metric" style="flex:1;min-width:120px;text-align:center"><div class="metric-label">Posts analisados</div><div class="metric-value">${med.length}</div></div>
+        <div class="metric" style="flex:1;min-width:120px;text-align:center"><div class="metric-label">Alcance 30d</div><div class="metric-value">${fmt(ins.reach)}</div></div>
+      </div>
+      <div class="analysis-box">${f}</div>`;
+  }catch(e){el.innerHTML=`<p style="color:#b91c1c;font-size:13px">Erro: ${e.message}</p>`;}
+}
+</script>
+<script>
+
+
+async function genGrowthReport(){
+  const el=document.getElementById('growth-out');
+  el.innerHTML='<div class="analysis-box"><span class="spin"></span> Gerando Growth Marketing Report dos últimos 30 dias...</div>';
+  
+  const med=D.media||[];
+  const ins=D.insights||{};
+  
+  // Classify content performance
+  const avgEng=med.length>0?(med.reduce((s,m)=>s+(m.engagement_rate||0),0)/med.length):0;
+  const winners=med.filter(m=>(m.engagement_rate||0)>avgEng*1.5).sort((a,b)=>(b.engagement_rate||0)-(a.engagement_rate||0)).slice(0,3);
+  const losers=med.filter(m=>(m.engagement_rate||0)<avgEng*0.5).sort((a,b)=>(a.engagement_rate||0)-(b.engagement_rate||0)).slice(0,3);
+  const reels=med.filter(m=>m.media_type==='REEL'||m.media_type==='VIDEO');
+  const carousels=med.filter(m=>m.media_type==='CAROUSEL_ALBUM');
+  const images=med.filter(m=>m.media_type==='IMAGE');
+  const avgReel=reels.length>0?(reels.reduce((s,m)=>s+(m.engagement_rate||0),0)/reels.length).toFixed(2):0;
+  const avgCarousel=carousels.length>0?(carousels.reduce((s,m)=>s+(m.engagement_rate||0),0)/carousels.length).toFixed(2):0;
+  const avgImage=images.length>0?(images.reduce((s,m)=>s+(m.engagement_rate||0),0)/images.length).toFixed(2):0;
+  
+  const dataContext=`
+DADOS DA CONTA @${D.username} - ÚLTIMOS 30 DIAS:
+Seguidores: ${D.followers_count} | Posts analisados: ${med.length}
+Alcance: ${fmt(ins.reach)} | Impressões: ${fmt(ins.impressions)} | Visitas ao perfil: ${fmt(ins.profile_views)} | Cliques no link: ${fmt(ins.website_clicks)}
+Taxa de engajamento média: ${avgEng.toFixed(2)}%
+
+PERFORMANCE POR FORMATO:
+- Reels/Vídeos (${reels.length} posts): média ${avgReel}% engajamento
+- Carrosséis (${carousels.length} posts): média ${avgCarousel}% engajamento  
+- Fotos (${images.length} posts): média ${avgImage}% engajamento
+
+TOP 3 POSTS (maior engajamento):
+${winners.map((p,i)=>`${i+1}. ${p.media_type} | ${(p.engagement_rate||0).toFixed(2)}% | ❤${p.like_count} 💬${p.comments_count} | "${(p.caption||'').substring(0,70)}"`).join('\n')}
+
+3 POSTS COM MENOR PERFORMANCE:
+${losers.map((p,i)=>`${i+1}. ${p.media_type} | ${(p.engagement_rate||0).toFixed(2)}% | ❤${p.like_count} 💬${p.comments_count} | "${(p.caption||'').substring(0,70)}"`).join('\n')}
+
+Nicho: Sexologia, Terapia de Relacionamentos, Educação Sexual
+Público: Casais e indivíduos buscando melhorar relacionamentos`;
+
+  const prompt=dataContext+`
+
+Gere um GROWTH MARKETING REPORT completo e acionável com a seguinte estrutura:
+
+## 📊 DIAGNÓSTICO EXECUTIVO
+Resumo em 3 linhas do estado atual da conta. Nota geral de performance (0-10) com justificativa.
+
+## ✅ O QUE FUNCIONOU (últimos 30 dias)
+Analise os dados e explique com precisão:
+- Quais formatos performaram melhor e por quê
+- Quais temas/abordagens geraram mais engajamento
+- Padrões nos posts de sucesso (hora, formato, estilo de legenda)
+- O que o algoritmo está favorecendo para esta conta
+
+## ❌ O QUE NÃO DEU CERTO
+- Formatos ou temas com baixo retorno
+- Erros estratégicos identificados nos dados
+- Oportunidades perdidas
+- Por que esses posts não performaram
+
+## 🚀 PLANO DE AÇÃO — PRÓXIMOS 30 DIAS
+Baseado nos dados, crie um plano específico:
+- **Meta realista** de crescimento (seguidores + engajamento)
+- **Mix de conteúdo ideal** (% de cada formato por semana)
+- **3 experimentos** para testar no próximo mês
+- **Frequência de postagem** recomendada
+
+## 💡 5 AÇÕES IMEDIATAS (esta semana)
+Liste 5 ações específicas e práticas para implementar agora, em ordem de impacto.
+
+## 📈 PROJEÇÃO
+Se implementar as recomendações, qual crescimento esperado em 30/60/90 dias?
+
+Use dados reais da conta na análise. Seja específico, direto e acionável. Em português.`;
 
   try{
     const r=await callClaude(prompt);
@@ -486,197 +434,27 @@ Use os dados reais. Seja direto, específico e acionável. Em português.`;
 }
 
 
-let roteiroHist=[];
-let roteiroTipo='';
+</script>
+<script>
+const BACKEND='https://instagram-agent-backend-production-37c7.up.railway.app';
+let D={},hist=[],igId=null,pageToken=null,attachedFile=null,selectedPostId=null;
 
-async function solicitarRoteiro(tipo, funil){
-  roteiroTipo=tipo;
-  roteiroHist=[];
-  const tipoLabel={reel:'Reel',story:'Sequência de Stories',carrossel:'Carrossel Educativo',lancamento:'Sequência de Lançamento'}[tipo];
-  document.getElementById('roteiro-out').style.display='block';
-  document.getElementById('roteiro-content').innerHTML='';
-  document.getElementById('roteiro-temas').innerHTML=`<div style="font-size:14px;font-weight:600;margin-bottom:.5rem">📋 ${tipoLabel}</div><span class="spin"></span> Gerando opções de pauta estratégica...`;
+function setStatus(m){document.getElementById('status-msg').textContent=m;}
+function showErr(m){const e=document.getElementById('err-msg');e.textContent=m;e.style.display='block';}
+function hideErr(){document.getElementById('err-msg').style.display='none';}
+function setLoad(l){const b=document.getElementById('conn-btn');b.disabled=l;b.textContent=l?'Conectando...':'Conectar ao Instagram';}
+function fmt(n){if(n===undefined||n===null||n==='')return'—';if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'K';return String(n);}
 
-  const funilLabel = funil==='topo'?'Topo de Funil (viralização/alcance)':funil==='meio'?'Meio de Funil (autoridade/engajamento)':'Fundo de Funil (conversão)';
-  const funilCTA = funil==='topo'?'CTA deve ser: salvar o vídeo, seguir o perfil ou mandar no Direct para alguém':funil==='meio'?'CTA deve ser: comentar uma resposta específica ou mandar DM com palavra-chave':'CTA deve ser: agendar atendimento online (R$250 individual / R$420 casal) ou comprar infoproduto (R$497-597) via link na bio — criar urgência real com vagas limitadas';
-  const dadosComentarios=document.getElementById('comments-list')?.innerText?.substring(0,1000)||'';
-  const prompt=`Vou criar um roteiro de ${tipoLabel} para @apaula.os.
-
-NÍVEL DO FUNIL ESCOLHIDO: ${funilLabel}
-${funilCTA}
-
-DADOS DA CONTA: ${sumData()}
-${dadosComentarios?'COMENTÁRIOS RECENTES DO PÚBLICO:\n'+dadosComentarios:''}
-
-Seguindo o protocolo obrigatório:
-1. Confirme o nível do funil e o que isso significa para a CTA
-2. Liste 5 opções de temas/pautas estratégicas para ${tipoLabel} no nível ${funilLabel}
-
-Para cada opção entregue:
-- **Tema**: título em linguagem do público (com palavra-chave de dor)
-- **Conceito âncora**: qual conceito clínico (sexologia/psicologia) sustenta o tema
-- **Dor/Gatilho**: qual dor específica esse tema toca
-- **Potencial Dark Social**: por que esse tema será mandado no Direct ou WhatsApp
-- **VTSD check**: qual elemento do VTSD é o eixo central
-- **CTA prevista**: como será a chamada para ação coerente com ${funilLabel}
-
-Baseie nas palavras-chave de dor do nicho e nos dados reais da conta.`;
-
+async function doConnect(){
+  const t=document.getElementById('tok').value.trim();
+  const inputId=(document.getElementById('ig-id-input')||{value:'17841450756552541'}).value.trim()||'17841450756552541';
+  if(!t){showErr('Cole seu access token.');return;}
+  hideErr();setLoad(true);setStatus('Conectando...');
   try{
-    const r=await callClaude(prompt);
-    const f=r.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
-    document.getElementById('roteiro-temas').innerHTML=`
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;flex-wrap:wrap;gap:8px">
-        <div style="font-size:14px;font-weight:600">📋 ${tipoLabel} — Escolha o tema:</div>
-        <button onclick="document.getElementById('roteiro-out').style.display='none'" style="font-size:12px;color:#888;background:none;border:none;cursor:pointer">✕ fechar</button>
-      </div>
-      <div class="analysis-box" style="margin-bottom:1rem">${f}</div>
-      <div style="font-size:13px;color:#555;margin-bottom:.5rem">👆 Escolha um tema acima e clique em <strong>Desenvolver</strong>, ou escreva o número no chat abaixo:</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        ${[1,2,3,4,5].map(n=>`<button onclick="desenvolverRoteiro(${n})" style="padding:.4rem .875rem;background:#ede9fe;color:#4c1d95;border:none;border-radius:8px;font-size:13px;cursor:pointer;font-weight:500">Tema ${n}</button>`).join('')}
-      </div>`;
-    roteiroHist.push({role:'assistant',content:r});
-    renderRoteiroChat();
-  }catch(e){document.getElementById('roteiro-temas').innerHTML=`<p style="color:#b91c1c;font-size:13px">Erro: ${e.message}</p>`;}
-}
-
-async function desenvolverRoteiro(num){
-  const tipoLabel={reel:'Reel',story:'Sequência de Stories',carrossel:'Carrossel Educativo',lancamento:'Sequência de Lançamento'}[roteiroTipo];
-  document.getElementById('roteiro-content').innerHTML=`<span class="spin"></span> Desenvolvendo roteiro completo do Tema ${num}...`;
-  document.getElementById('roteiro-content').scrollIntoView({behavior:'smooth',block:'nearest'});
-
-  roteiroHist.push({role:'user',content:`Desenvolva o roteiro completo do Tema ${num}.`});
-
-  const instrucoes={
-    reel:`Desenvolva o roteiro completo em formato ONE-SHEET (lauda única, sem tabelas):
-
-GANCHO (0-3s): frase de abertura que paralisa o scroll
-TRADUÇÃO EMOCIONAL: o que o público está sentindo quando vê esse gancho
-DESENVOLVIMENTO (3-30s): desenvolvimento com Espetacularização do Banal
-VIRADA: o momento de insight/revelação
-CTA: micro-ação prática imediata + incentivo ao compartilhamento via Direct
-LEGENDA: texto completo com SEO (palavras-chave de dor) + hashtags
-INDICAÇÕES DE PRODUÇÃO: expressão corporal, cortes, ritmo sugerido`,
-
-    story:`Desenvolva a sequência completa de 6-8 stories em ONE-SHEET:
-
-Para cada story:
-STORY [N] — [Tipo: Contexto/Problema/Solução/Prova/CTA]
-Visual sugerido:
-Texto/Fala:
-Tradução Emocional (subtexto):
-Elemento interativo (enquete/caixa/link):
-
-Finalize com CTA que leve para o Direct ou link da bio.`,
-
-    carrossel:`Desenvolva o carrossel completo em ONE-SHEET:
-
-CAPA (slide 1): título com palavra-chave de dor + gancho visual
-SLIDE 2-9: desenvolvimento com um insight por slide
-ÚLTIMO SLIDE: CTA com micro-ação + "salva esse post"
-TRADUÇÃO EMOCIONAL: subtexto de cada slide principal
-LEGENDA: texto completo com SEO + hashtags`,
-
-    lancamento:`Desenvolva a sequência de lançamento PLC em ONE-SHEET:
-
-FASE 1 — PRÉ-LANÇAMENTO (3 posts):
-Post 1: [Aquecimento — gatilho curiosidade]
-Post 2: [Educação — quebra de crença]  
-Post 3: [Prova social — resultado]
-
-FASE 2 — LANÇAMENTO (2 posts):
-Post 4: [Abertura — escassez + autoridade]
-Post 5: [Urgência — últimas horas]
-
-Para cada post: formato, gancho, desenvolvimento, CTA e tradução emocional.`
-  };
-
-  try{
-    const r=await callClaudeChat(
-      `Você está desenvolvendo um roteiro de ${tipoLabel} para @apaula.os. ${instrucoes[roteiroTipo]}`,
-      [...roteiroHist]
-    );
-    roteiroHist.push({role:'assistant',content:r});
-    const f=r.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
-    document.getElementById('roteiro-content').innerHTML=`
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
-        <div style="font-size:14px;font-weight:600">✍️ Roteiro Completo — Tema ${num}</div>
-        <button onclick="navigator.clipboard.writeText(document.getElementById('roteiro-content').innerText)" style="padding:.3rem .75rem;background:#f3f4f6;border:1px solid #ddd;border-radius:6px;font-size:12px;cursor:pointer">📋 Copiar</button>
-      </div>
-      <div class="analysis-box">${f}</div>
-      <div style="font-size:13px;color:#888;margin-top:.75rem">💬 Quer ajustar algo? Use o chat abaixo para refinar o roteiro.</div>`;
-    renderRoteiroChat();
-  }catch(e){document.getElementById('roteiro-content').innerHTML=`<p style="color:#b91c1c;font-size:13px">Erro: ${e.message}</p>`;}
-}
-
-async function sendRoteiroMsg(){
-  const inp=document.getElementById('roteiro-chat-in');
-  const msg=inp.value.trim();if(!msg)return;
-  inp.value='';
-  roteiroHist.push({role:'user',content:msg});
-  renderRoteiroChat();
-  try{
-    const sys=`Roteirista sênior de conteúdo para @apaula.os. Nicho: Relacionamento e Sexualidade. Dados: ${sumData()}. Use VTSD e Fórmula de Lançamento. Se pedir roteiro, siga o protocolo: liste 3-5 temas primeiro, aguarde escolha.`;
-    const r=await callClaudeChat(sys,roteiroHist);
-    roteiroHist.push({role:'assistant',content:r});
-    renderRoteiroChat();
-  }catch(e){roteiroHist.push({role:'assistant',content:'Erro. Tente novamente.'});renderRoteiroChat();}
-}
-
-function renderRoteiroChat(){
-  const c=document.getElementById('roteiro-chat-msgs');
-  if(!roteiroHist.length){c.innerHTML='<p style="text-align:center;color:#888;padding:1.5rem 0;font-size:14px">Selecione um formato acima para começar...</p>';return;}
-  c.innerHTML=roteiroHist.map(m=>`<div class="msg ${m.role==='user'?'user':'bot'}">${m.content.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')}</div>`).join('');
-  c.scrollTop=c.scrollHeight;
-}
-
-
-function showInstallGuide(){
-  document.getElementById('install-modal').style.display='flex';
-  // Auto-detect device
-  const ua=navigator.userAgent;
-  if(/iPhone|iPad|iPod/.test(ua)) showGuide('ios');
-  else if(/Android/.test(ua)) showGuide('android');
-  else showGuide('desktop');
-}
-
-function showGuide(type){
-  ['ios','android','desktop'].forEach(t=>{
-    document.getElementById('guide-'+t).style.display=t===type?'block':'none';
-  });
-}
-
-// Close modal clicking outside
-document.getElementById('install-modal').addEventListener('click',function(e){
-  if(e.target===this) this.style.display='none';
-});
-
-// Hide banner if already installed
-if(window.matchMedia('(display-mode: standalone)').matches){
-  document.getElementById('install-banner').style.display='none';
-}
-
-
-const AGENT_SECRET='igagent-apaula-2024-x9k';
-
-// Auto-connect on load using token from Railway backend
-async function autoConnect(){
-  const timeout = setTimeout(()=>{ showManualForm(); }, 10000);
-  try{
-    const r=await fetch(`${BACKEND}/get-token`,{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({secret:AGENT_SECRET})
-    });
-    if(!r.ok){ clearTimeout(timeout); showManualForm(); return; }
-    const d=await r.json();
-    if(!d.token){ clearTimeout(timeout); showManualForm(); return; }
-    await connectWithToken(d.token, d.ig_id||'17841450756552541');
-    clearTimeout(timeout);
-  }catch(e){
-    clearTimeout(timeout);
-    showManualForm();
-  }
+    await connectWithToken(t, inputId);
+    igId=inputId;
+    setLoad(false);setStatus('');
+  }catch(e){showErr('Erro: '+e.message);setLoad(false);setStatus('');}
 }
 
 async function connectWithToken(tok, igId){
@@ -700,12 +478,443 @@ async function connectWithToken(tok, igId){
   const insights={};
   if(insData.data) insData.data.forEach(m=>{insights[m.name]=m.total_value?m.total_value.value:(m.values?m.values.reduce((s,v)=>s+v.value,0):0);});
   D={...profile,media,insights};
-  igId_global=igId;
   pageToken=tok;
   render();
 }
 
-let igId_global=null;
+const DEMO={username:'apaula.os',name:'Ana Paula Carmo',followers_count:354900,follows_count:63,media_count:1500,biography:'🏅|Sexóloga com título e Associada ABRASEX 🏅|Terapeuta Sexual 🏅|+ 2.000 casais transformados com os cursos e terapias Saiba mais 👇',insights:{impressions:142400,reach:98200,profile_views:8940,website_clicks:1218},media:[{id:'1',caption:'Comunicação no relacionamento: o que ninguém te conta',media_type:'REEL',like_count:8340,comments_count:620,engagement_rate:2.52},{id:'2',caption:'Bastidores da semana de atendimentos',media_type:'CAROUSEL_ALBUM',like_count:4120,comments_count:330,engagement_rate:1.27},{id:'3',caption:'Dica: como resolver conflitos sem brigar',media_type:'VIDEO',like_count:6230,comments_count:470,engagement_rate:1.89},{id:'4',caption:'Depoimento real de paciente que transformou seu relacionamento',media_type:'IMAGE',like_count:5670,comments_count:410,engagement_rate:1.71},{id:'5',caption:'Exercício prático para casais — faça agora',media_type:'REEL',like_count:9450,comments_count:720,engagement_rate:2.86},{id:'6',caption:'Reflexão: o que você tem feito pelo seu relacionamento?',media_type:'IMAGE',like_count:3450,comments_count:290,engagement_rate:1.04}]};
+function loadDemo(){D={...DEMO};igId='demo';pageToken='demo';render();}
+
+function render(){
+  document.getElementById('sc-setup').classList.remove('active');
+  document.getElementById('sc-dash').classList.add('active');
+  document.getElementById('conn-badge').className='badge badge-ok';
+  document.getElementById('conn-badge').textContent='✓ Conectado';
+  renderProfile();renderMetrics();renderPosts();renderCommentsPosts();runQuickAnal();
+}
+
+function renderProfile(){
+  const el=document.getElementById('profile-bar');
+  const init=(D.name||D.username||'?')[0].toUpperCase();
+    el.innerHTML=`<div class="avatar">${init}</div><div style="flex:1"><div style="font-weight:700;font-size:16px">@${D.username||'perfil'}</div><div style="font-size:12px;color:#666;margin-top:2px">${D.biography||''}</div></div><div style="text-align:right"><div style="font-size:11px;color:#888">Seguidores</div><div style="font-size:20px;font-weight:700;margin-bottom:4px">${fmt(D.followers_count)}</div><button onclick="switchAccount()" style="font-size:11px;padding:3px 10px;background:#f3f4f6;border:1px solid #ddd;border-radius:6px;cursor:pointer;color:#555">Trocar conta</button></div>`;}
+
+function renderMetrics(){
+  const ins=D.insights||{};const med=D.media||[];
+  const avg=med.length>0?(med.reduce((s,m)=>s+(m.engagement_rate||0),0)/med.length).toFixed(2)+'%':'—';
+  const data=[['Seguidores',fmt(D.followers_count)],['Publicações',fmt(D.media_count)],['Alcance 30d',fmt(ins.reach)],['Impressões',fmt(ins.impressions)],['Visitas perfil',fmt(ins.profile_views)],['Cliques site',fmt(ins.website_clicks)],['Engaj. médio',avg],['Seguindo',fmt(D.follows_count)]];
+  document.getElementById('mtr-grid').innerHTML=data.map(([l,v])=>`<div class="metric"><div class="metric-label">${l}</div><div class="metric-value">${v}</div></div>`).join('');
+}
+
+function renderPosts(){
+  const med=D.media||[];
+  if(!med.length){document.getElementById('posts-list').innerHTML='<p style="color:#888;font-size:14px">Nenhuma publicação encontrada.</p>';return;}
+  const sorted=[...med].sort((a,b)=>(b.engagement_rate||0)-(a.engagement_rate||0));
+  document.getElementById('posts-list').innerHTML=sorted.map((m,i)=>{
+    const isReel=m.media_type==='VIDEO'||m.media_type==='REEL';
+    const isCarousel=m.media_type==='CAROUSEL_ALBUM';
+    const type=isReel?'Reel/Vídeo':isCarousel?'Carrossel':'Foto';
+    const cls=isReel?'type-reel':isCarousel?'type-carousel':'type-image';
+        return `<div class="post-row" onclick="loadPostInsights('${m.id}','${(m.caption||'').replace(/'/g,'').substring(0,40)}')">
+      <span style="font-size:12px;color:#999;min-width:24px;font-weight:600">#${i+1}</span>
+      <span class="post-type ${cls}">${type}</span>
+      <div style="flex:1;font-size:13px;color:#555;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${(m.caption||'Sem legenda').substring(0,60)}...</div>
+      <div style="display:flex;gap:8px;font-size:12px;color:#888;flex-shrink:0">
+        <span>❤ ${fmt(m.like_count)}</span>
+        <span>💬 ${fmt(m.comments_count)}</span>
+        <span>🔖 ${fmt(m.saved||0)}</span>
+        <span>👁 ${fmt(m.reach||0)}</span>
+        <span style="font-weight:700;color:#111">${(m.engagement_rate||0).toFixed(2)}%</span>
+      </div>
+    </div>`;  }).join('');
+}
+
+async function loadPostInsights(mediaId, caption){
+  const detail=document.getElementById('post-detail');
+  const content=document.getElementById('post-detail-content');
+  detail.style.display='block';
+  content.innerHTML=`<div style="font-weight:600;margin-bottom:.75rem">${caption}...</div><span class="spin"></span> Carregando métricas detalhadas...`;
+  detail.scrollIntoView({behavior:'smooth',block:'nearest'});
+
+  if(igId==='demo'){
+    content.innerHTML=`<div style="font-weight:600;margin-bottom:.75rem">${caption}...</div>
+    <div class="insight-grid">
+      <div class="insight-card"><div class="insight-num">12.4K</div><div class="insight-lbl">Impressões</div></div>
+      <div class="insight-card"><div class="insight-num">8.2K</div><div class="insight-lbl">Alcance</div></div>
+      <div class="insight-card"><div class="insight-num">342</div><div class="insight-lbl">Salvos</div></div>
+      <div class="insight-card"><div class="insight-num">4.8K</div><div class="insight-lbl">Plays</div></div>
+    </div>
+    <div style="font-size:13px;color:#888;margin-top:.5rem">💡 <em>Dados de demonstração</em></div>`;
+    return;
+  }
+
+  try{
+    const r=await fetch(`${BACKEND}/post-insights`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({media_id:mediaId,token:pageToken})});
+    const d=await r.json();
+    if(d.error){content.innerHTML=`<p style="color:#b91c1c;font-size:13px">⚠️ ${d.error}</p>`;return;}
+    const metrics=[['impressions','Impressões'],['reach','Alcance'],['saved','Salvos'],['video_views','Plays'],['total_interactions','Interações']];
+    content.innerHTML=`<div style="font-weight:600;margin-bottom:.75rem">${caption}...</div>
+    <div class="insight-grid">${metrics.filter(([k])=>d[k]!==undefined).map(([k,l])=>`<div class="insight-card"><div class="insight-num">${fmt(d[k])}</div><div class="insight-lbl">${l}</div></div>`).join('')}</div>`;
+  }catch(e){content.innerHTML=`<p style="color:#b91c1c;font-size:13px">Erro: ${e.message}</p>`;}
+}
+
+async function loadStories(){
+  const loading=document.getElementById('stories-loading');
+  const storiesContent=document.getElementById('stories-content');
+  const analysis=document.getElementById('stories-analysis');
+  loading.style.display='block';
+
+  if(igId==='demo'){
+    loading.style.display='none';
+    storiesContent.innerHTML=`
+      <div class="story-card"><div class="story-thumb">🎬</div><div style="font-size:11px;color:#555">Story 1</div></div>
+      <div class="story-card"><div class="story-thumb">📸</div><div style="font-size:11px;color:#555">Story 2</div></div>
+      <div class="story-card"><div class="story-thumb">🎥</div><div style="font-size:11px;color:#555">Story 3</div></div>`;
+    analysis.innerHTML=`<div class="analysis-box" style="margin-top:.75rem"><strong>Análise dos Stories (demo):</strong><br>Você tem 3 stories ativos. Para maximizar o engajamento, publique entre 18h-21h e use enquetes e caixas de perguntas — esses elementos aumentam em média 40% a visualização.</div>`;
+    return;
+  }
+
+  try{
+    const r=await fetch(`${BACKEND}/stories`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ig_id:igId,token:pageToken})});
+    const d=await r.json();
+    loading.style.display='none';
+    if(d.error){storiesContent.innerHTML=`<p style="color:#b91c1c;font-size:13px">⚠️ ${d.error}</p>`;return;}
+    const stories=d.stories||[];
+    if(!stories.length){storiesContent.innerHTML=`<p style="color:#888;font-size:14px">Nenhum story ativo no momento.</p>`;return;}
+    storiesContent.innerHTML=stories.map(s=>`
+      <div class="story-card">
+        <div class="story-thumb">${s.media_url?`<img src="${s.media_url}" onerror="this.parentNode.innerHTML='🎬'">`:s.media_type==='VIDEO'?'🎬':'📸'}</div>
+        <div style="font-size:11px;color:#555;white-space:normal">${new Date(s.timestamp).toLocaleDateString('pt-BR')}</div>
+      </div>`).join('');
+    // Analyze with AI
+    const aiRes=await callClaude(`Tenho ${stories.length} stories ativos. Contexto da conta:\n${sumData()}\nDê 3 dicas rápidas para melhorar meus stories. Em portugues.`);
+    analysis.innerHTML=`<div class="analysis-box" style="margin-top:.75rem">${aiRes.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')}</div>`;
+  }catch(e){loading.style.display='none';storiesContent.innerHTML=`<p style="color:#b91c1c;font-size:13px">Erro: ${e.message}</p>`;}
+}
+
+function renderCommentsPosts(){
+  const med=D.media||[];
+  document.getElementById('comments-post-list').innerHTML=med.slice(0,8).map(m=>`
+    <div class="post-row" onclick="loadComments('${m.id}','${(m.caption||'').replace(/'/g,'').substring(0,50)}')">
+      <span class="post-type ${m.media_type==='VIDEO'||m.media_type==='REEL'?'type-reel':m.media_type==='CAROUSEL_ALBUM'?'type-carousel':'type-image'}">${m.media_type==='VIDEO'||m.media_type==='REEL'?'Reel':m.media_type==='CAROUSEL_ALBUM'?'Carrossel':'Foto'}</span>
+      <div style="flex:1;font-size:13px;color:#555;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${(m.caption||'Sem legenda').substring(0,60)}...</div>
+      <span style="font-size:12px;color:#888">💬 ${fmt(m.comments_count)}</span>
+    </div>`).join('');
+}
+
+async function loadComments(mediaId, caption){
+  selectedPostId=mediaId;
+  document.getElementById('comments-section').style.display='block';
+  document.getElementById('comments-post-title').textContent=caption+'...';
+  document.getElementById('comments-list').innerHTML='<span class="spin"></span> Carregando comentários...';
+  document.getElementById('comments-ai').innerHTML='';
+
+  if(igId==='demo'){
+    document.getElementById('comments-list').innerHTML=`
+      <div class="comment-item"><div class="comment-user">@maria_silva</div><div class="comment-text">Que conteúdo incrível! Me ajudou muito 💜</div><div class="comment-meta">2h atrás · ❤ 12</div></div>
+      <div class="comment-item"><div class="comment-user">@joao_santos</div><div class="comment-text">Minha esposa e eu aplicamos isso ontem e funcionou!</div><div class="comment-meta">3h atrás · ❤ 8</div></div>
+      <div class="comment-item"><div class="comment-user">@ana_costa</div><div class="comment-text">Você tem algum curso? Preciso muito disso</div><div class="comment-meta">5h atrás · ❤ 5</div></div>`;
+    return;
+  }
+
+  try{
+    const r=await fetch(`${BACKEND}/comments`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({media_id:mediaId,token:pageToken})});
+    const d=await r.json();
+    if(d.error){document.getElementById('comments-list').innerHTML=`<p style="color:#b91c1c;font-size:13px">⚠️ ${d.error}</p>`;return;}
+    const comments=d.comments||[];
+    if(!comments.length){document.getElementById('comments-list').innerHTML='<p style="color:#888;font-size:14px">Nenhum comentário encontrado.</p>';return;}
+    document.getElementById('comments-list').innerHTML=comments.map(c=>`
+      <div class="comment-item">
+        <div class="comment-user">@${c.username||'usuário'}</div>
+        <div class="comment-text">${c.text}</div>
+        <div class="comment-meta">${new Date(c.timestamp).toLocaleDateString('pt-BR')} · ❤ ${c.like_count||0}</div>
+      </div>`).join('');
+  }catch(e){document.getElementById('comments-list').innerHTML=`<p style="color:#b91c1c;font-size:13px">Erro: ${e.message}</p>`;}
+}
+
+async function analyzeComments(){
+  const aiDiv=document.getElementById('comments-ai');
+  aiDiv.innerHTML='<span class="spin"></span> Identificando oportunidades de conteúdo nos comentários...';
+  const commentsText=document.getElementById('comments-list').innerText.substring(0,3000);
+  const postCaption=document.getElementById('comments-post-title').textContent;
+  try{
+    const prompt=`Você é um estrategista de conteúdo sênior analisando comentários do Instagram @${D.username||'apaula.os'} (Sexóloga/Terapeuta de Relacionamentos, 354K seguidores).
+
+POST ANALISADO: "${postCaption}"
+
+COMENTÁRIOS:
+${commentsText}
+
+Faça uma análise estratégica completa com foco em criação de conteúdo:
+
+**🎯 OPORTUNIDADES DE CONTEÚDO**
+Liste as 3-5 melhores ideias de novos posts/reels baseadas nas dúvidas e reações dos comentários. Para cada ideia informe: formato ideal (reel/carrossel/post), título sugerido e por que vai engajar.
+
+**❓ DÚVIDAS FREQUENTES**
+Quais perguntas se repetem? Essas dúvidas revelam gaps de conteúdo que precisam ser preenchidos.
+
+**🔥 TEMAS QUE GERARAM DEBATE**
+O que as pessoas discutiram ou debateram? Isso indica assuntos polêmicos ou de alto interesse que geram engajamento.
+
+**📢 PEDIDOS EXPLÍCITOS**
+Liste pedidos diretos de conteúdo que as pessoas fizeram nos comentários.
+
+**⚠️ COMENTÁRIOS QUE PRECISAM DE ATENÇÃO**
+Comentários negativos, críticas ou situações que precisam de resposta ou cuidado.
+
+**✅ PRÓXIMOS 3 POSTS SUGERIDOS**
+Com base em tudo isso, sugira os 3 próximos posts a criar, em ordem de prioridade.
+
+Seja específico e use exemplos reais dos comentários. Em português.`;
+    const r=await callClaude(prompt);
+    aiDiv.innerHTML=`<div class="analysis-box" style="margin-top:.75rem">${r.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')}</div>`;
+  }catch(e){aiDiv.innerHTML=`<p style="color:#b91c1c;font-size:13px">Erro: ${e.message}</p>`;}
+}
+
+async function loadMentions(){
+  const loading=document.getElementById('mentions-loading');
+  const list=document.getElementById('mentions-list');
+  loading.style.display='block';list.innerHTML='';
+
+  if(igId==='demo'){
+    loading.style.display='none';
+    list.innerHTML=`
+      <div class="mention-row"><strong>@cliente_feliz</strong> marcou você em um post · ❤ 45 · 💬 8<br><span style="color:#555;font-size:12px">Recomendando os seus serviços para seguidores</span></div>
+      <div class="mention-row"><strong>@parceira_oficial</strong> marcou você em um story · ❤ 120<br><span style="color:#555;font-size:12px">Parceria de conteúdo</span></div>`;
+    return;
+  }
+
+  try{
+    const r=await fetch(`${BACKEND}/mentions`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ig_id:igId,token:pageToken})});
+    const d=await r.json();
+    loading.style.display='none';
+    if(d.error){list.innerHTML=`<p style="color:#b91c1c;font-size:13px">⚠️ ${d.error}</p>`;return;}
+    const mentions=d.mentions||[];
+    if(!mentions.length){list.innerHTML='<p style="color:#888;font-size:14px">Nenhuma menção encontrada.</p>';return;}
+    list.innerHTML=mentions.map(m=>`
+      <div class="mention-row">
+        <strong>${m.media_type}</strong> · ❤ ${fmt(m.like_count)} · 💬 ${fmt(m.comments_count)}<br>
+        <span style="color:#555;font-size:12px">${(m.caption||'').substring(0,80)}</span>
+      </div>`).join('');
+  }catch(e){loading.style.display='none';list.innerHTML=`<p style="color:#b91c1c;font-size:13px">Erro: ${e.message}</p>`;}
+}
+
+async function runQuickAnal(){
+  const el=document.getElementById('quick-anal');
+  el.innerHTML='<span class="spin"></span> Analisando...';
+  try{
+    const r=await callClaude(sumData()+'\n\nFaca uma analise direta em 3-4 frases: o que esta indo bem, o maior problema e a melhor oportunidade imediata. Em portugues.');
+    el.innerHTML=r.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+  }catch(e){el.innerHTML='<span style="color:#888">Análise indisponível.</span>';}
+}
+
+async function genStrategy(){
+  const el=document.getElementById('strat-out');
+  el.innerHTML='<div class="analysis-box"><span class="spin"></span>Criando estratégia personalizada...</div>';
+  try{
+    const r=await callClaude(sumData()+'\n\nComo estrategista senior de marketing digital e growth, crie um plano completo com:\n**Diagnóstico:** pontos fortes e fracos\n**Conteúdo:** 3 formatos e temas prioritarios\n**Growth 30 dias:** 3 táticas específicas e mensuráveis\n**Engajamento:** como aumentar interações\n**5 ações para agora:** priorizadas\n\nUse ** para subtítulos. Direto e específico. Em portugues.');
+    const f=r.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
+    el.innerHTML=`<div class="analysis-box" style="margin-bottom:1rem">${f}</div>`;
+    hist=[{role:'assistant',content:'Estratégia pronta! O que quer aprofundar?'}];
+    renderChat();
+  }catch(e){el.innerHTML='<p style="color:#888;font-size:14px">Erro ao gerar estratégia.</p>';}
+}
+
+function handleFile(input){
+  const file=input.files[0];if(!file)return;
+  if(file.size>20*1024*1024){alert('Arquivo muito grande. Máximo 20MB.');input.value='';return;}
+  attachedFile=file;
+  document.getElementById('file-name').textContent='📎 '+file.name;
+  document.getElementById('file-preview').style.display='flex';
+}
+
+function clearFile(){
+  attachedFile=null;
+  document.getElementById('file-in').value='';
+  document.getElementById('file-preview').style.display='none';
+}
+
+async function sendMsg(){
+  const inp=document.getElementById('chat-in');
+  const msg=inp.value.trim();
+  if(!msg&&!attachedFile)return;
+  inp.value='';
+  const file=attachedFile;clearFile();
+  let label=msg||(file?'📎 '+file.name:'');
+  hist.push({role:'user',content:label});renderChat();
+  try{
+    let response;
+    if(file){
+      const ft=file.type;const fn=file.name.toLowerCase();
+      if(ft.startsWith('image/')){
+        const b64=await fileToBase64(file);
+        response=await callClaudeWithImage(b64,ft,msg||'Analise esta imagem no contexto do meu Instagram e dê insights estratégicos.');
+      } else if(ft==='application/pdf'){
+        const b64=await fileToBase64(file);
+        response=await callClaudeWithPDF(b64,msg||'Analise este PDF e conecte com minha estratégia de marketing.');
+      } else if(fn.endsWith('.docx')||fn.endsWith('.doc')){
+        const ab=await file.arrayBuffer();
+        const res=await mammoth.extractRawText({arrayBuffer:ab});
+        const text=res.value.substring(0,6000);
+        response=await callClaudeChat('Estrategista senior de marketing digital. Conta: '+sumData(),[...hist.slice(0,-1),{role:'user',content:(msg||'Analise este documento')+':\n\n'+text}]);
+      } else {
+        response='Formato não suportado para análise direta. Aceito: imagens, PDF e Word.';
+      }
+    } else {
+      response=await callClaudeChat('Estrategista senior de marketing digital e growth expert em Instagram. Dados:\n'+sumData()+'\nDireto, especifico e acionavel. Em portugues.',hist);
+    }
+    hist.push({role:'assistant',content:response});renderChat();
+  }catch(e){hist.push({role:'assistant',content:'Erro. Tente novamente.'});renderChat();}
+}
+
+async function fileToBase64(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=rej;r.readAsDataURL(file);});}
+
+async function callClaudeWithImage(b64,mediaType,prompt){
+  const r=await fetch(`${BACKEND}/claude`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:mediaType,data:b64}},{type:'text',text:prompt+'\n\nContexto: '+sumData()}]}]})});
+  const d=await r.json();if(d.error)throw new Error(d.error);return d.text||'';
+}
+
+async function callClaudeWithPDF(b64,prompt){
+  const r=await fetch(`${BACKEND}/claude`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:[{role:'user',content:[{type:'document',source:{type:'base64',media_type:'application/pdf',data:b64}},{type:'text',text:prompt+'\n\nContexto: '+sumData()}]}]})});
+  const d=await r.json();if(d.error)throw new Error(d.error);return d.text||'';
+}
+
+function renderChat(){
+  const c=document.getElementById('chat-msgs');
+  if(!hist.length){c.innerHTML='<p style="text-align:center;color:#888;padding:2rem 0;font-size:14px">Gere a estratégia para começar...</p>';return;}
+  c.innerHTML=hist.map(m=>`<div class="msg ${m.role==='user'?'user':'bot'}">${m.content.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')}</div>`).join('');
+  c.scrollTop=c.scrollHeight;
+}
+
+function sw(tab,btn){
+  ['overview','performance','stories','comments','mentions','growth','roteiros','strategy'].forEach(t=>{const el=document.getElementById('tab-'+t);if(el)el.style.display=t===tab?'block':'none';});
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if(tab==='strategy'&&!document.getElementById('strat-out').innerHTML.includes('strong'))genStrategy();
+  if(tab==='growth'&&document.getElementById('growth-out').innerHTML.includes('Clique'))genGrowthReport();
+  if(tab==='stories'&&document.getElementById('stories-content').innerHTML==='')loadStories();
+  if(tab==='mentions'&&document.getElementById('mentions-list').innerHTML==='')loadMentions();
+}
+
+function sumData(){
+  const ins=D.insights||{};const med=D.media||[];
+  const avg=med.length>0?(med.reduce((s,m)=>s+(m.engagement_rate||0),0)/med.length).toFixed(2):0;
+  const top=[...med].sort((a,b)=>(b.engagement_rate||0)-(a.engagement_rate||0)).slice(0,3);
+  return `Conta: @${D.username} (${D.name}) | Seguidores: ${D.followers_count} | Seguindo: ${D.follows_count} | Posts: ${D.media_count}\nBio: ${D.biography||''}\nMétricas 30d: Alcance ${fmt(ins.reach)} | Impressões ${fmt(ins.impressions)} | Visitas ${fmt(ins.profile_views)} | Cliques ${fmt(ins.website_clicks)}\nEngaj. médio: ${avg}% | Posts: ${med.length}\nTop 3:\n${top.map((p,i)=>`${i+1}. ${p.media_type} | ${(p.engagement_rate||0).toFixed(2)}% | ❤${p.like_count} 💬${p.comments_count} | "${(p.caption||'').substring(0,50)}"`).join('\n')}`;
+}
+
+
+async function genGrowthReport(){
+  const el=document.getElementById('growth-out');
+  el.innerHTML='<div class="analysis-box"><span class="spin"></span> Gerando Growth Marketing Report dos últimos 30 dias...</div>';
+  
+  const med=D.media||[];
+  const ins=D.insights||{};
+  
+  // Classify content performance
+  const avgEng=med.length>0?(med.reduce((s,m)=>s+(m.engagement_rate||0),0)/med.length):0;
+  const winners=med.filter(m=>(m.engagement_rate||0)>avgEng*1.5).sort((a,b)=>(b.engagement_rate||0)-(a.engagement_rate||0)).slice(0,3);
+  const losers=med.filter(m=>(m.engagement_rate||0)<avgEng*0.5).sort((a,b)=>(a.engagement_rate||0)-(b.engagement_rate||0)).slice(0,3);
+  const reels=med.filter(m=>m.media_type==='REEL'||m.media_type==='VIDEO');
+  const carousels=med.filter(m=>m.media_type==='CAROUSEL_ALBUM');
+  const images=med.filter(m=>m.media_type==='IMAGE');
+  const avgReel=reels.length>0?(reels.reduce((s,m)=>s+(m.engagement_rate||0),0)/reels.length).toFixed(2):0;
+  const avgCarousel=carousels.length>0?(carousels.reduce((s,m)=>s+(m.engagement_rate||0),0)/carousels.length).toFixed(2):0;
+  const avgImage=images.length>0?(images.reduce((s,m)=>s+(m.engagement_rate||0),0)/images.length).toFixed(2):0;
+  
+  const dataContext=`
+DADOS DA CONTA @${D.username} - ÚLTIMOS 30 DIAS:
+Seguidores: ${D.followers_count} | Posts analisados: ${med.length}
+Alcance: ${fmt(ins.reach)} | Impressões: ${fmt(ins.impressions)} | Visitas ao perfil: ${fmt(ins.profile_views)} | Cliques no link: ${fmt(ins.website_clicks)}
+Taxa de engajamento média: ${avgEng.toFixed(2)}%
+
+PERFORMANCE POR FORMATO:
+- Reels/Vídeos (${reels.length} posts): média ${avgReel}% engajamento
+- Carrosséis (${carousels.length} posts): média ${avgCarousel}% engajamento  
+- Fotos (${images.length} posts): média ${avgImage}% engajamento
+
+TOP 3 POSTS (maior engajamento):
+${winners.map((p,i)=>`${i+1}. ${p.media_type} | ${(p.engagement_rate||0).toFixed(2)}% | ❤${p.like_count} 💬${p.comments_count} | "${(p.caption||'').substring(0,70)}"`).join('\n')}
+
+3 POSTS COM MENOR PERFORMANCE:
+${losers.map((p,i)=>`${i+1}. ${p.media_type} | ${(p.engagement_rate||0).toFixed(2)}% | ❤${p.like_count} 💬${p.comments_count} | "${(p.caption||'').substring(0,70)}"`).join('\n')}
+
+Nicho: Sexologia, Terapia de Relacionamentos, Educação Sexual
+Público: Casais e indivíduos buscando melhorar relacionamentos`;
+
+  const prompt=dataContext+`
+
+Gere um GROWTH MARKETING REPORT completo e acionável com a seguinte estrutura:
+
+## 📊 DIAGNÓSTICO EXECUTIVO
+Resumo em 3 linhas do estado atual da conta. Nota geral de performance (0-10) com justificativa.
+
+## ✅ O QUE FUNCIONOU (últimos 30 dias)
+Analise os dados e explique com precisão:
+- Quais formatos performaram melhor e por quê
+- Quais temas/abordagens geraram mais engajamento
+- Padrões nos posts de sucesso (hora, formato, estilo de legenda)
+- O que o algoritmo está favorecendo para esta conta
+
+## ❌ O QUE NÃO DEU CERTO
+- Formatos ou temas com baixo retorno
+- Erros estratégicos identificados nos dados
+- Oportunidades perdidas
+- Por que esses posts não performaram
+
+## 🚀 PLANO DE AÇÃO — PRÓXIMOS 30 DIAS
+Baseado nos dados, crie um plano específico:
+- **Meta realista** de crescimento (seguidores + engajamento)
+- **Mix de conteúdo ideal** (% de cada formato por semana)
+- **3 experimentos** para testar no próximo mês
+- **Frequência de postagem** recomendada
+
+## 💡 5 AÇÕES IMEDIATAS (esta semana)
+Liste 5 ações específicas e práticas para implementar agora, em ordem de impacto.
+
+## 📈 PROJEÇÃO
+Se implementar as recomendações, qual crescimento esperado em 30/60/90 dias?
+
+Use dados reais da conta na análise. Seja específico, direto e acionável. Em português.`;
+
+  try{
+    const r=await callClaude(prompt);
+    const f=r.replace(/## (.*?)\n/g,'<h3 style="font-size:15px;font-weight:700;margin:1.25rem 0 .5rem;color:#111">$1</h3>\n')
+             .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
+             .replace(/\n/g,'<br>');
+    el.innerHTML=`
+      <div style="display:flex;gap:10px;margin-bottom:1rem;flex-wrap:wrap">
+        <div class="metric" style="flex:1;min-width:120px;text-align:center"><div class="metric-label">Engaj. Médio</div><div class="metric-value">${avgEng.toFixed(2)}%</div></div>
+        <div class="metric" style="flex:1;min-width:120px;text-align:center"><div class="metric-label">Melhor formato</div><div class="metric-value" style="font-size:16px">${avgReel>=avgCarousel&&avgReel>=avgImage?'Reels':avgCarousel>=avgImage?'Carrossel':'Fotos'}</div></div>
+        <div class="metric" style="flex:1;min-width:120px;text-align:center"><div class="metric-label">Posts analisados</div><div class="metric-value">${med.length}</div></div>
+        <div class="metric" style="flex:1;min-width:120px;text-align:center"><div class="metric-label">Alcance 30d</div><div class="metric-value">${fmt(ins.reach)}</div></div>
+      </div>
+      <div class="analysis-box">${f}</div>`;
+  }catch(e){el.innerHTML=`<p style="color:#b91c1c;font-size:13px">Erro: ${e.message}</p>`;}
+}
+
+
+
+const AGENT_SECRET='igagent-apaula-2024-x9k';
+
+// Auto-connect on load
+async function autoConnect(){
+  const timeout = setTimeout(()=>{ showManualForm(); }, 10000);
+  try{
+    const r=await fetch(`${BACKEND}/get-token`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({secret:AGENT_SECRET})
+    });
+    if(!r.ok){ clearTimeout(timeout); showManualForm(); return; }
+    const d=await r.json();
+    if(!d.token){ clearTimeout(timeout); showManualForm(); return; }
+    await connectWithToken(d.token, d.ig_id||'17841450756552541');
+    clearTimeout(timeout);
+  }catch(e){
+    clearTimeout(timeout);
+    showManualForm();
+  }
+}
 
 function showManualForm(){
   document.getElementById('auto-connecting').style.display='none';
@@ -713,7 +922,6 @@ function showManualForm(){
 }
 
 function switchAccount(){
-  // Reset and show login screen
   D={};hist=[];igId=null;pageToken=null;
   document.getElementById('sc-dash').classList.remove('active');
   document.getElementById('sc-setup').classList.add('active');
@@ -721,31 +929,10 @@ function switchAccount(){
   document.getElementById('conn-badge').textContent='Aguardando';
   document.getElementById('auto-connecting').style.display='none';
   document.getElementById('manual-form').style.display='block';
-  document.getElementById('tok').value='';
-  document.getElementById('err-msg').style.display='none';
+  if(document.getElementById('tok')) document.getElementById('tok').value='';
+  if(document.getElementById('err-msg')) document.getElementById('err-msg').style.display='none';
 }
 
-// Run auto-connect when page loads
-window.addEventListener('load', autoConnect);
-
-
-let formatoSelecionado = '';
-
-function selecionarFormato(formato) {
-  formatoSelecionado = formato;
-  document.getElementById('step-formato').style.display = 'none';
-  document.getElementById('step-funil').style.display = 'block';
-}
-
-function voltarFormato() {
-  formatoSelecionado = '';
-  document.getElementById('step-funil').style.display = 'none';
-  document.getElementById('step-formato').style.display = 'block';
-}
-
-</script>
-<script>
-const BACKEND='https://instagram-agent-backend-production-37c7.up.railway.app';
 
 const SYSTEM_PROMPT=`Você é um Estrategista de Marketing Digital e Growth Marketing Sênior com especialização em funis de venda para criadores de conteúdo no nicho de Sexualidade e Relacionamentos. Você assessora exclusivamente a @apaula.os — Ana Paula Carmo, Sexóloga titulada, Associada ABRASEX, Terapeuta Sexual, com 355K seguidores e +2.000 casais atendidos.
 
@@ -755,113 +942,127 @@ const SYSTEM_PROMPT=`Você é um Estrategista de Marketing Digital e Growth Mark
 - Postura crítica obrigatória: questione qualquer sugestão sem base em dados ou sem lógica de funil.
 - Nunca elogie por elogiar. Se uma ideia é fraca, diga claramente e por quê.
 - Você não é um assistente genérico. Você é o estrategista sênior desta conta específica.
-- PROIBIDO usar jargão acadêmico vazio: "teoria do apego seguro", "neuroplasticidade", "coerção sexual sutil" NÃO ressoam com o público. Use o vocabulário proprietário da conta.
+- PROIBIDO usar jargão acadêmico vazio como "teoria do apego seguro" ou "neuroplasticidade". Use o vocabulário proprietário da conta.
 
 ## VOCABULÁRIO PROPRIETÁRIO — OBRIGATÓRIO
-Este é o ecossistema de conceitos da @apaula.os. Use estes termos, não substitua por equivalentes genéricos.
-
-### PILAR 1: DINÂMICA DA EXAUSTÃO (Carga Mental)
+### PILAR 1: DINÂMICA DA EXAUSTÃO
 DOMINADOS: Carga Mental | Mãe do Marido | Verticalização da Relação | Gerente x Subordinado | Pai Ajudante vs Pai Parceiro
-OCEANO AZUL (explorar): 
-- Turno Invisível: trabalho emocional que a mulher faz e o homem não enxerga (planejar festa infantil, prever que o leite vai acabar, perceber que o filho está triste)
-- Amnésia Conveniente: parceiro que "esquece" combinados básicos, forçando a mulher a ser a chata que cobra
-- Terceirização Afetiva: parceiro que não regula as próprias emoções e usa a esposa como regulador — suga energia dela
-- Síndrome da Colega de Quarto: quando o casamento virou apenas divisão de boletos e logística, sem polaridade masculina/feminina
-- Fadiga de Decisão: "o que você quer pedir pro jantar?" às 22h irrita porque ela já tomou 500 decisões no dia — ela queria que ele liderasse uma
+OCEANO AZUL: Turno Invisível | Amnésia Conveniente | Terceirização Afetiva | Síndrome da Colega de Quarto | Fadiga de Decisão
 
 ### PILAR 2: MECÂNICA SEXUAL E DESEJO
 DOMINADOS: Desejo Responsivo | Repulsa ao Toque | Sexo de Manutenção | Incompatibilidade de Apetite | Libido Pós-Parto
-OCEANO AZUL (explorar):
-- Toque Utilitário / Toque Pedágio: o marido que só encosta quando quer transar — o corpo dela lê como cobrança, não carinho
-- Falsa Fome / Tesão de Alívio: o homem não busca a mulher por desejo, busca como válvula de escape do estresse — usa a mulher como ansiolítico
-- Preliminar de 24 Horas: a excitação feminina não começa no quarto, começa no "bom dia" e na ajuda com a rotina
-- Orgasmo de Conexão vs Orgasmo Físico: ter gozado no sexo de manutenção não significa que foi nutritivo para ela
-- Conta Bancária da Intimidade: depósitos (ajuda, escuta, carinho sem intenção) vs saques (cobrança de sexo, críticas) — se está no vermelho, o corpo trava
+OCEANO AZUL: Toque Utilitário / Toque Pedágio | Falsa Fome / Tesão de Alívio | Preliminar de 24 Horas | Orgasmo de Conexão vs Orgasmo Físico | Conta Bancária da Intimidade
 
 ### PILAR 3: COMPORTAMENTO E DARK SOCIAL
-DOMINADOS: A Mão Boba no sofá | Silêncio Punitivo | A Dondoca Sensível | Micro-traições
-OCEANO AZUL (explorar):
-- Pedido de Desculpas sem Fatura Paga: "desculpa" para acabar a briga sem mudar o comportamento — a desculpa vazia
-- DR de Planilha: o casal que vai discutir a relação e acaba brigando sobre logística (quem pagou o quê) em vez da desconexão emocional
-- Marido Wi-Fi: fisicamente presente, emocionalmente desconectado — só "conecta" quando precisa de algo (sexo ou comida)
-- Competição de Cansaço: ela diz que está exausta, ele responde "mas eu também trabalhei" — invalidação da dor
-- Traição Invisível: não é outra mulher — é trair o combinado de parceria (não defender a esposa da sogra, sumir nas reuniões de família)
+DOMINADOS: A Mão Boba | Silêncio Punitivo | A Dondoca Sensível | Micro-traições
+OCEANO AZUL: Pedido de Desculpas sem Fatura Paga | DR de Planilha | Marido Wi-Fi | Competição de Cansaço | Traição Invisível
 
-### PILAR 4: PSICOLOGIA E TRADUÇÃO EMOCIONAL
-DOMINADOS: Medo de "dar a mão e querer o braço" | Espectadorismo (Spectatoring) | Solidão a Dois | O "Não" como dignidade
+### PILAR 4: PSICOLOGIA
+DOMINADOS: Espectadorismo | Solidão a Dois | O "Não" como dignidade
 
-## ARQUITETURA DE FUNIL — REGRA MÁSTER
-Todo conteúdo deve ser posicionado em um nível e a CTA deve ser coerente com ele:
-
-### TOPO (viralização/alcance)
-- Objetivo: novos seguidores, salvamentos, Dark Social
-- CTA: "Salva esse vídeo" / "Manda pra sua amiga que precisa ouvir isso" / "Segue pra mais"
-- Formato ideal: Reel curto, gancho de dor imediata, identificação instantânea
-
-### MEIO (autoridade/engajamento)
-- Objetivo: comentários, conexão, construir autoridade clínica
-- CTA: "Comenta aqui [pergunta específica]" / "Me manda uma DM com [palavra-chave]"
-- Formato ideal: Carrossel educativo, Reel com profundidade, conceito proprietário
-
-### FUNDO (conversão)
-- Objetivo: vender atendimento online R$250 individual / R$420 casal | infoproduto R$497-597
-- CTA obrigatória: "Me manda uma DM com a palavra TERAPIA" / "Vagas abertas essa semana — link na bio" / "Se você se identificou, o próximo passo é [ação específica]"
-- NUNCA use CTA genérica no fundo. Sempre especifique o produto, crie urgência e dê o próximo passo exato.
+## ARQUITETURA DE FUNIL
+### TOPO: CTA salvar / seguir / mandar no Direct
+### MEIO: CTA comentar / DM com palavra-chave
+### FUNDO: CTA "Me manda DM com TERAPIA" / "link na bio" / vagas limitadas (R$250 individual / R$420 casal / infoproduto R$497-597)
 
 ## METODOLOGIAS OBRIGATÓRIAS
+### VTSD CHECKLIST (validar antes de entregar roteiro):
+☐ GANCHO: Para o scroll em 2s? Cria "isso sou eu" imediato?
+☐ VILLAIN FRAME: Vilão cotidiano e reconhecível (mão boba, esquecimento, Wi-Fi humano)?
+☐ ESPETACULARIZAÇÃO DO BANAL: Assunto comum virou tema de relacionamento?
+☐ DARK SOCIAL: A pessoa vai mandar no Direct ou WhatsApp?
+☐ RETENÇÃO: Há virada ou tensão que prende até o final?
+☐ MICRO-AÇÃO PRÁTICA: Há uma ação específica para HOJE?
 
-### VTSD (Leandro Ladeira) — CHECKLIST DE VALIDAÇÃO
-Antes de entregar qualquer roteiro, valide CADA item. Se qualquer um falhar, refaça:
-☐ GANCHO: Para o scroll nos primeiros 2 segundos? Cria "isso sou eu" imediato?
-☐ VILLAIN FRAME: O vilão é cotidiano e reconhecível? (a mão boba, o esquecimento, o Wi-Fi humano) — NÃO é crime ou abuso
-☐ ESPETACULARIZAÇÃO DO BANAL: Pegou algo comum da rotina (louça, celular, jantar) e transformou em tema de relacionamento?
-☐ DARK SOCIAL: A pessoa vai querer mandar isso pra alguém específico no Direct ou WhatsApp?
-☐ RETENÇÃO: Há pelo menos uma virada ou tensão que prende até o final?
-☐ MICRO-AÇÃO PRÁTICA: Há uma ação específica que a pessoa pode fazer HOJE?
+### MICRO-AÇÃO — PADRÃO OBRIGATÓRIO:
+Específica (não "melhore a comunicação" — "nas próximas 24h faça X"), com contexto emocional, sem julgamento.
+Exemplo: "Faça um jejum de críticas nas próximas 24 horas. Sua tarefa hoje não é apontar o que ele esqueceu. É procurar UMA coisa que ele fez certo e verbalizar."
 
-### MICRO-AÇÃO PRÁTICA — PADRÃO OBRIGATÓRIO
-Toda micro-ação deve seguir este padrão (baseado no estilo da Ana Paula):
-- Específica: não "melhore a comunicação" — "nas próximas 24 horas, faça X"
-- Com contexto emocional: explique o porquê em uma frase
-- Sem julgamento: saída do papel de inspetora, entrada no papel de parceira
-- Exemplo de padrão correto: "Se vocês vêm de uma semana de brigas, faça um jejum de críticas nas próximas 24 horas. Sua tarefa hoje não é apontar o que ele esqueceu. É procurar ativamente UMA coisa que ele fez certo e verbalizar: 'Percebi que você fez [X] hoje. Obrigada, isso me ajudou.' Saia do papel de inspetora e volte para o papel de parceira."
+### FÓRMULA DE LANÇAMENTO:
+Gatilhos: autoridade (titulação + 2.000 casais), prova social, escassez, antecipação.
+Sequência PLC: educa → engaja → converte.
 
-### Fórmula de Lançamento (Érico Rocha)
-- Gatilhos ativos em todo roteiro: autoridade (titulação ABRASEX, +2.000 casais), prova social, escassez (vagas limitadas), antecipação
-- Sequência PLC semanal: Conteúdo 1 (educa/vocabulário proprietário) → Conteúdo 2 (debate/identificação) → Conteúdo 3 (converte)
-- Quebra de objeção dentro do conteúdo orgânico
-- Micro-compromisso progressivo: cada CTA prepara para a próxima ação mais profunda
-
-## PROTOCOLOS DE ENTREGA
-
-### Roteiros (One-Sheet) — FORMATO OBRIGATÓRIO
-NÍVEL DO FUNIL: [topo/meio/fundo] + objetivo
-GANCHO (0-3s): frase que para o scroll — usa vocabulário proprietário
-TRADUÇÃO EMOCIONAL: o que a audiência sente ao ver esse gancho ("ela vai pensar...")
-CONCEITO PROPRIETÁRIO ÂNCORA: qual termo do vocabulário da conta sustenta o roteiro
-VILLAIN FRAME: quem/o que é o vilão cotidiano e reconhecível
-DESENVOLVIMENTO: com pico de tensão e virada
-MICRO-AÇÃO PRÁTICA: ação específica que a pessoa faz HOJE (seguir o padrão de estilo da Ana Paula)
-CTA: específica para o nível do funil com próximo passo exato
-LEGENDA SEO: palavra-chave de dor nas primeiras 3 palavras + chamada Dark Social + hashtags
-INDICAÇÕES DE PRODUÇÃO: expressão corporal, ritmo, cortes sugeridos
-
-### Daily Growth Review
-Diagnóstico → O que os dados dizem → Causa raiz → Ação de correção → Métrica em 7 dias
-
-## FLUXO DE TRABALHO PARA ROTEIROS — PROTOCOLO INVIOLÁVEL
-NUNCA gere roteiro direto. Siga sempre:
+## FLUXO DE ROTEIROS — INVIOLÁVEL:
 1. Confirmar nível do funil (topo/meio/fundo)
-2. Identificar conceito proprietário âncora do tema
-3. Listar 5 pautas com: conceito proprietário + villain cotidiano + potencial Dark Social + micro-ação prevista + CTA coerente com o funil
-4. Aguardar escolha
-5. Validar contra checklist VTSD completo
-6. Entregar One-Sheet com todos os campos obrigatórios
+2. Listar 5 pautas com: conceito proprietário + villain cotidiano + Dark Social + micro-ação prevista + CTA
+3. Aguardar escolha
+4. Validar checklist VTSD
+5. Entregar One-Sheet completo
 
-## CONTEXTO DA CONTA
-Conta: @apaula.os | Sexóloga titulada | Associada ABRASEX | Terapeuta Sexual
-Seguidores: 355K | Engajamento atual: 0,41% (benchmark nicho: 2-4% — estado crítico)
-Público: Mulheres 25-45, casais em crise, pessoas com bloqueios sexuais e de conexão
-Produtos: Atendimento individual R$250 | Casal R$420 | Infoproduto R$497-597
-Diferencial competitivo: titulação clínica real + vocabulário proprietário que o público não encontra em outro lugar
-Tom: especialista acessível, sem julgamento, direta, traduz clínica em cotidiano`
+## ONE-SHEET FORMAT:
+NÍVEL DO FUNIL | GANCHO (0-3s) | TRADUÇÃO EMOCIONAL | CONCEITO PROPRIETÁRIO ÂNCORA | VILLAIN FRAME | DESENVOLVIMENTO | MICRO-AÇÃO PRÁTICA | CTA | LEGENDA SEO | INDICAÇÕES DE PRODUÇÃO
+
+## CONTEXTO DA CONTA:
+@apaula.os | 355K seguidores | 0,41% engajamento (crítico, benchmark 2-4%)
+Público: Mulheres 25-45, casais em crise | Produtos: R$250/R$420/R$497-597`;
+
+async function callClaude(msg, extraSystem=''){
+  const sys = SYSTEM_PROMPT + (extraSystem ? '\n\n' + extraSystem : '');
+  const r=await fetch(`${BACKEND}/claude`,{method:'POST',headers:{'Content-Type':'application/json','x-agent-secret':AGENT_SECRET},body:JSON.stringify({system:sys,messages:[{role:'user',content:msg}]})});
+  const d=await r.json();if(d.error)throw new Error(d.error);return d.text||'';
+}
+async function callClaudeChat(sys,msgs){
+  const fullSys = SYSTEM_PROMPT + (sys ? '\n\n' + sys : '');
+  const r=await fetch(`${BACKEND}/claude`,{method:'POST',headers:{'Content-Type':'application/json','x-agent-secret':AGENT_SECRET},body:JSON.stringify({system:fullSys,messages:msgs.map(h=>({role:h.role,content:h.content}))})});
+  const d=await r.json();if(d.error)throw new Error(d.error);return d.text||'';
+}
+
+
+let roteiroHist=[],roteiroTipo='',formatoSelecionado='';
+
+function selecionarFormato(f){formatoSelecionado=f;document.getElementById('step-formato').style.display='none';document.getElementById('step-funil').style.display='block';document.getElementById('roteiro-out').style.display='none';}
+function voltarFormato(){formatoSelecionado='';document.getElementById('step-funil').style.display='none';document.getElementById('step-formato').style.display='block';}
+
+async function solicitarRoteiro(tipo,funil){
+  roteiroTipo=tipo;roteiroHist=[];
+  const tLabel={reel:'Reel',story:'Stories',carrossel:'Carrossel',lancamento:'Lancamento'}[tipo];
+  const fLabel=funil==='topo'?'Topo (viralização)':funil==='meio'?'Meio (autoridade)':'Fundo (conversão)';
+  const fCTA=funil==='topo'?'CTA: salvar/seguir/Direct':funil==='meio'?'CTA: comentar/DM palavra-chave':'CTA: agendar R$250/R$420 ou infoproduto R$497-597 com urgência';
+  document.getElementById('roteiro-out').style.display='block';
+  document.getElementById('step-funil').style.display='none';
+  document.getElementById('roteiro-content').innerHTML='';
+  document.getElementById('roteiro-temas').innerHTML=`<div style="font-size:14px;font-weight:600;margin-bottom:.5rem">📋 ${tLabel} — ${fLabel}</div><span class="spin"></span> Gerando pautas...`;
+  const prompt=`Crie 5 pautas de ${tLabel} para @apaula.os no nível ${fLabel}.\n${fCTA}\nDADOS: ${sumData()}\n\nPara cada pauta:\n- **Tema**: título com palavra-chave de dor do vocabulário proprietário\n- **Conceito âncora**: Carga Mental / Toque Pedágio / Marido Wi-Fi / etc\n- **Villain cotidiano**: comportamento banal reconhecível (não crime)\n- **Dark Social**: por que vai ser mandado no WhatsApp/Direct\n- **VTSD**: elemento principal\n- **CTA prevista**: coerente com ${fLabel}\n\nNunca use jargão acadêmico genérico.`;
+  try{
+    const r=await callClaude(prompt);
+    const f=r.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
+    document.getElementById('roteiro-temas').innerHTML=`<div style="display:flex;justify-content:space-between;margin-bottom:.75rem"><div style="font-size:14px;font-weight:600">📋 ${tLabel} — ${fLabel}</div><button onclick="document.getElementById('step-formato').style.display='block';document.getElementById('roteiro-out').style.display='none'" style="font-size:12px;color:#888;background:none;border:none;cursor:pointer">✕</button></div><div class="analysis-box" style="margin-bottom:1rem">${f}</div><div style="font-size:13px;color:#555;margin-bottom:.5rem">Escolha e clique em <strong>Desenvolver</strong>:</div><div style="display:flex;gap:8px;flex-wrap:wrap">${[1,2,3,4,5].map(n=>`<button onclick="desenvolverRoteiro(${n},'${tipo}','${funil}')" style="padding:.4rem .875rem;background:#ede9fe;color:#4c1d95;border:none;border-radius:8px;font-size:13px;cursor:pointer;font-weight:500">Tema ${n}</button>`).join('')}</div>`;
+    roteiroHist.push({role:'assistant',content:r});renderRoteiroChat();
+  }catch(e){document.getElementById('roteiro-temas').innerHTML=`<p style="color:#b91c1c;font-size:13px">Erro: ${e.message}</p>`;}
+}
+
+async function desenvolverRoteiro(num,tipo,funil){
+  const tLabel={reel:'Reel',story:'Stories',carrossel:'Carrossel',lancamento:'Lancamento'}[tipo];
+  const fLabel=funil==='topo'?'Topo':funil==='meio'?'Meio':'Fundo';
+  document.getElementById('roteiro-content').innerHTML=`<span class="spin"></span> Desenvolvendo Tema ${num}...`;
+  roteiroHist.push({role:'user',content:`Desenvolva o roteiro completo do Tema ${num} em One-Sheet.`});
+  try{
+    const r=await callClaudeChat(`Roteirista para @apaula.os. Use vocabulário proprietário. Formato: NÍVEL DO FUNIL | GANCHO (0-3s) | TRADUÇÃO EMOCIONAL | CONCEITO ÂNCORA | VILLAIN FRAME | DESENVOLVIMENTO | MICRO-AÇÃO PRÁTICA (específica, 24h, estilo Ana Paula) | CTA (coerente com ${fLabel}) | LEGENDA SEO | INDICAÇÕES DE PRODUÇÃO`,roteiroHist);
+    roteiroHist.push({role:'assistant',content:r});
+    const f=r.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
+    document.getElementById('roteiro-content').innerHTML=`<div style="display:flex;justify-content:space-between;margin-bottom:.75rem"><div style="font-size:14px;font-weight:600">✍️ Tema ${num} — ${fLabel}</div><button onclick="navigator.clipboard.writeText(document.getElementById('roteiro-content').innerText)" style="padding:.3rem .75rem;background:#f3f4f6;border:1px solid #ddd;border-radius:6px;font-size:12px;cursor:pointer">📋 Copiar</button></div><div class="analysis-box">${f}</div><div style="font-size:13px;color:#888;margin-top:.75rem">💬 Ajuste no chat abaixo.</div>`;
+    renderRoteiroChat();
+  }catch(e){document.getElementById('roteiro-content').innerHTML=`<p style="color:#b91c1c;font-size:13px">Erro: ${e.message}</p>`;}
+}
+
+async function sendRoteiroMsg(){
+  const inp=document.getElementById('roteiro-chat-in');const msg=inp.value.trim();if(!msg)return;
+  inp.value='';roteiroHist.push({role:'user',content:msg});renderRoteiroChat();
+  try{const r=await callClaudeChat(`Roteirista para @apaula.os. Use vocabulário proprietário. Dados: ${sumData()}`,roteiroHist);roteiroHist.push({role:'assistant',content:r});renderRoteiroChat();}
+  catch(e){roteiroHist.push({role:'assistant',content:'Erro.'});renderRoteiroChat();}
+}
+
+function renderRoteiroChat(){
+  const c=document.getElementById('roteiro-chat-msgs');
+  if(!roteiroHist.length){c.innerHTML='<p style="text-align:center;color:#888;padding:1.5rem 0;font-size:14px">Selecione um formato acima...</p>';return;}
+  c.innerHTML=roteiroHist.map(m=>`<div class="msg ${m.role==='user'?'user':'bot'}">${m.content.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')}</div>`).join('');
+  c.scrollTop=c.scrollHeight;
+}
+
+window.addEventListener('load', autoConnect);
+
+
+
+</script>
+</body>
+</html>
