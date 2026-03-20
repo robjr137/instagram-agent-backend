@@ -183,16 +183,21 @@ textarea{resize:vertical}
   </div>
 
   <!-- GROWTH REPORT -->
-  <div id="tab-growth" style="display:none">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
-      <div>
-        <div style="font-size:15px;font-weight:700">Growth Marketing Report</div>
-        <div style="font-size:12px;color:#888">Análise completa dos últimos 30 dias</div>
-      </div>
-      <button onclick="genGrowthReport()" style="padding:.5rem 1.25rem;background:linear-gradient(135deg,#833ab4,#fd1d1d);color:#fff;border:none;border-radius:8px;font-size:13px;cursor:pointer;font-weight:500">🔄 Gerar Relatório</button>
+  <did="tab-growth" style="display:none">
+    <div style="margin-bottom:1.25rem">
+      <div style="font-size:15px;font-weight:700;margin-bottom:.25rem">📊 Growth Marketing Report</div>
+      <div style="font-size:12px;color:#888">Análise completa de performance + plano de ação baseado em dados reais</div>
     </div>
-    <div id="growth-out"><div class="analysis-box" style="text-align:center;color:#888;padding:2rem">Clique em "Gerar Relatório" para criar sua análise de growth marketing personalizada.</div></div>
-  </div>
+    <div style="display:flex;gap:8px;margin-bottom:1rem">
+      <button onclick="genGrowthReport(7)" style="flex:1;padding:.6rem;background:#fff;border:1.5px solid #ddd;border-radius:10px;cursor:pointer;font-size:13px;font-weight:500" onmouseover="this.style.background='#ede9fe'" onmouseout="this.style.background='#fff'">📅 7 dias</button>
+      <button onclick="genGrowthReport(30)" style="flex:1;padding:.6rem;background:#fff;border:1.5px solid #ddd;border-radius:10px;cursor:pointer;font-size:13px;font-weight:500" onmouseover="this.style.background='#ede9fe'" onmouseout="this.style.background='#fff'">📅 30 dias</button>
+      <button onclick="genGrowthReport(90)" style="flex:1;padding:.6rem;background:#fff;border:1.5px solid #ddd;border-radius:10px;cursor:pointer;font-size:13px;font-weight:500" onmouseover="this.style.background='#ede9fe'" onmouseout="this.style.background='#fff'">📅 90 dias</button>
+    </div>
+    <div id="growth-out" class="card" style="text-align:center;padding:2rem">
+      <div style="font-size:32px;margin-bottom:.5rem">📊</div>
+      <div style="font-weight:600;color:#555">Selecione o período acima</div>
+      <div style="font-size:12px;color:#888;margin-top:.25rem">7, 30 ou 90 dias de análise com plano de ação</div>
+    </div>
 
   <!-- ROTEIROS -->
   <div id="tab-roteiros" style="display:none">
@@ -251,10 +256,13 @@ textarea{resize:vertical}
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/mammoth@1.6.0/mammoth.browser.min.js"></script>
+
 <script>
-async function genGrowthReport(){
+
+
+async function genGrowthReport(dias=30){
   const el=document.getElementById('growth-out');
-  el.innerHTML='<div class="analysis-box"><span class="spin"></span> Gerando Growth Marketing Report dos últimos 30 dias...</div>';
+  el.innerHTML=`<div class="analysis-box"><span class="spin"></span> Gerando Growth Report dos últimos ${dias} dias...</div>`;
   
   const med=D.media||[];
   const ins=D.insights||{};
@@ -271,7 +279,7 @@ async function genGrowthReport(){
   const avgImage=images.length>0?(images.reduce((s,m)=>s+(m.engagement_rate||0),0)/images.length).toFixed(2):0;
   
   const dataContext=`
-DADOS DA CONTA @${D.username} - ÚLTIMOS 30 DIAS:
+DADOS DA CONTA @${D.username} - ÚLTIMOS ${dias} DIAS:
 Seguidores: ${D.followers_count} | Posts analisados: ${med.length}
 Alcance: ${fmt(ins.reach)} | Impressões: ${fmt(ins.impressions)} | Visitas ao perfil: ${fmt(ins.profile_views)} | Cliques no link: ${fmt(ins.website_clicks)}
 Taxa de engajamento média: ${avgEng.toFixed(2)}%
@@ -292,99 +300,7 @@ Público: Casais e indivíduos buscando melhorar relacionamentos`;
 
   const prompt=dataContext+`
 
-Gere um GROWTH MARKETING REPORT completo e acionável com a seguinte estrutura:
-
-## 📊 DIAGNÓSTICO EXECUTIVO
-Resumo em 3 linhas do estado atual da conta. Nota geral de performance (0-10) com justificativa.
-
-## ✅ O QUE FUNCIONOU (últimos 30 dias)
-Analise os dados e explique com precisão:
-- Quais formatos performaram melhor e por quê
-- Quais temas/abordagens geraram mais engajamento
-- Padrões nos posts de sucesso (hora, formato, estilo de legenda)
-- O que o algoritmo está favorecendo para esta conta
-
-## ❌ O QUE NÃO DEU CERTO
-- Formatos ou temas com baixo retorno
-- Erros estratégicos identificados nos dados
-- Oportunidades perdidas
-- Por que esses posts não performaram
-
-## 🚀 PLANO DE AÇÃO — PRÓXIMOS 30 DIAS
-Baseado nos dados, crie um plano específico:
-- **Meta realista** de crescimento (seguidores + engajamento)
-- **Mix de conteúdo ideal** (% de cada formato por semana)
-- **3 experimentos** para testar no próximo mês
-- **Frequência de postagem** recomendada
-
-## 💡 5 AÇÕES IMEDIATAS (esta semana)
-Liste 5 ações específicas e práticas para implementar agora, em ordem de impacto.
-
-## 📈 PROJEÇÃO
-Se implementar as recomendações, qual crescimento esperado em 30/60/90 dias?
-
-Use dados reais da conta na análise. Seja específico, direto e acionável. Em português.`;
-
-  try{
-    const r=await callClaude(prompt);
-    const f=r.replace(/## (.*?)\n/g,'<h3 style="font-size:15px;font-weight:700;margin:1.25rem 0 .5rem;color:#111">$1</h3>\n')
-             .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
-             .replace(/\n/g,'<br>');
-    el.innerHTML=`
-      <div style="display:flex;gap:10px;margin-bottom:1rem;flex-wrap:wrap">
-        <div class="metric" style="flex:1;min-width:120px;text-align:center"><div class="metric-label">Engaj. Médio</div><div class="metric-value">${avgEng.toFixed(2)}%</div></div>
-        <div class="metric" style="flex:1;min-width:120px;text-align:center"><div class="metric-label">Melhor formato</div><div class="metric-value" style="font-size:16px">${avgReel>=avgCarousel&&avgReel>=avgImage?'Reels':avgCarousel>=avgImage?'Carrossel':'Fotos'}</div></div>
-        <div class="metric" style="flex:1;min-width:120px;text-align:center"><div class="metric-label">Posts analisados</div><div class="metric-value">${med.length}</div></div>
-        <div class="metric" style="flex:1;min-width:120px;text-align:center"><div class="metric-label">Alcance 30d</div><div class="metric-value">${fmt(ins.reach)}</div></div>
-      </div>
-      <div class="analysis-box">${f}</div>`;
-  }catch(e){el.innerHTML=`<p style="color:#b91c1c;font-size:13px">Erro: ${e.message}</p>`;}
-}
-</script>
-<script>
-
-
-async function genGrowthReport(){
-  const el=document.getElementById('growth-out');
-  el.innerHTML='<div class="analysis-box"><span class="spin"></span> Gerando Growth Marketing Report dos últimos 30 dias...</div>';
-  
-  const med=D.media||[];
-  const ins=D.insights||{};
-  
-  // Classify content performance
-  const avgEng=med.length>0?(med.reduce((s,m)=>s+(m.engagement_rate||0),0)/med.length):0;
-  const winners=med.filter(m=>(m.engagement_rate||0)>avgEng*1.5).sort((a,b)=>(b.engagement_rate||0)-(a.engagement_rate||0)).slice(0,3);
-  const losers=med.filter(m=>(m.engagement_rate||0)<avgEng*0.5).sort((a,b)=>(a.engagement_rate||0)-(b.engagement_rate||0)).slice(0,3);
-  const reels=med.filter(m=>m.media_type==='REEL'||m.media_type==='VIDEO');
-  const carousels=med.filter(m=>m.media_type==='CAROUSEL_ALBUM');
-  const images=med.filter(m=>m.media_type==='IMAGE');
-  const avgReel=reels.length>0?(reels.reduce((s,m)=>s+(m.engagement_rate||0),0)/reels.length).toFixed(2):0;
-  const avgCarousel=carousels.length>0?(carousels.reduce((s,m)=>s+(m.engagement_rate||0),0)/carousels.length).toFixed(2):0;
-  const avgImage=images.length>0?(images.reduce((s,m)=>s+(m.engagement_rate||0),0)/images.length).toFixed(2):0;
-  
-  const dataContext=`
-DADOS DA CONTA @${D.username} - ÚLTIMOS 30 DIAS:
-Seguidores: ${D.followers_count} | Posts analisados: ${med.length}
-Alcance: ${fmt(ins.reach)} | Impressões: ${fmt(ins.impressions)} | Visitas ao perfil: ${fmt(ins.profile_views)} | Cliques no link: ${fmt(ins.website_clicks)}
-Taxa de engajamento média: ${avgEng.toFixed(2)}%
-
-PERFORMANCE POR FORMATO:
-- Reels/Vídeos (${reels.length} posts): média ${avgReel}% engajamento
-- Carrosséis (${carousels.length} posts): média ${avgCarousel}% engajamento  
-- Fotos (${images.length} posts): média ${avgImage}% engajamento
-
-TOP 3 POSTS (maior engajamento):
-${winners.map((p,i)=>`${i+1}. ${p.media_type} | ${(p.engagement_rate||0).toFixed(2)}% | ❤${p.like_count} 💬${p.comments_count} | "${(p.caption||'').substring(0,70)}"`).join('\n')}
-
-3 POSTS COM MENOR PERFORMANCE:
-${losers.map((p,i)=>`${i+1}. ${p.media_type} | ${(p.engagement_rate||0).toFixed(2)}% | ❤${p.like_count} 💬${p.comments_count} | "${(p.caption||'').substring(0,70)}"`).join('\n')}
-
-Nicho: Sexologia, Terapia de Relacionamentos, Educação Sexual
-Público: Casais e indivíduos buscando melhorar relacionamentos`;
-
-  const prompt=dataContext+`
-
-Gere um GROWTH MARKETING REPORT completo e acionável com a seguinte estrutura:
+Gere um GROWTH MARKETING REPORT dos últimos ${dias} dias, completo e acionável:
 
 ## 📊 DIAGNÓSTICO EXECUTIVO
 Resumo em 3 linhas do estado atual da conta. Nota geral de performance (0-10) com justificativa.
@@ -548,12 +464,21 @@ async function loadPostInsights(mediaId, caption){
   }
 
   try{
-    const r=await fetch(`${BACKEND}/post-insights`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({media_id:mediaId,token:pageToken})});
-    const d=await r.json();
-    if(d.error){content.innerHTML=`<p style="color:#b91c1c;font-size:13px">⚠️ ${d.error}</p>`;return;}
-    const metrics=[['impressions','Impressões'],['reach','Alcance'],['saved','Salvos'],['video_views','Plays'],['total_interactions','Interações']];
-    content.innerHTML=`<div style="font-weight:600;margin-bottom:.75rem">${caption}...</div>
-    <div class="insight-grid">${metrics.filter(([k])=>d[k]!==undefined).map(([k,l])=>`<div class="insight-card"><div class="insight-num">${fmt(d[k])}</div><div class="insight-lbl">${l}</div></div>`).join('')}</div>`;
+    const post=D.media&&D.media.find(m=>m.id===mediaId);
+    const reach=post?.reach||0;
+    const saved=post?.saved||0;
+    const likes=post?.like_count||0;
+    const comments=post?.comments_count||0;
+    const engagement=post?.engagement_rate||0;
+    content.innerHTML=`<div style="font-weight:600;margin-bottom:.75rem;font-size:13px">${caption}...</div>
+    <div class="insight-grid">
+      <div class="insight-card"><div class="insight-num">${fmt(reach)}</div><div class="insight-lbl">👁 Alcance</div></div>
+      <div class="insight-card"><div class="insight-num">${fmt(likes)}</div><div class="insight-lbl">❤️ Curtidas</div></div>
+      <div class="insight-card"><div class="insight-num">${fmt(comments)}</div><div class="insight-lbl">💬 Comentários</div></div>
+      <div class="insight-card"><div class="insight-num">${fmt(saved)}</div><div class="insight-lbl">🔖 Salvamentos</div></div>
+      <div class="insight-card"><div class="insight-num">${engagement.toFixed(2)}%</div><div class="insight-lbl">📊 Engajamento</div></div>
+      <div class="insight-card"><div class="insight-num">${reach>0?((saved/reach)*100).toFixed(2)+'%':'—'}</div><div class="insight-lbl">💾 Taxa de Salvo</div></div>
+    </div>`;
   }catch(e){content.innerHTML=`<p style="color:#b91c1c;font-size:13px">Erro: ${e.message}</p>`;}
 }
 
@@ -574,10 +499,16 @@ async function loadStories(){
   }
 
   try{
-    const r=await fetch(`${BACKEND}/stories`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ig_id:igId,token:pageToken})});
+    const activeIgId=igId_global||igId||'17841450756552541';
+    const BASE='https://graph.facebook.com/v19.0';
+    const r=await fetch(`${BASE}/${activeIgId}/stories?fields=id,media_type,timestamp,media_url&access_token=${pageToken}`);
     const d=await r.json();
     loading.style.display='none';
-    if(d.error){storiesContent.innerHTML=`<p style="color:#b91c1c;font-size:13px">⚠️ ${d.error}</p>`;return;}
+    if(d.error){
+      storiesContent.innerHTML=`<p style="color:#888;font-size:14px">Stories não disponíveis via API.<br><small style="color:#aaa">Requer permissão avançada da Meta.</small></p>`;
+      try{const aiRes=await callClaude('Dê 5 dicas estratégicas para Stories no nicho de sexologia usando VTSD.');analysis.innerHTML=`<div class="analysis-box" style="margin-top:.75rem">${aiRes.replace(/
+/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')}</div>`;}catch(err){}
+      return;}
     const stories=d.stories||[];
     if(!stories.length){storiesContent.innerHTML=`<p style="color:#888;font-size:14px">Nenhum story ativo no momento.</p>`;return;}
     storiesContent.innerHTML=stories.map(s=>`
@@ -803,116 +734,52 @@ function sumData(){
 }
 
 
-async function genGrowthReport(){
-  const el=document.getElementById('growth-out');
-  el.innerHTML='<div class="analysis-box"><span class="spin"></span> Gerando Growth Marketing Report dos últimos 30 dias...</div>';
-  
-  const med=D.media||[];
-  const ins=D.insights||{};
-  
-  // Classify content performance
-  const avgEng=med.length>0?(med.reduce((s,m)=>s+(m.engagement_rate||0),0)/med.length):0;
-  const winners=med.filter(m=>(m.engagement_rate||0)>avgEng*1.5).sort((a,b)=>(b.engagement_rate||0)-(a.engagement_rate||0)).slice(0,3);
-  const losers=med.filter(m=>(m.engagement_rate||0)<avgEng*0.5).sort((a,b)=>(a.engagement_rate||0)-(b.engagement_rate||0)).slice(0,3);
-  const reels=med.filter(m=>m.media_type==='REEL'||m.media_type==='VIDEO');
-  const carousels=med.filter(m=>m.media_type==='CAROUSEL_ALBUM');
-  const images=med.filter(m=>m.media_type==='IMAGE');
-  const avgReel=reels.length>0?(reels.reduce((s,m)=>s+(m.engagement_rate||0),0)/reels.length).toFixed(2):0;
-  const avgCarousel=carousels.length>0?(carousels.reduce((s,m)=>s+(m.engagement_rate||0),0)/carousels.length).toFixed(2):0;
-  const avgImage=images.length>0?(images.reduce((s,m)=>s+(m.engagement_rate||0),0)/images.length).toFixed(2):0;
-  
-  const dataContext=`
-DADOS DA CONTA @${D.username} - ÚLTIMOS 30 DIAS:
-Seguidores: ${D.followers_count} | Posts analisados: ${med.length}
-Alcance: ${fmt(ins.reach)} | Impressões: ${fmt(ins.impressions)} | Visitas ao perfil: ${fmt(ins.profile_views)} | Cliques no link: ${fmt(ins.website_clicks)}
-Taxa de engajamento média: ${avgEng.toFixed(2)}%
-
-PERFORMANCE POR FORMATO:
-- Reels/Vídeos (${reels.length} posts): média ${avgReel}% engajamento
-- Carrosséis (${carousels.length} posts): média ${avgCarousel}% engajamento  
-- Fotos (${images.length} posts): média ${avgImage}% engajamento
-
-TOP 3 POSTS (maior engajamento):
-${winners.map((p,i)=>`${i+1}. ${p.media_type} | ${(p.engagement_rate||0).toFixed(2)}% | ❤${p.like_count} 💬${p.comments_count} | "${(p.caption||'').substring(0,70)}"`).join('\n')}
-
-3 POSTS COM MENOR PERFORMANCE:
-${losers.map((p,i)=>`${i+1}. ${p.media_type} | ${(p.engagement_rate||0).toFixed(2)}% | ❤${p.like_count} 💬${p.comments_count} | "${(p.caption||'').substring(0,70)}"`).join('\n')}
-
-Nicho: Sexologia, Terapia de Relacionamentos, Educação Sexual
-Público: Casais e indivíduos buscando melhorar relacionamentos`;
-
-  const prompt=dataContext+`
-
-Gere um GROWTH MARKETING REPORT completo e acionável com a seguinte estrutura:
-
-## 📊 DIAGNÓSTICO EXECUTIVO
-Resumo em 3 linhas do estado atual da conta. Nota geral de performance (0-10) com justificativa.
-
-## ✅ O QUE FUNCIONOU (últimos 30 dias)
-Analise os dados e explique com precisão:
-- Quais formatos performaram melhor e por quê
-- Quais temas/abordagens geraram mais engajamento
-- Padrões nos posts de sucesso (hora, formato, estilo de legenda)
-- O que o algoritmo está favorecendo para esta conta
-
-## ❌ O QUE NÃO DEU CERTO
-- Formatos ou temas com baixo retorno
-- Erros estratégicos identificados nos dados
-- Oportunidades perdidas
-- Por que esses posts não performaram
-
-## 🚀 PLANO DE AÇÃO — PRÓXIMOS 30 DIAS
-Baseado nos dados, crie um plano específico:
-- **Meta realista** de crescimento (seguidores + engajamento)
-- **Mix de conteúdo ideal** (% de cada formato por semana)
-- **3 experimentos** para testar no próximo mês
-- **Frequência de postagem** recomendada
-
-## 💡 5 AÇÕES IMEDIATAS (esta semana)
-Liste 5 ações específicas e práticas para implementar agora, em ordem de impacto.
-
-## 📈 PROJEÇÃO
-Se implementar as recomendações, qual crescimento esperado em 30/60/90 dias?
-
-Use dados reais da conta na análise. Seja específico, direto e acionável. Em português.`;
-
-  try{
-    const r=await callClaude(prompt);
-    const f=r.replace(/## (.*?)\n/g,'<h3 style="font-size:15px;font-weight:700;margin:1.25rem 0 .5rem;color:#111">$1</h3>\n')
-             .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
-             .replace(/\n/g,'<br>');
-    el.innerHTML=`
-      <div style="display:flex;gap:10px;margin-bottom:1rem;flex-wrap:wrap">
-        <div class="metric" style="flex:1;min-width:120px;text-align:center"><div class="metric-label">Engaj. Médio</div><div class="metric-value">${avgEng.toFixed(2)}%</div></div>
-        <div class="metric" style="flex:1;min-width:120px;text-align:center"><div class="metric-label">Melhor formato</div><div class="metric-value" style="font-size:16px">${avgReel>=avgCarousel&&avgReel>=avgImage?'Reels':avgCarousel>=avgImage?'Carrossel':'Fotos'}</div></div>
-        <div class="metric" style="flex:1;min-width:120px;text-align:center"><div class="metric-label">Posts analisados</div><div class="metric-value">${med.length}</div></div>
-        <div class="metric" style="flex:1;min-width:120px;text-align:center"><div class="metric-label">Alcance 30d</div><div class="metric-value">${fmt(ins.reach)}</div></div>
-      </div>
-      <div class="analysis-box">${f}</div>`;
-  }catch(e){el.innerHTML=`<p style="color:#b91c1c;font-size:13px">Erro: ${e.message}</p>`;}
-}
-
-
 
 const AGENT_SECRET='igagent-apaula-2024-x9k';
 
 // Auto-connect on load
-async function autoConnect(){
-  const timeout = setTimeout(()=>{ showManualForm(); }, 10000);
+async function autoConnect(attempt=1){
+  const maxAttempts=3;
+  const timeoutMs=15000;
+  
+  // Update loading message with attempt info
+  const loadingMsg=document.querySelector('#auto-connecting span:last-child');
+  if(loadingMsg) loadingMsg.textContent = attempt>1 ? `Reconectando... (tentativa ${attempt}/${maxAttempts})` : 'Conectando à sua conta...';
+  
+  const timeout = setTimeout(()=>{
+    if(attempt < maxAttempts){
+      autoConnect(attempt+1);
+    } else {
+      showManualForm();
+    }
+  }, timeoutMs);
+  
   try{
     const r=await fetch(`${BACKEND}/get-token`,{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({secret:AGENT_SECRET})
     });
-    if(!r.ok){ clearTimeout(timeout); showManualForm(); return; }
+    if(!r.ok){ 
+      clearTimeout(timeout);
+      if(attempt < maxAttempts){ autoConnect(attempt+1); } else { showManualForm(); }
+      return; 
+    }
     const d=await r.json();
-    if(!d.token){ clearTimeout(timeout); showManualForm(); return; }
+    if(!d.token){ 
+      clearTimeout(timeout);
+      if(attempt < maxAttempts){ autoConnect(attempt+1); } else { showManualForm(); }
+      return; 
+    }
     await connectWithToken(d.token, d.ig_id||'17841450756552541');
     clearTimeout(timeout);
   }catch(e){
     clearTimeout(timeout);
-    showManualForm();
+    if(attempt < maxAttempts){ 
+      setTimeout(()=>autoConnect(attempt+1), 2000);
+    } else { 
+      showManualForm(); 
+    }
   }
 }
 
