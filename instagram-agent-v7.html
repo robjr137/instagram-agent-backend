@@ -657,6 +657,8 @@ if(window.matchMedia('(display-mode: standalone)').matches){
 }
 
 
+const AGENT_SECRET='igagent-apaula-2024-x9k';
+
 // Auto-connect on load using token from Railway backend
 async function autoConnect(){
   const timeout = setTimeout(()=>{ showManualForm(); }, 10000);
