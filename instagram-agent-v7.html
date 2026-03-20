@@ -96,9 +96,10 @@ textarea{resize:vertical}
         Em instantes você terá acesso às análises que vão<br>
         <span style="color:#833ab4;font-weight:600">transformar dados em decisões e decisões em resultado.</span>
       </div>
-      <div style="display:flex;align-items:center;justify-content:center;gap:8px;color:#9CA3AF;font-size:13px">
+      <div style="display:flex;align-items:center;justify-content:center;gap:8px;color:#9CA3AF;font-size:13px;margin-bottom:1rem">
         <span class="spin"></span><span>Conectando à sua conta...</span>
       </div>
+      <button onclick="showManualForm()" style="font-size:12px;color:#9CA3AF;background:none;border:none;cursor:pointer;text-decoration:underline">Entrar manualmente</button>
     </div>
     <div id="manual-form" style="display:none">
       <h2 style="font-size:18px;font-weight:700;margin-bottom:.5rem">Conectar manualmente</h2>
@@ -395,6 +396,8 @@ async function connectWithToken(tok, igId){
   if(insData.data) insData.data.forEach(m=>{insights[m.name]=m.total_value?m.total_value.value:(m.values?m.values.reduce((s,v)=>s+v.value,0):0);});
   D={...profile,media,insights};
   pageToken=tok;
+  igId=igId;
+  igId_global=igId;
   render();
 }
 
@@ -740,13 +743,15 @@ const AGENT_SECRET='igagent-apaula-2024-x9k';
 // Auto-connect on load
 async function autoConnect(attempt=1){
   const maxAttempts=3;
-  const timeoutMs=15000;
+  const timeoutMs=8000;
   
-  // Update loading message with attempt info
   const loadingMsg=document.querySelector('#auto-connecting span:last-child');
-  if(loadingMsg) loadingMsg.textContent = attempt>1 ? `Reconectando... (tentativa ${attempt}/${maxAttempts})` : 'Conectando à sua conta...';
+  if(loadingMsg) loadingMsg.textContent = attempt>1 ? `Reconectando... (${attempt}/${maxAttempts})` : 'Conectando à sua conta...';
   
+  // AbortController garante que o fetch cancela quando o timeout dispara
+  const controller = new AbortController();
   const timeout = setTimeout(()=>{
+    controller.abort();
     if(attempt < maxAttempts){
       autoConnect(attempt+1);
     } else {
@@ -758,27 +763,27 @@ async function autoConnect(attempt=1){
     const r=await fetch(`${BACKEND}/get-token`,{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({secret:AGENT_SECRET})
+      body:JSON.stringify({secret:AGENT_SECRET}),
+      signal:controller.signal
     });
     if(!r.ok){ 
       clearTimeout(timeout);
-      if(attempt < maxAttempts){ autoConnect(attempt+1); } else { showManualForm(); }
+      attempt < maxAttempts ? autoConnect(attempt+1) : showManualForm();
       return; 
     }
     const d=await r.json();
     if(!d.token){ 
       clearTimeout(timeout);
-      if(attempt < maxAttempts){ autoConnect(attempt+1); } else { showManualForm(); }
+      attempt < maxAttempts ? autoConnect(attempt+1) : showManualForm();
       return; 
     }
-    await connectWithToken(d.token, d.ig_id||'17841450756552541');
     clearTimeout(timeout);
+    await connectWithToken(d.token, d.ig_id||'17841450756552541');
   }catch(e){
     clearTimeout(timeout);
-    if(attempt < maxAttempts){ 
-      setTimeout(()=>autoConnect(attempt+1), 2000);
-    } else { 
-      showManualForm(); 
+    // AbortError = timeout, outros = erro de rede
+    if(e.name!=='AbortError'){
+      attempt < maxAttempts ? setTimeout(()=>autoConnect(attempt+1),1000) : showManualForm();
     }
   }
 }
