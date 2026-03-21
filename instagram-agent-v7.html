@@ -259,100 +259,7 @@ textarea{resize:vertical}
 
 <script src="https://cdn.jsdelivr.net/npm/mammoth@1.6.0/mammoth.browser.min.js"></script>
 
-<script>
 
-
-async function genGrowthReport(dias=30){
-  const el=document.getElementById('growth-out');
-  el.innerHTML=`<div class="analysis-box"><span class="spin"></span> Gerando Growth Report dos últimos ${dias} dias...</div>`;
-  
-  const med=D.media||[];
-  const ins=D.insights||{};
-  
-  // Classify content performance
-  const avgEng=med.length>0?(med.reduce((s,m)=>s+(m.engagement_rate||0),0)/med.length):0;
-  const winners=med.filter(m=>(m.engagement_rate||0)>avgEng*1.5).sort((a,b)=>(b.engagement_rate||0)-(a.engagement_rate||0)).slice(0,3);
-  const losers=med.filter(m=>(m.engagement_rate||0)<avgEng*0.5).sort((a,b)=>(a.engagement_rate||0)-(b.engagement_rate||0)).slice(0,3);
-  const reels=med.filter(m=>m.media_type==='REEL'||m.media_type==='VIDEO');
-  const carousels=med.filter(m=>m.media_type==='CAROUSEL_ALBUM');
-  const images=med.filter(m=>m.media_type==='IMAGE');
-  const avgReel=reels.length>0?(reels.reduce((s,m)=>s+(m.engagement_rate||0),0)/reels.length).toFixed(2):0;
-  const avgCarousel=carousels.length>0?(carousels.reduce((s,m)=>s+(m.engagement_rate||0),0)/carousels.length).toFixed(2):0;
-  const avgImage=images.length>0?(images.reduce((s,m)=>s+(m.engagement_rate||0),0)/images.length).toFixed(2):0;
-  
-  const dataContext=`
-DADOS DA CONTA @${D.username} - ÚLTIMOS ${dias} DIAS:
-Seguidores: ${D.followers_count} | Posts analisados: ${med.length}
-Alcance: ${fmt(ins.reach)} | Impressões: ${fmt(ins.impressions)} | Visitas ao perfil: ${fmt(ins.profile_views)} | Cliques no link: ${fmt(ins.website_clicks)}
-Taxa de engajamento média: ${avgEng.toFixed(2)}%
-
-PERFORMANCE POR FORMATO:
-- Reels/Vídeos (${reels.length} posts): média ${avgReel}% engajamento
-- Carrosséis (${carousels.length} posts): média ${avgCarousel}% engajamento  
-- Fotos (${images.length} posts): média ${avgImage}% engajamento
-
-TOP 3 POSTS (maior engajamento):
-${winners.map((p,i)=>`${i+1}. ${p.media_type} | ${(p.engagement_rate||0).toFixed(2)}% | ❤${p.like_count} 💬${p.comments_count} | "${(p.caption||'').substring(0,70)}"`).join('\n')}
-
-3 POSTS COM MENOR PERFORMANCE:
-${losers.map((p,i)=>`${i+1}. ${p.media_type} | ${(p.engagement_rate||0).toFixed(2)}% | ❤${p.like_count} 💬${p.comments_count} | "${(p.caption||'').substring(0,70)}"`).join('\n')}
-
-Nicho: Sexologia, Terapia de Relacionamentos, Educação Sexual
-Público: Casais e indivíduos buscando melhorar relacionamentos`;
-
-  const prompt=dataContext+`
-
-Gere um GROWTH MARKETING REPORT dos últimos ${dias} dias, completo e acionável:
-
-## 📊 DIAGNÓSTICO EXECUTIVO
-Resumo em 3 linhas do estado atual da conta. Nota geral de performance (0-10) com justificativa.
-
-## ✅ O QUE FUNCIONOU (últimos 30 dias)
-Analise os dados e explique com precisão:
-- Quais formatos performaram melhor e por quê
-- Quais temas/abordagens geraram mais engajamento
-- Padrões nos posts de sucesso (hora, formato, estilo de legenda)
-- O que o algoritmo está favorecendo para esta conta
-
-## ❌ O QUE NÃO DEU CERTO
-- Formatos ou temas com baixo retorno
-- Erros estratégicos identificados nos dados
-- Oportunidades perdidas
-- Por que esses posts não performaram
-
-## 🚀 PLANO DE AÇÃO — PRÓXIMOS 30 DIAS
-Baseado nos dados, crie um plano específico:
-- **Meta realista** de crescimento (seguidores + engajamento)
-- **Mix de conteúdo ideal** (% de cada formato por semana)
-- **3 experimentos** para testar no próximo mês
-- **Frequência de postagem** recomendada
-
-## 💡 5 AÇÕES IMEDIATAS (esta semana)
-Liste 5 ações específicas e práticas para implementar agora, em ordem de impacto.
-
-## 📈 PROJEÇÃO
-Se implementar as recomendações, qual crescimento esperado em 30/60/90 dias?
-
-Use dados reais da conta na análise. Seja específico, direto e acionável. Em português.`;
-
-  try{
-    const r=await callClaude(prompt);
-    const f=r.replace(/## (.*?)\n/g,'<h3 style="font-size:15px;font-weight:700;margin:1.25rem 0 .5rem;color:#111">$1</h3>\n')
-             .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
-             .replace(/\n/g,'<br>');
-    el.innerHTML=`
-      <div style="display:flex;gap:10px;margin-bottom:1rem;flex-wrap:wrap">
-        <div class="metric" style="flex:1;min-width:120px;text-align:center"><div class="metric-label">Engaj. Médio</div><div class="metric-value">${avgEng.toFixed(2)}%</div></div>
-        <div class="metric" style="flex:1;min-width:120px;text-align:center"><div class="metric-label">Melhor formato</div><div class="metric-value" style="font-size:16px">${avgReel>=avgCarousel&&avgReel>=avgImage?'Reels':avgCarousel>=avgImage?'Carrossel':'Fotos'}</div></div>
-        <div class="metric" style="flex:1;min-width:120px;text-align:center"><div class="metric-label">Posts analisados</div><div class="metric-value">${med.length}</div></div>
-        <div class="metric" style="flex:1;min-width:120px;text-align:center"><div class="metric-label">Alcance 30d</div><div class="metric-value">${fmt(ins.reach)}</div></div>
-      </div>
-      <div class="analysis-box">${f}</div>`;
-  }catch(e){el.innerHTML=`<p style="color:#b91c1c;font-size:13px">Erro: ${e.message}</p>`;}
-}
-
-
-</script>
 <script>
 const BACKEND='https://instagram-agent-backend-production-37c7.up.railway.app';
 let D={},hist=[],igId=null,pageToken=null,attachedFile=null,selectedPostId=null;
@@ -746,7 +653,7 @@ function sw(tab,btn){
   document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   if(tab==='strategy'&&!document.getElementById('strat-out').innerHTML.includes('strong'))genStrategy();
-  if(tab==='growth'&&document.getElementById('growth-out').innerHTML.includes('Clique'))genGrowthReport();
+  if(tab==='growth'&&!document.getElementById('growth-out').innerHTML.includes('analysis-box'))genGrowthReport();
   if(tab==='stories'&&document.getElementById('stories-content').innerHTML==='')loadStories();
   if(tab==='mentions'&&document.getElementById('mentions-list').innerHTML==='')loadMentions();
 }
@@ -956,6 +863,35 @@ function renderRoteiroChat(){
   if(!roteiroHist.length){c.innerHTML='<p style="text-align:center;color:#888;padding:1.5rem 0;font-size:14px">Selecione um formato acima...</p>';return;}
   c.innerHTML=roteiroHist.map(m=>`<div class="msg ${m.role==='user'?'user':'bot'}">${m.content.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')}</div>`).join('');
   c.scrollTop=c.scrollHeight;
+}
+
+
+async function genGrowthReport(dias=30){
+  const el=document.getElementById('growth-out');
+  el.innerHTML='<div class="analysis-box"><span class="spin"></span> Gerando Growth Report dos últimos '+dias+' dias...</div>';
+  const med=D.media||[];
+  const ins=D.insights||{};
+  const avgEng=med.length>0?(med.reduce((s,m)=>s+(m.engagement_rate||0),0)/med.length):0;
+  const winners=med.filter(m=>(m.engagement_rate||0)>avgEng*1.5).sort((a,b)=>(b.engagement_rate||0)-(a.engagement_rate||0)).slice(0,3);
+  const losers=med.filter(m=>(m.engagement_rate||0)<avgEng*0.5).sort((a,b)=>(a.engagement_rate||0)-(b.engagement_rate||0)).slice(0,3);
+  const reels=med.filter(m=>m.media_type==='REEL'||m.media_type==='VIDEO');
+  const carousels=med.filter(m=>m.media_type==='CAROUSEL_ALBUM');
+  const images=med.filter(m=>m.media_type==='IMAGE');
+  const avgReel=reels.length>0?(reels.reduce((s,m)=>s+(m.engagement_rate||0),0)/reels.length).toFixed(2):0;
+  const avgCarousel=carousels.length>0?(carousels.reduce((s,m)=>s+(m.engagement_rate||0),0)/carousels.length).toFixed(2):0;
+  const avgImage=images.length>0?(images.reduce((s,m)=>s+(m.engagement_rate||0),0)/images.length).toFixed(2):0;
+  const dataCtx=`DADOS @${D.username} - ÚLTIMOS ${dias} DIAS:\nSeguidores: ${D.followers_count} | Posts: ${med.length}\nAlcance: ${fmt(ins.reach)} | Visitas: ${fmt(ins.profile_views)} | Cliques: ${fmt(ins.website_clicks)}\nEngaj. médio: ${avgEng.toFixed(2)}%\nFormatos: Reels ${avgReel}% | Carrosseis ${avgCarousel}% | Fotos ${avgImage}%\nTOP 3:\n${winners.map((p,i)=>`${i+1}. ${p.media_type}|${(p.engagement_rate||0).toFixed(2)}%|❤${p.like_count}💬${p.comments_count}🔖${p.saved||0}|"${(p.caption||'').substring(0,60)}"`).join('\n')}\nMENOR PERFORMANCE:\n${losers.map((p,i)=>`${i+1}. ${p.media_type}|${(p.engagement_rate||0).toFixed(2)}%|"${(p.caption||'').substring(0,60)}"`).join('\n')}`;
+  const prompt=dataCtx+`\n\nGere um GROWTH REPORT completo:\n## DIAGNÓSTICO EXECUTIVO\nNota 0-10 com justificativa.\n## O QUE FUNCIONOU\nFormatos, temas, padrões vencedores.\n## O QUE NÃO DEU CERTO\nErros, oportunidades perdidas.\n## PLANO 30 DIAS\nMeta realista, mix de conteúdo, 3 experimentos.\n## 5 AÇÕES IMEDIATAS\nPriorizadas por impacto.\n## PROJEÇÃO\n30/60/90 dias se implementar.\nUse os dados reais. Seja cirúrgico. Em português.`;
+  try{
+    const r=await callClaude(prompt);
+    const f=r.replace(/## (.*?)\n/g,'<h3 style="font-size:15px;font-weight:700;margin:1.25rem 0 .5rem;color:#111">$1</h3>\n').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
+    el.innerHTML=`<div style="display:flex;gap:10px;margin-bottom:1rem;flex-wrap:wrap">
+      <div class="metric" style="flex:1;min-width:120px;text-align:center"><div class="metric-label">Engaj. Médio</div><div class="metric-value">${avgEng.toFixed(2)}%</div></div>
+      <div class="metric" style="flex:1;min-width:120px;text-align:center"><div class="metric-label">Melhor formato</div><div class="metric-value" style="font-size:16px">${avgReel>=avgCarousel&&avgReel>=avgImage?'Reels':avgCarousel>=avgImage?'Carrossel':'Fotos'}</div></div>
+      <div class="metric" style="flex:1;min-width:120px;text-align:center"><div class="metric-label">Posts analisados</div><div class="metric-value">${med.length}</div></div>
+      <div class="metric" style="flex:1;min-width:120px;text-align:center"><div class="metric-label">Alcance</div><div class="metric-value">${fmt(ins.reach)}</div></div>
+    </div><div class="analysis-box">${f}</div>`;
+  }catch(e){el.innerHTML=`<p style="color:#b91c1c;font-size:13px">Erro: ${e.message}</p>`;}
 }
 
 window.addEventListener('load', autoConnect);
