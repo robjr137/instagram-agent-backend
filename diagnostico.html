@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagnóstico do Agente</title>
+<style>
+body{font-family:Arial,sans-serif;max-width:600px;margin:2rem auto;padding:1rem}
+.test{padding:.75rem;margin:.5rem 0;border-radius:8px;font-size:14px}
+.ok{background:#d1fae5;color:#065f46}
+.fail{background:#fee2e2;color:#b91c1c}
+.pending{background:#f3f4f6;color:#6b7280}
+button{padding:.75rem 1.5rem;background:#7c3aed;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:14px;margin:.5rem .5rem .5rem 0}
+</style>
+</head>
+<body>
+<h2>🔍 Diagnóstico do Agente</h2>
+<p style="color:#6b7280;font-size:13px">Este diagnóstico vai identificar exatamente onde está o problema.</p>
+
+<div id="t1" class="test pending">⏳ Teste 1: JavaScript carregando...</div>
+<div id="t2" class="test pending">⏳ Teste 2: Railway online...</div>
+<div id="t3" class="test pending">⏳ Teste 3: Token do Instagram válido...</div>
+<div id="t4" class="test pending">⏳ Teste 4: API do Instagram respondendo...</div>
+<div id="t5" class="test pending">⏳ Teste 5: Claude API funcionando...</div>
+
+<div id="result" style="margin-top:1.5rem;padding:1rem;background:#ede9fe;border-radius:8px;display:none">
+  <strong>Resultado:</strong>
+  <div id="result-text" style="margin-top:.5rem;font-size:13px"></div>
+</div>
+
+<button onclick="runTests()" style="margin-top:1rem">▶ Executar Testes</button>
+<button onclick="window.location.href='https://robjr137.github.io/instagram-agent-backend/instagram-agent-v7.html'" style="background:#10b981">→ Abrir Agente</button>
+
+<script>
+const BACKEND = 'https://instagram-agent-backend-production-37c7.up.railway.app';
+const AGENT_SECRET = 'igagent-apaula-2024-x9k';
+const IG_ID = '17841450756552541';
+
+function ok(id, msg){ document.getElementById(id).className='test ok'; document.getElementById(id).textContent='✅ '+msg; }
+function fail(id, msg){ document.getElementById(id).className='test fail'; document.getElementById(id).textContent='❌ '+msg; }
+
+async function runTests(){
+  // Test 1: JS working
+  ok('t1', 'JavaScript carregando corretamente');
+
+  // Test 2: Railway online
+  try{
+    const r = await fetch(`${BACKEND}/`, {signal: AbortSignal.timeout(8000)});
+    if(r.ok){ ok('t2', 'Railway online e respondendo'); }
+    else { fail('t2', `Railway respondeu com status ${r.status}`); }
+  }catch(e){ fail('t2', `Railway inacessível: ${e.message}`); }
+
+  // Test 3: get-token
+  let token = null, igId = null;
+  try{
+    const r = await fetch(`${BACKEND}/get-token`, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({secret: AGENT_SECRET}),
+      signal: AbortSignal.timeout(10000)
+    });
+    const d = await r.json();
+    if(d.token){
+      token = d.token;
+      igId = d.ig_id || IG_ID;
+      ok('t3', `Token recebido do Railway (ID: ${igId})`);
+    } else {
+      fail('t3', `Railway não retornou token: ${JSON.stringify(d)}`);
+    }
+  }catch(e){ fail('t3', `Erro ao buscar token: ${e.message}`); }
+
+  // Test 4: Instagram API
+  if(token){
+    try{
+      const r = await fetch(`https://graph.facebook.com/v19.0/${igId}?fields=id,username,followers_count&access_token=${token}`);
+      const d = await r.json();
+      if(d.username){
+        ok('t4', `Instagram OK: @${d.username} (${d.followers_count} seguidores)`);
+      } else if(d.error){
+        fail('t4', `Instagram API erro: ${d.error.message}`);
+      }
+    }catch(e){ fail('t4', `Erro Instagram: ${e.message}`); }
+  } else {
+    fail('t4', 'Pulado - sem token');
+  }
+
+  // Test 5: Claude API
+  try{
+    const r = await fetch(`${BACKEND}/claude`, {
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-agent-secret':AGENT_SECRET},
+      body: JSON.stringify({messages:[{role:'user',content:'Responda apenas: OK'}]}),
+      signal: AbortSignal.timeout(15000)
+    });
+    const d = await r.json();
+    if(d.text){ ok('t5', `Claude API OK: "${d.text.substring(0,50)}"`); }
+    else { fail('t5', `Claude não retornou texto: ${JSON.stringify(d)}`); }
+  }catch(e){ fail('t5', `Erro Claude: ${e.message}`); }
+
+  // Show result
+  const all = ['t1','t2','t3','t4','t5'].every(id => 
+    document.getElementById(id).className.includes('ok')
+  );
+  const resultDiv = document.getElementById('result');
+  const resultText = document.getElementById('result-text');
+  resultDiv.style.display = 'block';
+  if(all){
+    resultText.innerHTML = '✅ Todos os testes passaram! O agente deveria funcionar. Pode ser cache do browser — tente Ctrl+Shift+R no link do agente.';
+  } else {
+    const failed = ['t1','t2','t3','t4','t5']
+      .filter(id => document.getElementById(id).className.includes('fail'))
+      .map(id => document.getElementById(id).textContent);
+    resultText.innerHTML = 'Problemas encontrados:<br>' + failed.join('<br>');
+  }
+}
+
+// Auto-run
+window.addEventListener('load', runTests);
+</script>
+</body>
+</html>
