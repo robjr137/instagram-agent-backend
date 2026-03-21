@@ -8,7 +8,12 @@ const PORT = process.env.PORT || 3001;
 const BASE = 'https://graph.facebook.com/v19.0';
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
 
-app.use(cors({ origin: '*' }));
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'x-agent-secret', 'Authorization']
+}));
+app.options('*', cors());
 app.use(express.json());
 
 async function fbGet(path, token) {
@@ -80,6 +85,7 @@ app.post('/connect', async (req, res) => {
 
     res.json({ profile, media, insights, igId, pageToken });
   } catch (err) {
+    console.error('[claude] erro:', err.message);
     res.status(500).json({ error: err.message });
   }
 });
@@ -95,6 +101,7 @@ app.post('/post-insights', async (req, res) => {
     if (r.data) r.data.forEach(m => { data[m.name] = m.values ? m.values[0]?.value : m.value; });
     res.json(data);
   } catch (err) {
+    console.error('[claude] erro:', err.message);
     res.status(500).json({ error: err.message });
   }
 });
@@ -108,6 +115,7 @@ app.post('/stories', async (req, res) => {
     if (r.error) return res.status(400).json({ error: r.error.message });
     res.json({ stories: r.data || [] });
   } catch (err) {
+    console.error('[claude] erro:', err.message);
     res.status(500).json({ error: err.message });
   }
 });
@@ -121,6 +129,7 @@ app.post('/comments', async (req, res) => {
     if (r.error) return res.status(400).json({ error: r.error.message });
     res.json({ comments: r.data || [] });
   } catch (err) {
+    console.error('[claude] erro:', err.message);
     res.status(500).json({ error: err.message });
   }
 });
@@ -134,6 +143,7 @@ app.post('/mentions', async (req, res) => {
     if (r.error) return res.status(400).json({ error: r.error.message });
     res.json({ mentions: r.data || [] });
   } catch (err) {
+    console.error('[claude] erro:', err.message);
     res.status(500).json({ error: err.message });
   }
 });
@@ -160,7 +170,7 @@ app.post('/claude', async (req, res) => {
   const { messages, system } = req.body;
   if (!ANTHROPIC_API_KEY) return res.status(500).json({ error: 'Chave API não configurada' });
   try {
-    const body = { model: 'claude-sonnet-4-20250514', max_tokens: 1500, messages };
+    const body = { model: 'claude-sonnet-4-5', max_tokens: 2000, messages };
     if (system) body.system = system;
     const r = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -171,6 +181,7 @@ app.post('/claude', async (req, res) => {
     if (d.error) return res.status(400).json({ error: d.error.message });
     res.json({ text: d.content?.[0]?.text || '' });
   } catch (err) {
+    console.error('[claude] erro:', err.message);
     res.status(500).json({ error: err.message });
   }
 });
