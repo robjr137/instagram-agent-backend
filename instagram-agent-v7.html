@@ -285,6 +285,7 @@ async function doConnect(){
 async function connectWithToken(tok, igIdParam){
   const BASE='https://graph.facebook.com/v19.0';
   
+  console.log('[connectWithToken] iniciando com igId:', igIdParam);
   // Step 1: Profile (required - throws if fails)
   const rProfile=await fetch(`${BASE}/${igIdParam}?fields=id,username,name,biography,followers_count,follows_count,media_count,website&access_token=${tok}`);
   const profile=await rProfile.json();
@@ -328,6 +329,7 @@ async function connectWithToken(tok, igIdParam){
   pageToken=tok;
   igId=igIdParam;
   igId_global=igIdParam;
+  console.log('[connectWithToken] dados carregados, chamando render()');
   render();
 }
 
@@ -335,6 +337,7 @@ const DEMO={username:'apaula.os',name:'Ana Paula Carmo',followers_count:354900,f
 function loadDemo(){D={...DEMO};igId='demo';pageToken='demo';render();}
 
 function render(){
+  console.log('[render] trocando telas');
   document.getElementById('sc-setup').classList.remove('active');
   document.getElementById('sc-dash').classList.add('active');
   document.getElementById('conn-badge').className='badge badge-ok';
@@ -673,51 +676,55 @@ const AGENT_SECRET='igagent-apaula-2024-x9k';
 async function autoConnect(attempt=1){
   const maxAttempts=3;
   const timeoutMs=8000;
+  console.log('[autoConnect] tentativa', attempt);
   
   const loadingMsg=document.querySelector('#auto-connecting span:last-child');
   if(loadingMsg) loadingMsg.textContent = attempt>1 ? `Reconectando... (${attempt}/${maxAttempts})` : 'Conectando à sua conta...';
   const statusDiv=document.getElementById('auto-status');
   if(statusDiv) statusDiv.textContent = attempt>1?`Tentativa ${attempt} de ${maxAttempts}...`:'Buscando configurações...';
   
-  // AbortController garante que o fetch cancela quando o timeout dispara
   const controller = new AbortController();
   const timeout = setTimeout(()=>{
+    console.log('[autoConnect] timeout disparou na tentativa', attempt);
     controller.abort();
     if(attempt < maxAttempts){
       autoConnect(attempt+1);
     } else {
+      console.log('[autoConnect] max tentativas atingido - mostrando formulario manual');
       showManualForm();
     }
   }, timeoutMs);
   
   try{
+    console.log('[autoConnect] chamando', BACKEND+'/get-token');
     const r=await fetch(`${BACKEND}/get-token`,{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({secret:AGENT_SECRET}),
       signal:controller.signal
     });
+    console.log('[autoConnect] resposta status:', r.status);
     if(!r.ok){ 
       clearTimeout(timeout);
+      console.log('[autoConnect] resposta nao ok:', r.status);
       attempt < maxAttempts ? autoConnect(attempt+1) : showManualForm();
       return; 
     }
     const d=await r.json();
+    console.log('[autoConnect] token recebido:', d.token ? 'SIM' : 'NAO', 'ig_id:', d.ig_id);
     if(!d.token){ 
       clearTimeout(timeout);
       attempt < maxAttempts ? autoConnect(attempt+1) : showManualForm();
       return; 
     }
     clearTimeout(timeout);
+    console.log('[autoConnect] chamando connectWithToken...');
     await connectWithToken(d.token, d.ig_id||'17841450756552541');
+    console.log('[autoConnect] connectWithToken concluido - render() deve ter sido chamado');
   }catch(e){
     clearTimeout(timeout);
-    if(e.name==='AbortError'){
-      // Timeout already handled by setTimeout callback above
-      return;
-    }
-    // Real error (profile invalid, network, etc.)
-    console.warn('autoConnect error:', e.message);
+    console.log('[autoConnect] erro capturado:', e.name, e.message);
+    if(e.name==='AbortError'){ return; }
     attempt < maxAttempts ? setTimeout(()=>autoConnect(attempt+1),1000) : showManualForm();
   }
 }
