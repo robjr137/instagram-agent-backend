@@ -413,7 +413,18 @@ async function loadPostInsights(mediaId, caption){
       <div class="insight-card"><div class="insight-num">${fmt(saved)}</div><div class="insight-lbl">🔖 Salvamentos</div></div>
       <div class="insight-card"><div class="insight-num">${engagement.toFixed(2)}%</div><div class="insight-lbl">📊 Engajamento</div></div>
       <div class="insight-card"><div class="insight-num">${reach>0?((saved/reach)*100).toFixed(2)+'%':'—'}</div><div class="insight-lbl">💾 Taxa de Salvo</div></div>
-    </div>`;
+    </div>
+    <div id="post-ai-analysis" class="analysis-box" style="margin-top:1rem"><span class="spin"></span> Analisando performance com IA...</div>`;
+    // AI analysis
+    try{
+      const postCtx=`Post: "${caption}"\nAlcance: ${fmt(reach)} | Curtidas: ${fmt(likes)} | Comentários: ${fmt(comments)} | Salvamentos: ${fmt(saved)} | Engajamento: ${engagement.toFixed(2)}% | Taxa de salvo: ${reach>0?((saved/reach)*100).toFixed(2)+'%':'—'}\nDados da conta: ${sumData()}`;
+      const aiRes=await callClaude(postCtx+'\n\nEm 3-4 linhas: diagnóstico cirúrgico deste post — o que funcionou, o que não funcionou e qual a próxima ação específica baseada nesses dados. Use vocabulário proprietário da conta.');
+      const aiDiv=document.getElementById('post-ai-analysis');
+      if(aiDiv) aiDiv.innerHTML=aiRes.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+    }catch(aiErr){
+      const aiDiv=document.getElementById('post-ai-analysis');
+      if(aiDiv) aiDiv.innerHTML='<span style="color:#888;font-size:12px">Análise de IA indisponível</span>';
+    }
   }catch(e){content.innerHTML=`<p style="color:#b91c1c;font-size:13px">Erro: ${e.message}</p>`;}
 }
 
@@ -482,10 +493,13 @@ async function loadComments(mediaId, caption){
   }
 
   try{
-    const r=await fetch(`${BACKEND}/comments`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({media_id:mediaId,token:pageToken})});
+    // Call Instagram API directly
+    const BASE='https://graph.facebook.com/v19.0';
+    const tok=pageToken;
+    const r=await fetch(`${BASE}/${mediaId}/comments?fields=id,text,username,timestamp,like_count&limit=50&access_token=${tok}`);
     const d=await r.json();
-    if(d.error){document.getElementById('comments-list').innerHTML=`<p style="color:#b91c1c;font-size:13px">⚠️ ${d.error}</p>`;return;}
-    const comments=d.comments||[];
+    if(d.error){document.getElementById('comments-list').innerHTML=`<p style="color:#888;font-size:14px">Comentários não disponíveis: ${d.error.message}</p>`;return;}
+    const comments=d.data||[];
     if(!comments.length){document.getElementById('comments-list').innerHTML='<p style="color:#888;font-size:14px">Nenhum comentário encontrado.</p>';return;}
     document.getElementById('comments-list').innerHTML=comments.map(c=>`
       <div class="comment-item">
@@ -549,15 +563,21 @@ async function loadMentions(){
   }
 
   try{
-    const r=await fetch(`${BACKEND}/mentions`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ig_id:igId,token:pageToken})});
+    // Call Instagram API directly
+    const BASE='https://graph.facebook.com/v19.0';
+    const activeId=igId_global||igId||'17841450756552541';
+    const r=await fetch(`${BASE}/${activeId}/tags?fields=id,caption,media_type,timestamp,like_count,comments_count&limit=20&access_token=${pageToken}`);
     const d=await r.json();
     loading.style.display='none';
-    if(d.error){list.innerHTML=`<p style="color:#b91c1c;font-size:13px">⚠️ ${d.error}</p>`;return;}
-    const mentions=d.mentions||[];
+    if(d.error){
+      list.innerHTML=`<p style="color:#888;font-size:14px">Menções não disponíveis com este token.<br><small style="color:#aaa">Requer permissão avançada da Meta (App Review).</small></p>`;
+      return;
+    }
+    const mentions=d.data||[];
     if(!mentions.length){list.innerHTML='<p style="color:#888;font-size:14px">Nenhuma menção encontrada.</p>';return;}
     list.innerHTML=mentions.map(m=>`
       <div class="mention-row">
-        <strong>${m.media_type}</strong> · ❤ ${fmt(m.like_count)} · 💬 ${fmt(m.comments_count)}<br>
+        <strong>${m.media_type||'Post'}</strong> · ❤ ${fmt(m.like_count)} · 💬 ${fmt(m.comments_count)}<br>
         <span style="color:#555;font-size:12px">${(m.caption||'').substring(0,80)}</span>
       </div>`).join('');
   }catch(e){loading.style.display='none';list.innerHTML=`<p style="color:#b91c1c;font-size:13px">Erro: ${e.message}</p>`;}
@@ -874,7 +894,7 @@ function renderRoteiroChat(){
 
 async function genGrowthReport(dias=30){
   const el=document.getElementById('growth-out');
-  el.innerHTML='<div class="analysis-box"><span class="spin"></span> Gerando Growth Report dos últimos '+dias+' dias...</div>';
+  el.innerHTML='<div class="analysis-box" style="text-align:center;padding:2rem"><span class="spin"></span><div style="margin-top:.75rem;font-size:13px;color:#666">Gerando análise dos últimos '+dias+' dias com dados reais...<br><small style="color:#999">Isso pode levar 15-30 segundos</small></div></div>';
   const med=D.media||[];
   const ins=D.insights||{};
   const avgEng=med.length>0?(med.reduce((s,m)=>s+(m.engagement_rate||0),0)/med.length):0;
