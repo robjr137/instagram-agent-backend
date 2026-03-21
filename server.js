@@ -7,6 +7,40 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 const BASE = 'https://graph.facebook.com/v19.0';
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_KEY = process.env.SUPABASE_KEY;
+
+// ── SUPABASE CLIENT ───────────────────────────────────────────────────────────
+async function supabaseQuery(method, table, data = null, filters = '') {
+  if (!SUPABASE_URL || !SUPABASE_KEY) return null;
+  try {
+    const url = `${SUPABASE_URL}/rest/v1/${table}${filters}`;
+    const opts = {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Prefer': method === 'POST' ? 'return=representation' : 'return=representation'
+      }
+    };
+    if (data) opts.body = JSON.stringify(data);
+    const r = await fetch(url, opts);
+    if (!r.ok) {
+      const err = await r.text();
+      console.error(`[supabase] ${method} ${table} error:`, err);
+      return null;
+    }
+    return await r.json();
+  } catch (e) {
+    console.error('[supabase] error:', e.message);
+    return null;
+  }
+}
+
+async function sbInsert(table, data) { return supabaseQuery('POST', table, data); }
+async function sbSelect(table, filters = '') { return supabaseQuery('GET', table, null, filters); }
+async function sbUpdate(table, data, filters) { return supabaseQuery('PATCH', table, data, filters); }
 
 app.use(cors({
   origin: '*',
@@ -24,6 +58,141 @@ async function fbGet(path, token) {
 
 app.get('/', (req, res) => {
   res.json({ status: 'ok', message: 'Instagram Agent Backend v2 rodando!' });
+});
+
+// ── SUPABASE ENDPOINTS ────────────────────────────────────────────────────────
+
+// Save profile snapshot
+app.post('/save-snapshot', async (req, res) => {
+  const secret = req.headers['x-agent-secret'];
+  if (process.env.AGENT_SECRET && secret !== process.env.AGENT_SECRET) {
+    return res.status(401).json({ error: 'Não autorizado' });
+  }
+  const { profile, media, insights } = req.body;
+  if (!profile) return res.status(400).json({ error: 'Dados obrigatórios' });
+  try {
+    const avgEng = media && media.length > 0
+      ? media.reduce((s, m) => s + (m.engagement_rate || 0), 0) / media.length
+      : 0;
+    const topFormat = media && media.length > 0
+      ? (() => {
+          const reels = media.filter(m => m.media_type === 'REEL' || m.media_type === 'VIDEO');
+          const carousels = media.filter(m => m.media_type === 'CAROUSEL_ALBUM');
+          const avgR = reels.length > 0 ? reels.reduce((s, m) => s + (m.engagement_rate || 0), 0) / reels.length : 0;
+          const avgC = carousels.length > 0 ? carousels.reduce((s, m) => s + (m.engagement_rate || 0), 0) / carousels.length : 0;
+          const avgI = media.length > 0 ? media.reduce((s, m) => s + (m.engagement_rate || 0), 0) / media.length : 0;
+          return avgR >= avgC && avgR >= avgI ? 'Reels' : avgC >= avgI ? 'Carrossel' : 'Foto';
+        })()
+      : 'N/A';
+    const snapshot = {
+      username: profile.username,
+      followers_count: profile.followers_count,
+      follows_count: profile.follows_count,
+      media_count: profile.media_count,
+      reach: insights?.reach || 0,
+      profile_views: insights?.profile_views || 0,
+      website_clicks: insights?.website_clicks || 0,
+      avg_engagement: parseFloat(avgEng.toFixed(2)),
+      top_format: topFormat
+    };
+    const result = await sbInsert('perfil_snapshots', snapshot);
+    // Also save posts performance
+    if (media && media.length > 0) {
+      for (const post of media.slice(0, 20)) {
+        await sbInsert('posts_performance', {
+          post_id: post.id,
+          caption: (post.caption || '').substring(0, 500),
+          media_type: post.media_type,
+          like_count: post.like_count || 0,
+          comments_count: post.comments_count || 0,
+          saved: post.saved || 0,
+          reach: post.reach || 0,
+          engagement_rate: parseFloat((post.engagement_rate || 0).toFixed(2)),
+          post_date: post.timestamp
+        });
+      }
+    }
+    res.json({ ok: true, snapshot: result });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// Save roteiro
+app.post('/save-roteiro', async (req, res) => {
+  const secret = req.headers['x-agent-secret'];
+  if (process.env.AGENT_SECRET && secret !== process.env.AGENT_SECRET) {
+    return res.status(401).json({ error: 'Não autorizado' });
+  }
+  const { tipo, funil, tema, conceito_ancora, conteudo } = req.body;
+  try {
+    const result = await sbInsert('roteiros', { tipo, funil, tema, conceito_ancora, conteudo, status: 'criado' });
+    res.json({ ok: true, id: result?.[0]?.id });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// Save growth report
+app.post('/save-report', async (req, res) => {
+  const secret = req.headers['x-agent-secret'];
+  if (process.env.AGENT_SECRET && secret !== process.env.AGENT_SECRET) {
+    return res.status(401).json({ error: 'Não autorizado' });
+  }
+  const { periodo, conteudo, avg_engagement, total_reach, top_formato } = req.body;
+  try {
+    const result = await sbInsert('growth_reports', { periodo, conteudo, avg_engagement, total_reach, top_formato });
+    res.json({ ok: true, id: result?.[0]?.id });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// Get/update contexto
+app.get('/contexto', async (req, res) => {
+  const secret = req.headers['x-agent-secret'];
+  if (process.env.AGENT_SECRET && secret !== process.env.AGENT_SECRET) {
+    return res.status(401).json({ error: 'Não autorizado' });
+  }
+  try {
+    const result = await sbSelect('contexto_conta', '?order=bloco');
+    res.json({ contexto: result || [] });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.post('/contexto', async (req, res) => {
+  const secret = req.headers['x-agent-secret'];
+  if (process.env.AGENT_SECRET && secret !== process.env.AGENT_SECRET) {
+    return res.status(401).json({ error: 'Não autorizado' });
+  }
+  const { bloco, conteudo } = req.body;
+  try {
+    const result = await sbUpdate('contexto_conta', 
+      { conteudo, updated_at: new Date().toISOString() },
+      `?bloco=eq.${bloco}`
+    );
+    res.json({ ok: true });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// Get historical snapshots for evolution chart
+app.get('/historico', async (req, res) => {
+  const secret = req.headers['x-agent-secret'];
+  if (process.env.AGENT_SECRET && secret !== process.env.AGENT_SECRET) {
+    return res.status(401).json({ error: 'Não autorizado' });
+  }
+  try {
+    const snapshots = await sbSelect('perfil_snapshots', '?order=created_at.desc&limit=30');
+    const reports = await sbSelect('growth_reports', '?order=created_at.desc&limit=10');
+    const roteiros = await sbSelect('roteiros', '?order=created_at.desc&limit=20');
+    res.json({ snapshots: snapshots || [], reports: reports || [], roteiros: roteiros || [] });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
 });
 
 // ── CONNECT ──────────────────────────────────────────────────────────────────
