@@ -343,6 +343,16 @@ function loadDemo(){D={...DEMO};igId='demo';pageToken='demo';render();}
 
 function render(){
   console.log('[render] trocando telas');
+  // Auto-save snapshot to Supabase
+  setTimeout(()=>{
+    fetch(`${BACKEND}/save-snapshot`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-agent-secret':AGENT_SECRET},
+      body:JSON.stringify({profile:D,media:D.media,insights:D.insights})
+    }).then(r=>r.json()).then(d=>{
+      if(d.ok) console.log('[supabase] snapshot salvo');
+    }).catch(e=>console.warn('[supabase] snapshot failed:',e.message));
+  }, 2000);
   document.getElementById('sc-setup').classList.remove('active');
   document.getElementById('sc-dash').classList.add('active');
   document.getElementById('conn-badge').className='badge badge-ok';
@@ -877,6 +887,12 @@ async function desenvolverRoteiro(num,tipo,funil){
   try{
     const r=await callClaudeChat(`Roteirista para @apaula.os. Use vocabulário proprietário. Formato: NÍVEL DO FUNIL | GANCHO (0-3s) | TRADUÇÃO EMOCIONAL | CONCEITO ÂNCORA | VILLAIN FRAME | DESENVOLVIMENTO | MICRO-AÇÃO PRÁTICA (específica, 24h, estilo Ana Paula) | CTA (coerente com ${fLabel}) | LEGENDA SEO | INDICAÇÕES DE PRODUÇÃO`,roteiroHist);
     roteiroHist.push({role:'assistant',content:r});
+    // Save to Supabase
+    fetch(`${BACKEND}/save-roteiro`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-agent-secret':AGENT_SECRET},
+      body:JSON.stringify({tipo,funil,tema:`Tema ${num}`,conteudo:r})
+    }).catch(()=>{});
     const f=r.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
     document.getElementById('roteiro-content').innerHTML=`<div style="display:flex;justify-content:space-between;margin-bottom:.75rem"><div style="font-size:14px;font-weight:600">✍️ Tema ${num} — ${fLabel}</div><button onclick="navigator.clipboard.writeText(document.getElementById('roteiro-content').innerText)" style="padding:.3rem .75rem;background:#f3f4f6;border:1px solid #ddd;border-radius:6px;font-size:12px;cursor:pointer">📋 Copiar</button></div><div class="analysis-box">${f}</div><div style="font-size:13px;color:#888;margin-top:.75rem">💬 Ajuste no chat abaixo.</div>`;
     renderRoteiroChat();
@@ -917,6 +933,18 @@ async function genGrowthReport(dias=30){
   try{
     const r=await callClaude(prompt);
     const f=r.replace(/## (.*?)\n/g,'<h3 style="font-size:15px;font-weight:700;margin:1.25rem 0 .5rem;color:#111">$1</h3>\n').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
+    // Save to Supabase
+    fetch(`${BACKEND}/save-report`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-agent-secret':AGENT_SECRET},
+      body:JSON.stringify({
+        periodo:dias,
+        conteudo:r,
+        avg_engagement:parseFloat(avgEng.toFixed(2)),
+        total_reach:ins.reach||0,
+        top_formato:avgReel>=avgCarousel&&avgReel>=avgImage?'Reels':avgCarousel>=avgImage?'Carrossel':'Fotos'
+      })
+    }).catch(()=>{});
     el.innerHTML=`<div style="display:flex;gap:10px;margin-bottom:1rem;flex-wrap:wrap">
       <div class="metric" style="flex:1;min-width:120px;text-align:center"><div class="metric-label">Engaj. Médio</div><div class="metric-value">${avgEng.toFixed(2)}%</div></div>
       <div class="metric" style="flex:1;min-width:120px;text-align:center"><div class="metric-label">Melhor formato</div><div class="metric-value" style="font-size:16px">${avgReel>=avgCarousel&&avgReel>=avgImage?'Reels':avgCarousel>=avgImage?'Carrossel':'Fotos'}</div></div>
