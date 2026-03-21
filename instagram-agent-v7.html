@@ -532,8 +532,7 @@ async function loadStories(){
     loading.style.display='none';
     if(d.error){
       storiesContent.innerHTML=`<p style="color:#888;font-size:14px">Stories não disponíveis via API.<br><small style="color:#aaa">Requer permissão avançada da Meta.</small></p>`;
-      try{const aiRes=await callClaude('Dê 5 dicas estratégicas para Stories no nicho de sexologia usando VTSD.');analysis.innerHTML=`<div class="analysis-box" style="margin-top:.75rem">${aiRes.replace(/
-/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')}</div>`;}catch(err){}
+      try{const aiRes=await callClaude('Dê 5 dicas estratégicas para Stories no nicho de sexologia usando VTSD.');analysis.innerHTML=`<div class="analysis-box" style="margin-top:.75rem">${aiRes.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')}</div>`;}catch(err){}
       return;}
     const stories=d.stories||[];
     if(!stories.length){storiesContent.innerHTML=`<p style="color:#888;font-size:14px">Nenhum story ativo no momento.</p>`;return;}
