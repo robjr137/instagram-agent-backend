@@ -129,6 +129,7 @@ textarea{resize:vertical}
     <button class="tab" onclick="sw('mentions',this)">Menções</button>
     <button class="tab" onclick="sw('growth',this)">📊 Growth Report</button>
     <button class="tab" onclick="sw('roteiros',this)">✍️ Roteiros</button>
+    <button class="tab" onclick="sw('contexto',this)">🧠 Contexto</button>
     <button class="tab" onclick="sw('strategy',this)">Estratégia IA</button>
   </div>
 
@@ -238,6 +239,76 @@ textarea{resize:vertical}
         <div class="chat-msgs" id="roteiro-chat-msgs" style="min-height:150px;max-height:350px;overflow-y:auto;padding:1rem;background:#fff"><p style="text-align:center;color:#888;padding:1.5rem 0;font-size:14px">Selecione um formato acima para começar...</p></div>
         <div class="chat-input-row"><input type="text" id="roteiro-chat-in" placeholder="Ex: roteiro sobre libido pós-parto..." onkeydown="if(event.key==='Enter')sendRoteiroMsg()"><button class="send-btn" onclick="sendRoteiroMsg()">Enviar</button></div>
       </div>
+    </div>
+  </div>
+
+  <!-- CENTRAL DE CONTEXTO -->
+  <div id="tab-contexto" style="display:none">
+    <input type="hidden" id="contexto-loaded" value="">
+    <div style="margin-bottom:1.25rem">
+      <div style="font-size:15px;font-weight:700;margin-bottom:.25rem">🧠 Central de Contexto</div>
+      <div style="font-size:12px;color:#888">Alimente o agente com informações do seu negócio. Esses dados são injetados automaticamente em todas as análises e roteiros.</div>
+    </div>
+
+    <div id="contexto-loading" style="text-align:center;padding:1.5rem;color:#888;font-size:13px">
+      <span class="spin"></span> Carregando contexto salvo...
+    </div>
+
+    <div id="contexto-form" style="display:none">
+      <!-- Bloco 1: Negócio -->
+      <div class="card" style="margin-bottom:1rem">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:.75rem">
+          <span style="font-size:18px">💼</span>
+          <div>
+            <div style="font-weight:600;font-size:14px">Negócio</div>
+            <div style="font-size:11px;color:#888">Ofertas ativas, preços, lançamentos previstos, parcerias</div>
+          </div>
+        </div>
+        <textarea id="ctx-negocio" rows="4" style="width:100%;padding:.75rem;border:1px solid #ddd;border-radius:8px;font-size:13px;font-family:Arial;resize:vertical" placeholder="Ex: Atendimento individual R$250 | Casal R$420 | Lançamento do infoproduto previsto para abril..."></textarea>
+      </div>
+
+      <!-- Bloco 2: Resultados reais -->
+      <div class="card" style="margin-bottom:1rem">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:.75rem">
+          <span style="font-size:18px">📈</span>
+          <div>
+            <div style="font-weight:600;font-size:14px">Resultados Reais</div>
+            <div style="font-size:11px;color:#888">DMs recebidas, agendamentos, vendas — atualize semanalmente</div>
+          </div>
+        </div>
+        <textarea id="ctx-resultados" rows="4" style="width:100%;padding:.75rem;border:1px solid #ddd;border-radius:8px;font-size:13px;font-family:Arial;resize:vertical" placeholder="Ex: Esta semana: 12 DMs com palavra TERAPIA, 4 agendamentos, 2 vendas do infoproduto..."></textarea>
+      </div>
+
+      <!-- Bloco 3: Feedback de conteúdo -->
+      <div class="card" style="margin-bottom:1rem">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:.75rem">
+          <span style="font-size:18px">✍️</span>
+          <div>
+            <div style="font-weight:600;font-size:14px">Feedback de Conteúdo</div>
+            <div style="font-size:11px;color:#888">O que funcionou, o que falhou, o que o público pediu</div>
+          </div>
+        </div>
+        <textarea id="ctx-feedback" rows="4" style="width:100%;padding:.75rem;border:1px solid #ddd;border-radius:8px;font-size:13px;font-family:Arial;resize:vertical" placeholder="Ex: Reel sobre Toque Pedágio viralizou (135K alcance). Carrossel sobre Espectadorismo gerou 22 salvamentos. Público pediu conteúdo sobre DR de casal..."></textarea>
+      </div>
+
+      <!-- Bloco 4: Contexto do momento -->
+      <div class="card" style="margin-bottom:1.25rem">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:.75rem">
+          <span style="font-size:18px">🌊</span>
+          <div>
+            <div style="font-weight:600;font-size:14px">Contexto do Momento</div>
+            <div style="font-size:11px;color:#888">Sazonalidade, tendências do nicho, o que está viralizando</div>
+          </div>
+        </div>
+        <textarea id="ctx-momento" rows="4" style="width:100%;padding:.75rem;border:1px solid #ddd;border-radius:8px;font-size:13px;font-family:Arial;resize:vertical" placeholder="Ex: Semana do Dia dos Namorados se aproximando. Tendência: conteúdo sobre reconexão de casal. Concorrentes falando muito sobre libido pós-parto..."></textarea>
+      </div>
+
+      <div style="display:flex;gap:10px;align-items:center">
+        <button onclick="saveContexto()" style="flex:1;padding:.75rem;background:linear-gradient(135deg,#833ab4,#fd1d1d);color:#fff;border:none;border-radius:10px;font-weight:600;font-size:14px;cursor:pointer">💾 Salvar Contexto</button>
+        <button onclick="useContextoNow()" style="flex:1;padding:.75rem;background:#ede9fe;color:#4c1d95;border:none;border-radius:10px;font-weight:600;font-size:14px;cursor:pointer">🧠 Gerar Análise com Contexto</button>
+      </div>
+
+      <div id="contexto-status" style="margin-top:.75rem;font-size:13px;text-align:center;min-height:20px"></div>
     </div>
   </div>
 
@@ -687,11 +758,12 @@ function renderChat(){
 }
 
 function sw(tab,btn){
-  ['overview','performance','stories','comments','mentions','growth','roteiros','strategy'].forEach(t=>{const el=document.getElementById('tab-'+t);if(el)el.style.display=t===tab?'block':'none';});
+  ['overview','performance','stories','comments','mentions','growth','roteiros','contexto','strategy'].forEach(t=>{const el=document.getElementById('tab-'+t);if(el)el.style.display=t===tab?'block':'none';});
   document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   if(tab==='strategy'&&!document.getElementById('strat-out').innerHTML.includes('strong'))genStrategy();
   // Growth report: user selects period (7/30/90 days) via buttons - no auto-trigger
+  if(tab==='contexto'&&!document.getElementById('contexto-loaded').value)loadContexto();
   if(tab==='stories'&&document.getElementById('stories-content').innerHTML==='')loadStories();
   if(tab==='mentions'&&document.getElementById('mentions-list').innerHTML==='')loadMentions();
 }
@@ -845,7 +917,8 @@ NÍVEL DO FUNIL | GANCHO (0-3s) | TRADUÇÃO EMOCIONAL | CONCEITO PROPRIETÁRIO 
 Público: Mulheres 25-45, casais em crise | Produtos: R$250/R$420/R$497-597`;
 
 async function callClaude(msg, extraSystem=''){
-  const sys = SYSTEM_PROMPT + (extraSystem ? '\n\n' + extraSystem : '');
+  const ctx = getContextoAtual ? getContextoAtual() : '';
+  const sys = SYSTEM_PROMPT + ctx + (extraSystem ? '\n\n' + extraSystem : '');
   const r=await fetch(`${BACKEND}/claude`,{method:'POST',headers:{'Content-Type':'application/json','x-agent-secret':AGENT_SECRET},body:JSON.stringify({system:sys,messages:[{role:'user',content:msg}]})});
   const d=await r.json();if(d.error)throw new Error(d.error);return d.text||'';
 }
@@ -956,6 +1029,88 @@ async function genGrowthReport(dias=30){
       <div style="color:#b91c1c;font-size:13px;margin-bottom:1rem">⚠️ Erro ao gerar relatório: ${e.message}</div>
       <button onclick="genGrowthReport(30)" style="padding:.5rem 1.25rem;background:#7c3aed;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600">🔄 Tentar novamente</button>
     </div>`;
+  }
+}
+
+
+// ── CENTRAL DE CONTEXTO ───────────────────────────────────────────────────────
+async function loadContexto(){
+  document.getElementById('contexto-loaded').value='1';
+  const loading=document.getElementById('contexto-loading');
+  const form=document.getElementById('contexto-form');
+  try{
+    const r=await fetch(`${BACKEND}/contexto`,{
+      headers:{'x-agent-secret':AGENT_SECRET}
+    });
+    const d=await r.json();
+    if(d.contexto && d.contexto.length){
+      d.contexto.forEach(row=>{
+        const el=document.getElementById(`ctx-${row.bloco==='feedback_conteudo'?'feedback':row.bloco==='contexto_momento'?'momento':row.bloco}`);
+        if(el && row.conteudo && !row.conteudo.startsWith('Preencha aqui')) el.value=row.conteudo;
+      });
+    }
+    loading.style.display='none';
+    form.style.display='block';
+  }catch(e){
+    loading.style.display='none';
+    form.style.display='block';
+    console.warn('[contexto] load failed:', e.message);
+  }
+}
+
+async function saveContexto(){
+  const status=document.getElementById('contexto-status');
+  status.textContent='Salvando...';
+  status.style.color='#888';
+  
+  const blocos=[
+    {bloco:'negocio', val:document.getElementById('ctx-negocio').value},
+    {bloco:'resultados', val:document.getElementById('ctx-resultados').value},
+    {bloco:'feedback_conteudo', val:document.getElementById('ctx-feedback').value},
+    {bloco:'contexto_momento', val:document.getElementById('ctx-momento').value},
+  ];
+
+  try{
+    for(const b of blocos){
+      await fetch(`${BACKEND}/contexto`,{
+        method:'POST',
+        headers:{'Content-Type':'application/json','x-agent-secret':AGENT_SECRET},
+        body:JSON.stringify({bloco:b.bloco, conteudo:b.val})
+      });
+    }
+    status.textContent='✅ Contexto salvo! O agente usará essas informações em todas as próximas análises.';
+    status.style.color='#065f46';
+  }catch(e){
+    status.textContent='❌ Erro ao salvar: '+e.message;
+    status.style.color='#b91c1c';
+  }
+}
+
+function getContextoAtual(){
+  const neg=document.getElementById('ctx-negocio')?.value||'';
+  const res=document.getElementById('ctx-resultados')?.value||'';
+  const feed=document.getElementById('ctx-feedback')?.value||'';
+  const mom=document.getElementById('ctx-momento')?.value||'';
+  if(!neg&&!res&&!feed&&!mom) return '';
+  return `\n\n## CONTEXTO DO NEGÓCIO (atualizado pela Ana Paula):\n${neg?'**Negócio:** '+neg+'\n':''}${res?'**Resultados reais:** '+res+'\n':''}${feed?'**Feedback de conteúdo:** '+feed+'\n':''}${mom?'**Contexto do momento:** '+mom:''}`;
+}
+
+async function useContextoNow(){
+  const ctx=getContextoAtual();
+  if(!ctx){
+    document.getElementById('contexto-status').textContent='⚠️ Preencha pelo menos um bloco antes de gerar a análise.';
+    document.getElementById('contexto-status').style.color='#92400e';
+    return;
+  }
+  document.getElementById('contexto-status').textContent='🧠 Gerando análise estratégica com seu contexto...';
+  document.getElementById('contexto-status').style.color='#4c1d95';
+  try{
+    const r=await callClaude(sumData()+ctx+'\n\nCom base nos dados reais da conta E no contexto do negócio informado acima, faça uma análise estratégica completa e acionável. Identifique oportunidades imediatas de conversão, ajustes de conteúdo necessários e as 3 ações prioritárias para esta semana. Use o vocabulário proprietário da conta. Em português.');
+    const f=r.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
+    document.getElementById('contexto-status').innerHTML=`<div class="analysis-box" style="margin-top:1rem;text-align:left">${f}</div>`;
+  }catch(e){
+    document.getElementById('contexto-status').textContent='❌ Erro: '+e.message;
+    document.getElementById('contexto-status').style.color='#b91c1c';
   }
 }
 
