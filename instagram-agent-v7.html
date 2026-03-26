@@ -1066,6 +1066,88 @@ function renderRoteiroChat(){
   c.scrollTop=c.scrollHeight;
 }
 
+
+// ── CENTRAL DE CONTEXTO ───────────────────────────────────────────────────────
+async function loadContexto(){
+  document.getElementById('contexto-loaded').value='1';
+  const loading=document.getElementById('contexto-loading');
+  const form=document.getElementById('contexto-form');
+  try{
+    const r=await fetch(`${BACKEND}/contexto`,{
+      headers:{'x-agent-secret':AGENT_SECRET}
+    });
+    const d=await r.json();
+    if(d.contexto && d.contexto.length){
+      d.contexto.forEach(row=>{
+        const elId=row.bloco==='feedback_conteudo'?'ctx-feedback':row.bloco==='contexto_momento'?'ctx-momento':'ctx-'+row.bloco;
+        const el=document.getElementById(elId);
+        if(el && row.conteudo && !row.conteudo.startsWith('Preencha aqui')) el.value=row.conteudo;
+      });
+    }
+    if(loading) loading.style.display='none';
+    if(form) form.style.display='block';
+  }catch(e){
+    if(loading) loading.style.display='none';
+    if(form) form.style.display='block';
+    console.warn('[contexto] load failed:', e.message);
+  }
+}
+
+async function saveContexto(){
+  const status=document.getElementById('contexto-status');
+  status.textContent='Salvando...';
+  status.style.color='#888';
+  const blocos=[
+    {bloco:'negocio', val:document.getElementById('ctx-negocio').value},
+    {bloco:'resultados', val:document.getElementById('ctx-resultados').value},
+    {bloco:'feedback_conteudo', val:document.getElementById('ctx-feedback').value},
+    {bloco:'contexto_momento', val:document.getElementById('ctx-momento').value},
+  ];
+  try{
+    for(const b of blocos){
+      await fetch(`${BACKEND}/contexto`,{
+        method:'POST',
+        headers:{'Content-Type':'application/json','x-agent-secret':AGENT_SECRET},
+        body:JSON.stringify({bloco:b.bloco, conteudo:b.val})
+      });
+    }
+    status.textContent='✅ Contexto salvo! O agente usará essas informações em todas as próximas análises.';
+    status.style.color='#065f46';
+  }catch(e){
+    status.textContent='❌ Erro ao salvar: '+e.message;
+    status.style.color='#b91c1c';
+  }
+}
+
+function getContextoAtual(){
+  const neg=document.getElementById('ctx-negocio')?.value||'';
+  const res=document.getElementById('ctx-resultados')?.value||'';
+  const feed=document.getElementById('ctx-feedback')?.value||'';
+  const mom=document.getElementById('ctx-momento')?.value||'';
+  if(!neg&&!res&&!feed&&!mom) return '';
+  return '\n\n## CONTEXTO DO NEGÓCIO (atualizado pela Ana Paula):\n'+(neg?'**Negócio:** '+neg+'\n':'')+(res?'**Resultados reais:** '+res+'\n':'')+(feed?'**Feedback de conteúdo:** '+feed+'\n':'')+(mom?'**Contexto do momento:** '+mom:'');
+}
+
+async function useContextoNow(){
+  const ctx=getContextoAtual();
+  const status=document.getElementById('contexto-status');
+  if(!ctx){
+    status.textContent='⚠️ Preencha pelo menos um bloco antes de gerar a análise.';
+    status.style.color='#92400e';
+    return;
+  }
+  status.textContent='🧠 Gerando análise estratégica com seu contexto...';
+  status.style.color='#4c1d95';
+  try{
+    const r=await callClaude(sumData()+ctx+'\n\nCom base nos dados reais da conta E no contexto do negócio informado acima, faça uma análise estratégica completa e acionável. Identifique oportunidades imediatas de conversão, ajustes de conteúdo necessários e as 3 ações prioritárias para esta semana. Use o vocabulário proprietário da conta. Em português.');
+    const f=r.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
+    status.innerHTML=`<div class="analysis-box" style="margin-top:1rem;text-align:left">${f}</div>`;
+  }catch(e){
+    status.textContent='❌ Erro: '+e.message;
+    status.style.color='#b91c1c';
+  }
+}
+
 window.addEventListener('load', autoConnect);
 
 
