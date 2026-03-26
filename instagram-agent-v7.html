@@ -961,6 +961,71 @@ NIVEL DO FUNIL | FORMATO (incluir se Trial Reel) | GANCHO (0-3s) | TRADUCAO EMOC
 @apaula.os | 355K seguidores | 0,41% engajamento (CRITICO — 7x abaixo do benchmark de 3-5%)
 Publico: Mulheres 25-45, casais em crise | Produtos: R$250/R$420/R$497-597`
 
+async function callClaude(msg, extraSystem=''){
+  const ctx = getContextoAtual ? getContextoAtual() : '';
+  const sys = SYSTEM_PROMPT + ctx + (extraSystem ? '\n\n' + extraSystem : '');
+  const r=await fetch(`${BACKEND}/claude`,{method:'POST',headers:{'Content-Type':'application/json','x-agent-secret':AGENT_SECRET},body:JSON.stringify({system:sys,messages:[{role:'user',content:msg}]})});
+  const d=await r.json();if(d.error)throw new Error(d.error);return d.text||'';
+}
+
+async function callClaudeChat(sys,msgs){
+  const ctx = getContextoAtual ? getContextoAtual() : '';
+  const fullSys = SYSTEM_PROMPT + ctx + (sys ? '\n\n' + sys : '');
+  const r=await fetch(`${BACKEND}/claude`,{method:'POST',headers:{'Content-Type':'application/json','x-agent-secret':AGENT_SECRET},body:JSON.stringify({system:fullSys,messages:msgs.map(h=>({role:h.role,content:h.content}))})});
+  const d=await r.json();if(d.error)throw new Error(d.error);return d.text||'';
+}
+
+async function genGrowthReport(dias=30){
+  const el=document.getElementById('growth-out');
+  el.innerHTML='<div class="analysis-box" style="text-align:center;padding:2rem"><span class="spin"></span><div style="margin-top:.75rem;font-size:13px;color:#666">Gerando análise dos últimos '+dias+' dias com dados reais...<br><small style="color:#999">Isso pode levar 15-30 segundos</small></div></div>';
+  const med=D.media||[];
+  const ins=D.insights||{};
+  const avgEng=med.length>0?(med.reduce((s,m)=>s+(m.engagement_rate||0),0)/med.length):0;
+  const winners=med.filter(m=>(m.engagement_rate||0)>avgEng*1.5).sort((a,b)=>(b.engagement_rate||0)-(a.engagement_rate||0)).slice(0,3);
+  const losers=med.filter(m=>(m.engagement_rate||0)<avgEng*0.5).sort((a,b)=>(a.engagement_rate||0)-(b.engagement_rate||0)).slice(0,3);
+  const reels=med.filter(m=>m.media_type==='REEL'||m.media_type==='VIDEO');
+  const carousels=med.filter(m=>m.media_type==='CAROUSEL_ALBUM');
+  const images=med.filter(m=>m.media_type==='IMAGE');
+  const avgReel=reels.length>0?(reels.reduce((s,m)=>s+(m.engagement_rate||0),0)/reels.length).toFixed(2):0;
+  const avgCarousel=carousels.length>0?(carousels.reduce((s,m)=>s+(m.engagement_rate||0),0)/carousels.length).toFixed(2):0;
+  const avgImage=images.length>0?(images.reduce((s,m)=>s+(m.engagement_rate||0),0)/images.length).toFixed(2):0;
+  const dataCtx=`DADOS @${D.username} - ÚLTIMOS ${dias} DIAS:\nSeguidores: ${D.followers_count} | Posts: ${med.length}\nAlcance: ${fmt(ins.reach)} | Visitas: ${fmt(ins.profile_views)} | Cliques: ${fmt(ins.website_clicks)}\nEngaj. médio: ${avgEng.toFixed(2)}%\nFormatos: Reels ${avgReel}% | Carrosseis ${avgCarousel}% | Fotos ${avgImage}%\nTOP 3:\n${winners.map((p,i)=>`${i+1}. ${p.media_type}|${(p.engagement_rate||0).toFixed(2)}%|❤${p.like_count}💬${p.comments_count}🔖${p.saved||0}|"${(p.caption||'').substring(0,60)}"`).join('\n')}\nMENOR PERF:\n${losers.map((p,i)=>`${i+1}. ${p.media_type}|${(p.engagement_rate||0).toFixed(2)}%|"${(p.caption||'').substring(0,60)}"`).join('\n')}`;
+  const prompt=dataCtx+`\n\nGere um GROWTH REPORT completo:\n## DIAGNÓSTICO EXECUTIVO\nNota 0-10 com justificativa.\n## O QUE FUNCIONOU\nFormatos, temas, padrões vencedores.\n## O QUE NÃO DEU CERTO\nErros, oportunidades perdidas.\n## PLANO 30 DIAS\nMeta realista, mix de conteúdo, 3 experimentos.\n## 5 AÇÕES IMEDIATAS\nPriorizadas por impacto.\n## PROJEÇÃO\n30/60/90 dias se implementar.\nUse os dados reais. Seja cirúrgico. Em português.`;
+  try{
+    const r=await callClaude(prompt);
+    // Save to Supabase
+    fetch(`${BACKEND}/save-report`,{method:'POST',headers:{'Content-Type':'application/json','x-agent-secret':AGENT_SECRET},body:JSON.stringify({periodo:dias,conteudo:r,avg_engagement:parseFloat(avgEng.toFixed(2)),total_reach:ins.reach||0,top_formato:avgReel>=avgCarousel&&avgReel>=avgImage?'Reels':avgCarousel>=avgImage?'Carrossel':'Fotos'})}).catch(()=>{});
+    const f=r.replace(/## (.*?)\n/g,'<h3 style="font-size:15px;font-weight:700;margin:1.25rem 0 .5rem;color:#111">$1</h3>\n').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
+    el.innerHTML=`<div style="display:flex;gap:10px;margin-bottom:1rem;flex-wrap:wrap">
+      <div class="metric" style="flex:1;min-width:120px;text-align:center"><div class="metric-label">Engaj. Médio</div><div class="metric-value">${avgEng.toFixed(2)}%</div></div>
+      <div class="metric" style="flex:1;min-width:120px;text-align:center"><div class="metric-label">Melhor formato</div><div class="metric-value" style="font-size:16px">${avgReel>=avgCarousel&&avgReel>=avgImage?'Reels':avgCarousel>=avgImage?'Carrossel':'Fotos'}</div></div>
+      <div class="metric" style="flex:1;min-width:120px;text-align:center"><div class="metric-label">Posts analisados</div><div class="metric-value">${med.length}</div></div>
+      <div class="metric" style="flex:1;min-width:120px;text-align:center"><div class="metric-label">Alcance</div><div class="metric-value">${fmt(ins.reach)}</div></div>
+    </div><div class="analysis-box">${f}</div>`;
+  }catch(e){
+    el.innerHTML=`<div style="text-align:center;padding:1.5rem">
+      <div style="color:#b91c1c;font-size:13px;margin-bottom:1rem">⚠️ Erro ao gerar relatório: ${e.message}</div>
+      <button onclick="genGrowthReport(${dias})" style="padding:.5rem 1.25rem;background:#7c3aed;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600">🔄 Tentar novamente</button>
+    </div>`;
+  }
+}
+
+async function solicitarRoteiro(num,tipo,funil){
+  const tLabel={reel:'Reel',trial:'Trial Reel',story:'Stories',carrossel:'Carrossel',lancamento:'Lancamento'}[tipo]||tipo;
+  const fLabel={topo:'Topo (Viralização)',meio:'Meio (Autoridade)',fundo:'Fundo (Conversão)'}[funil]||funil;
+  document.getElementById('roteiro-out').style.display='block';
+  document.getElementById('roteiro-content').innerHTML='<div class="analysis-box" style="text-align:center"><span class="spin"></span> Gerando '+num+' pautas de '+tLabel+' para '+fLabel+'...</div>';
+  const prompt=`Você é um estrategista sênior de conteúdo para @apaula.os.\n\nDados da conta: ${sumData()}\n\nGere EXATAMENTE ${num} sugestões de pauta para ${tLabel} — nível ${fLabel}.\n\nPara cada pauta entregue:\n1. TÍTULO DO GANCHO (máx 10 palavras — para o scroll em 3s)\n2. CONCEITO PROPRIETÁRIO ÂNCORA\n3. ÂNCORA GEO: definição citável do conceito\n4. VILLAIN COTIDIANO\n5. DARK SOCIAL: quem a mulher vai mandar isso?\n6. MICRO-AÇÃO PREVISTA\n7. CTA\n\nUse o vocabulário proprietário obrigatoriamente. Em português.`;
+  try{
+    const r=await callClaude(prompt);
+    const f=r.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
+    document.getElementById('roteiro-content').innerHTML=`<div style="font-size:13px;color:#666;margin-bottom:1rem">Escolha uma pauta e clique em <strong>Desenvolver</strong>:</div><div class="analysis-box">${f}</div><div style="margin-top:1rem;display:flex;gap:8px;flex-wrap:wrap">${Array.from({length:num},(_,i)=>`<button onclick="desenvolverRoteiro(${i+1},'${tipo}','${funil}')" style="padding:.5rem 1rem;background:#7c3aed;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600">Desenvolver Pauta ${i+1}</button>`).join('')}</div>`;
+  }catch(e){
+    document.getElementById('roteiro-content').innerHTML=`<p style="color:#b91c1c;font-size:13px">Erro: ${e.message}</p>`;
+  }
+}
+
+
 async function desenvolverRoteiro(num,tipo,funil){
   const tLabel={reel:'Reel',trial:'Trial Reel',story:'Stories',carrossel:'Carrossel',reaproveitamento:'Reaproveitamento',lancamento:'Lancamento'}[tipo];
   const fLabel=funil==='topo'?'Topo':funil==='meio'?'Meio':'Fundo';
