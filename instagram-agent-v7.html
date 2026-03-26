@@ -130,12 +130,24 @@ textarea{resize:vertical}
     <button class="tab" onclick="sw('growth',this)">📊 Growth Report</button>
     <button class="tab" onclick="sw('roteiros',this)">✍️ Roteiros</button>
     <button class="tab" onclick="sw('contexto',this)">🧠 Contexto</button>
+    <button class="tab" onclick="sw('agencia',this)">🏢 Agência</button>
     <button class="tab" onclick="sw('strategy',this)">Estratégia IA</button>
   </div>
 
   <!-- VISÃO GERAL -->
   <div id="tab-overview">
     <div class="metric-grid" id="mtr-grid"></div>
+    <!-- Score de Saúde da Conta -->
+    <div id="health-score-bar" style="margin-bottom:1rem;display:none">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem">
+        <div style="font-weight:700;font-size:14px">🏥 Score de Saúde da Conta</div>
+        <div id="health-score-value" style="font-size:28px;font-weight:800;color:#7c3aed">—</div>
+      </div>
+      <div style="background:#f3f4f6;border-radius:8px;height:10px;overflow:hidden">
+        <div id="health-score-bar-fill" style="height:100%;border-radius:8px;background:linear-gradient(90deg,#ef4444,#f59e0b,#10b981);transition:width 1s ease;width:0%"></div>
+      </div>
+      <div id="health-score-items" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:.5rem"></div>
+    </div>
     <div class="section-title">Análise rápida do agente</div>
     <div class="analysis-box" id="quick-anal"><span class="spin"></span>Analisando...</div>
   </div>
@@ -314,6 +326,68 @@ textarea{resize:vertical}
     </div>
   </div>
 
+  <!-- AGÊNCIA SÊNIOR -->
+  <div id="tab-agencia" style="display:none">
+    <input type="hidden" id="agencia-loaded" value="">
+    <div style="margin-bottom:1.25rem">
+      <div style="font-size:15px;font-weight:700;margin-bottom:.25rem">🏢 Análises de Agência Sênior</div>
+      <div style="font-size:12px;color:#888">8 dimensões estratégicas — do diagnóstico à conversão</div>
+    </div>
+
+    <!-- Botões de análise -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1.25rem">
+      <button onclick="runAgenciaAnalysis('matriz')" class="btn-agencia" style="padding:.75rem;background:#fff;border:1.5px solid #ddd;border-radius:10px;cursor:pointer;text-align:left;font-size:13px" onmouseover="this.style.borderColor='#833ab4'" onmouseout="this.style.borderColor='#ddd'">
+        <div style="font-size:18px;margin-bottom:3px">📊</div>
+        <div style="font-weight:600">Matriz de Conteúdo</div>
+        <div style="font-size:11px;color:#888">Portfólio vs funil — buracos e oportunidades</div>
+      </button>
+      <button onclick="runAgenciaAnalysis('timing')" class="btn-agencia" style="padding:.75rem;background:#fff;border:1.5px solid #ddd;border-radius:10px;cursor:pointer;text-align:left;font-size:13px" onmouseover="this.style.borderColor='#833ab4'" onmouseout="this.style.borderColor='#ddd'">
+        <div style="font-size:18px;margin-bottom:3px">⏰</div>
+        <div style="font-weight:600">Timing e Sazonalidade</div>
+        <div style="font-size:11px;color:#888">Melhores dias, horários e datas estratégicas</div>
+      </button>
+      <button onclick="runAgenciaAnalysis('aquisicao')" class="btn-agencia" style="padding:.75rem;background:#fff;border:1.5px solid #ddd;border-radius:10px;cursor:pointer;text-align:left;font-size:13px" onmouseover="this.style.borderColor='#833ab4'" onmouseout="this.style.borderColor='#ddd'">
+        <div style="font-size:18px;margin-bottom:3px">🎯</div>
+        <div style="font-weight:600">Aquisição e Tráfego</div>
+        <div style="font-size:11px;color:#888">Dark Social, CPS, SEO de dor</div>
+      </button>
+      <button onclick="runAgenciaAnalysis('retencao')" class="btn-agencia" style="padding:.75rem;background:#fff;border:1.5px solid #ddd;border-radius:10px;cursor:pointer;text-align:left;font-size:13px" onmouseover="this.style.borderColor='#833ab4'" onmouseout="this.style.borderColor='#ddd'">
+        <div style="font-size:18px;margin-bottom:3px">🔄</div>
+        <div style="font-weight:600">Retenção e Engajamento</div>
+        <div style="font-size:11px;color:#888">Saturação de formato, sentimento, cohort</div>
+      </button>
+      <button onclick="runAgenciaAnalysis('conversao')" class="btn-agencia" style="padding:.75rem;background:#fff;border:1.5px solid #ddd;border-radius:10px;cursor:pointer;text-align:left;font-size:13px" onmouseover="this.style.borderColor='#833ab4'" onmouseout="this.style.borderColor='#ddd'">
+        <div style="font-size:18px;margin-bottom:3px">💰</div>
+        <div style="font-weight:600">Conversão e LTV</div>
+        <div style="font-size:11px;color:#888">CTAs, esteira de produtos, temperatura</div>
+      </button>
+      <button onclick="runAgenciaAnalysis('competitivo')" class="btn-agencia" style="padding:.75rem;background:#fff;border:1.5px solid #ddd;border-radius:10px;cursor:pointer;text-align:left;font-size:13px" onmouseover="this.style.borderColor='#833ab4'" onmouseout="this.style.borderColor='#ddd'">
+        <div style="font-size:18px;margin-bottom:3px">🔍</div>
+        <div style="font-weight:600">Inteligência Competitiva</div>
+        <div style="font-size:11px;color:#888">Gap Analysis, Teste A/B, posicionamento</div>
+      </button>
+      <button onclick="runAgenciaAnalysis('okr')" class="btn-agencia" style="padding:.75rem;background:#fff;border:1.5px solid #ddd;border-radius:10px;cursor:pointer;text-align:left;font-size:13px" onmouseover="this.style.borderColor='#833ab4'" onmouseout="this.style.borderColor='#ddd'">
+        <div style="font-size:18px;margin-bottom:3px">🎯</div>
+        <div style="font-weight:600">Metas e OKRs</div>
+        <div style="font-size:11px;color:#888">Definir metas, monitorar progresso</div>
+      </button>
+      <button onclick="runAgenciaAnalysis('relatorio')" class="btn-agencia" style="padding:.75rem;background:#fff;border:1.5px solid #ddd;border-radius:10px;cursor:pointer;text-align:left;font-size:13px" onmouseover="this.style.borderColor='#833ab4'" onmouseout="this.style.borderColor='#ddd'">
+        <div style="font-size:18px;margin-bottom:3px">📋</div>
+        <div style="font-weight:600">Relatório Executivo</div>
+        <div style="font-size:11px;color:#888">Consolidado mensal completo</div>
+      </button>
+    </div>
+
+    <!-- Output area -->
+    <div id="agencia-out" style="display:none">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
+        <div id="agencia-out-title" style="font-weight:700;font-size:14px"></div>
+        <button onclick="document.getElementById('agencia-out').style.display='none'" style="font-size:11px;color:#888;background:none;border:none;cursor:pointer">✕ Fechar</button>
+      </div>
+      <div id="agencia-out-content" class="analysis-box"></div>
+    </div>
+  </div>
+
   <!-- ESTRATÉGIA IA -->
   <div id="tab-strategy" style="display:none">
     <div id="strat-out"></div>
@@ -416,6 +490,8 @@ function loadDemo(){D={...DEMO};igId='demo';pageToken='demo';render();}
 
 function render(){
   console.log('[render] trocando telas');
+  // Render health score
+  setTimeout(renderHealthScore, 500);
   // Auto-save snapshot to Supabase
   setTimeout(()=>{
     fetch(`${BACKEND}/save-snapshot`,{
@@ -761,11 +837,12 @@ function renderChat(){
 }
 
 function sw(tab,btn){
-  ['overview','performance','stories','comments','mentions','growth','roteiros','contexto','strategy'].forEach(t=>{const el=document.getElementById('tab-'+t);if(el)el.style.display=t===tab?'block':'none';});
+  ['overview','performance','stories','comments','mentions','growth','roteiros','contexto','agencia','strategy'].forEach(t=>{const el=document.getElementById('tab-'+t);if(el)el.style.display=t===tab?'block':'none';});
   document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   if(tab==='strategy'&&!document.getElementById('strat-out').innerHTML.includes('strong'))genStrategy();
   // Growth report: user selects period (7/30/90 days) via buttons - no auto-trigger
+  if(tab==='agencia'&&!document.getElementById('agencia-loaded').value)loadAgencia();
   if(tab==='contexto'&&!document.getElementById('contexto-loaded').value)loadContexto();
   if(tab==='stories'&&document.getElementById('stories-content').innerHTML==='')loadStories();
   if(tab==='mentions'&&document.getElementById('mentions-list').innerHTML==='')loadMentions();
@@ -1145,6 +1222,349 @@ async function useContextoNow(){
   }catch(e){
     status.textContent='❌ Erro: '+e.message;
     status.style.color='#b91c1c';
+  }
+}
+
+
+// ── SCORE DE SAÚDE DA CONTA ───────────────────────────────────────────────────
+function calcHealthScore(){
+  const med = D.media || [];
+  const ins = D.insights || {};
+  const followers = D.followers_count || 1;
+  if(!med.length) return null;
+
+  const scores = {};
+
+  // 1. Engajamento (0-25pts) — benchmark 3-5%
+  const avgEng = med.reduce((s,m)=>s+(m.engagement_rate||0),0)/med.length;
+  scores.engajamento = Math.min(25, Math.round((avgEng / 3) * 25));
+
+  // 2. Mix de formatos (0-15pts) — variedade saudavel
+  const tipos = new Set(med.map(m=>m.media_type));
+  scores.mix = tipos.size >= 3 ? 15 : tipos.size === 2 ? 10 : 5;
+
+  // 3. Taxa de salvamento (0-20pts) — sinal mais forte do algoritmo
+  const totalSaved = med.reduce((s,m)=>s+(m.saved||0),0);
+  const totalReach = med.reduce((s,m)=>s+(m.reach||0),0);
+  const saveRate = totalReach > 0 ? (totalSaved/totalReach)*100 : 0;
+  scores.salvamentos = Math.min(20, Math.round((saveRate / 2) * 20));
+
+  // 4. Consistencia de publicacao (0-15pts)
+  scores.consistencia = med.length >= 12 ? 15 : med.length >= 8 ? 10 : med.length >= 4 ? 7 : 3;
+
+  // 5. Alcance relativo (0-15pts)
+  const avgReach = totalReach / med.length;
+  const reachRate = (avgReach / followers) * 100;
+  scores.alcance = Math.min(15, Math.round((reachRate / 30) * 15));
+
+  // 6. Crescimento (0-10pts) — placeholder ate ter historico
+  scores.crescimento = 7; // valor neutro ate ter dados do Supabase
+
+  const total = Object.values(scores).reduce((a,b)=>a+b,0);
+  return { total, scores, avgEng, saveRate };
+}
+
+function renderHealthScore(){
+  const result = calcHealthScore();
+  if(!result) return;
+  const bar = document.getElementById('health-score-bar');
+  const val = document.getElementById('health-score-value');
+  const fill = document.getElementById('health-score-bar-fill');
+  const items = document.getElementById('health-score-items');
+  if(!bar) return;
+
+  bar.style.display = 'block';
+  val.textContent = result.total + '/100';
+  val.style.color = result.total >= 70 ? '#059669' : result.total >= 45 ? '#d97706' : '#dc2626';
+  setTimeout(()=>{ fill.style.width = result.total + '%'; }, 100);
+
+  const labels = {
+    engajamento: { label: 'Engajamento', max: 25 },
+    mix: { label: 'Mix formatos', max: 15 },
+    salvamentos: { label: 'Salvamentos', max: 20 },
+    consistencia: { label: 'Consistência', max: 15 },
+    alcance: { label: 'Alcance', max: 15 },
+    crescimento: { label: 'Crescimento', max: 10 },
+  };
+  items.innerHTML = Object.entries(result.scores).map(([k,v])=>{
+    const l = labels[k];
+    const pct = Math.round((v/l.max)*100);
+    const color = pct >= 70 ? '#059669' : pct >= 40 ? '#d97706' : '#dc2626';
+    return `<div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:6px;padding:4px 8px;font-size:11px"><span style="color:#6b7280">${l.label}</span> <span style="font-weight:700;color:${color}">${v}/${l.max}</span></div>`;
+  }).join('');
+}
+
+// ── ANÁLISES DE AGÊNCIA SÊNIOR ────────────────────────────────────────────────
+async function loadAgencia(){
+  document.getElementById('agencia-loaded').value='1';
+  renderHealthScore();
+}
+
+async function runAgenciaAnalysis(tipo){
+  const out = document.getElementById('agencia-out');
+  const title = document.getElementById('agencia-out-title');
+  const outContent = document.getElementById('agencia-out-content');
+  out.style.display = 'block';
+  out.scrollIntoView({behavior:'smooth', block:'nearest'});
+
+  const med = D.media || [];
+  const ins = D.insights || {};
+  const followers = D.followers_count || 355000;
+  const avgEng = med.length > 0 ? (med.reduce((s,m)=>s+(m.engagement_rate||0),0)/med.length).toFixed(2) : 0;
+  const reels = med.filter(m=>m.media_type==='REEL'||m.media_type==='VIDEO');
+  const carousels = med.filter(m=>m.media_type==='CAROUSEL_ALBUM');
+  const images = med.filter(m=>m.media_type==='IMAGE');
+  const avgReel = reels.length>0?(reels.reduce((s,m)=>s+(m.engagement_rate||0),0)/reels.length).toFixed(2):0;
+  const avgCarousel = carousels.length>0?(carousels.reduce((s,m)=>s+(m.engagement_rate||0),0)/carousels.length).toFixed(2):0;
+  const avgImage = images.length>0?(images.reduce((s,m)=>s+(m.engagement_rate||0),0)/images.length).toFixed(2):0;
+  const totalSaved = med.reduce((s,m)=>s+(m.saved||0),0);
+  const totalReach = med.reduce((s,m)=>s+(m.reach||0),0);
+  const saveRate = totalReach>0?((totalSaved/totalReach)*100).toFixed(2):0;
+  const health = calcHealthScore();
+  const ctx = (typeof getContextoAtual === 'function') ? getContextoAtual() : '';
+
+  const dataBase = `DADOS @${D.username||'apaula.os'} — ${followers} seguidores | ${med.length} posts analisados
+Engajamento médio: ${avgEng}% (benchmark nicho: 3-5%)
+Formatos: Reels ${avgReel}% | Carrosséis ${avgCarousel}% | Fotos ${avgImage}%
+Alcance total: ${ins.reach||0} | Salvamentos totais: ${totalSaved} | Taxa de salvo: ${saveRate}%
+Score de saúde: ${health?health.total+'/100':'N/A'}
+Posts últimos 20: ${med.map(m=>`${m.media_type}|${(m.engagement_rate||0).toFixed(2)}%|salvo:${m.saved||0}|"${(m.caption||'').substring(0,40)}"`).join(' | ')}`;
+
+  const prompts = {
+    matriz: {
+      title: '📊 Matriz de Conteúdo Estratégico',
+      prompt: `${dataBase}${ctx}
+
+Faça uma ANÁLISE DE MATRIZ DE CONTEÚDO completa:
+
+**PORTFÓLIO ATUAL**
+Mapeie os posts existentes em: Topo de funil (descoberta/viral) vs Meio (educação/autoridade) vs Fundo (conversão/CTA). Qual é a proporção atual? Está equilibrada?
+
+**GAPS IDENTIFICADOS**
+Quais tipos de conteúdo estão ausentes ou subutilizados? O que o funil precisa que não está sendo produzido?
+
+**PADRÕES VENCEDORES**
+Quais temas, formatos e estruturas aparecem nos posts com maior engajamento? Que padrão emerge?
+
+**CONTEÚDO PARA REAPROVEITAMENTO**
+Identifique posts com alto alcance mas baixo salvamento — candidatos a virar carrossel educativo.
+
+**RECOMENDAÇÃO DE MIX SEMANAL**
+Proporção ideal de formatos e funis para as próximas 4 semanas.
+
+Seja cirúrgico. Use dados reais. Em português.`
+    },
+    timing: {
+      title: '⏰ Timing, Sazonalidade e Calendário Editorial',
+      prompt: `${dataBase}${ctx}
+
+Faça uma ANÁLISE DE TIMING E SAZONALIDADE:
+
+**PADRÕES DE PERFORMANCE POR FORMATO**
+Com base nos dados de engajamento, quais formatos performam melhor? Reels têm mais alcance mas carrosséis têm mais salvamentos?
+
+**SAZONALIDADE DO NICHO (sexualidade e relacionamentos)**
+Identifique as datas estratégicas do ano para este nicho:
+- Janeiro: recomeços, promessas de casal
+- Fevereiro: Dia dos Namorados (12/02 no Brasil)
+- Maio: Dia das Mães
+- Junho: Dia dos Namorados internacional (14/06)
+- Outubro: mês da saúde sexual
+- Novembro/Dezembro: balanço de ano, metas de relacionamento
+
+**CALENDÁRIO EDITORIAL — PRÓXIMOS 30 DIAS**
+Sugira um calendário semanal específico com: dia, formato, tema, conceito proprietário âncora e nível de funil.
+
+**FREQUÊNCIA IDEAL**
+Quantos posts por semana para o objetivo de aumentar engajamento de 0,41% para 1% em 90 dias?
+
+Use o vocabulário proprietário. Em português.`
+    },
+    aquisicao: {
+      title: '🎯 Aquisição e Tráfego',
+      prompt: `${dataBase}${ctx}
+
+Faça uma ANÁLISE DE AQUISIÇÃO E TRÁFEGO:
+
+**DIAGNÓSTICO DE TRÁFEGO ORGÂNICO**
+Com ${followers} seguidores e engajamento de ${avgEng}%, qual é o custo estimado por seguidor (CPS) e por lead qualificado (CPL)?
+
+**DARK SOCIAL TRACKING**
+Quais posts têm maior potencial de circulação via WhatsApp e DM? Dark Social é quando o conteúdo é compartilhado no privado — salvamentos e compartilhamentos são os indicadores. Identifique os conteúdos com maior potencial de Dark Social nos dados.
+
+**SEO DE DOR**
+Quais palavras-chave de dor do nicho os posts estão usando? Identifique gaps: quais termos de busca o público usa ("perdi a libido", "marido não me toca", "falta de desejo") que não estão sendo atacados sistematicamente?
+
+**FUNIL DE DESCOBERTA**
+Como um novo seguidor chega à Ana Paula hoje? Mapeie o caminho: Reel viral → seguir → consumir conteúdo → DM → conversão. Onde está o maior gargalo?
+
+**3 AÇÕES IMEDIATAS**
+Para aumentar aquisição qualificada nas próximas 2 semanas.
+
+Em português.`
+    },
+    retencao: {
+      title: '🔄 Retenção e Engajamento Profundo',
+      prompt: `${dataBase}${ctx}
+
+Faça uma ANÁLISE DE RETENÇÃO E ENGAJAMENTO PROFUNDO:
+
+**DIAGNÓSTICO DE RETENÇÃO**
+Com ${followers} seguidores mas engajamento de ${avgEng}% (7x abaixo do benchmark de 3-5%), quantos seguidores são "fantasmas"? Que tipo de conteúdo está atraindo seguidores que não engajam?
+
+**SATURAÇÃO DE FORMATO**
+Analisando os últimos posts: há algum formato com queda de performance? Quando um formato vencedor começa a saturar, o algoritmo penaliza. Identifique sinais de saturação.
+
+**ANÁLISE DE SENTIMENTO DA AUDIÊNCIA**
+Com base nas legendas e performance dos posts, qual é o sentimento dominante da audiência? Estão em fase de dor ("não sei o que fazer") ou em fase de solução ("preciso de terapia")? Isso muda o tipo de CTA mais efetivo.
+
+**COHORT DE ENGAJAMENTO**
+Quais temas geram seguidores que voltam e comentam? Quais temas atraem curtidas mas não salvamentos (baixo valor percebido)?
+
+**SEQUÊNCIA DE STORIES RECOMENDADA**
+Para nutrir quem já segue e aumentar interação diária — baseada nos temas de maior engajamento.
+
+**3 AÇÕES PARA RETER MELHOR**
+Em português.`
+    },
+    conversao: {
+      title: '💰 Conversão e LTV',
+      prompt: `${dataBase}${ctx}
+
+Faça uma ANÁLISE DE CONVERSÃO E LTV (Lifetime Value):
+
+**TEMPERATURA DA AUDIÊNCIA**
+Com base no tipo de conteúdo que mais engaja, a audiência atual está fria (descoberta), morna (consideração) ou quente (pronta para comprar)? Qual % estimado em cada temperatura?
+
+**DIAGNÓSTICO DE CTAs**
+Quais CTAs estão sendo usados nos posts analisados? Estão alinhados com a temperatura da audiência? CTA direto para audiência fria é um erro clássico.
+
+**ESTEIRA DE PRODUTOS — ANÁLISE DE ENCAIXE**
+Produtos: Infoproduto R$497-597 (entrada) → Atendimento Individual R$250/sessão → Atendimento Casal R$420/sessão.
+Esta esteira está sendo comunicada no conteúdo? O infoproduto está sendo posicionado como porta de entrada ou está competindo com o atendimento?
+
+**MATRIZ DE CTA POR FORMATO**
+Com base nos dados: qual CTA performa melhor em qual formato? "Me manda DM com TERAPIA" funciona melhor em Reel ou Stories? "Link na bio" gera mais clique em qual tipo de post?
+
+**PROJEÇÃO DE RECEITA**
+Se o engajamento subir de 0,41% para 1%: quantos leads qualificados isso gera? Qual é o impacto estimado na receita mensal?
+
+**3 AÇÕES PARA AUMENTAR CONVERSÃO**
+Em português.`
+    },
+    competitivo: {
+      title: '🔍 Inteligência Competitiva e Posicionamento',
+      prompt: `${dataBase}${ctx}
+
+Faça uma ANÁLISE DE INTELIGÊNCIA COMPETITIVA:
+
+**POSICIONAMENTO ATUAL**
+Com base no vocabulário proprietário e nos temas dos posts, como a Ana Paula se diferencia de outras sexólogas e terapeutas de relacionamento? Qual é o posicionamento real vs o posicionamento ideal?
+
+**GAP ANALYSIS DO NICHO**
+Quais temas de sexualidade e relacionamento estão sendo subutilizados no mercado brasileiro que a Ana Paula tem autoridade para ocupar? Onde está o "oceano azul"?
+
+**VANTAGEM COMPETITIVA GEO**
+O vocabulário proprietário (Toque Pedágio, Marido Wi-Fi, Desejo Responsivo) é uma vantagem competitiva única para ser citada por IAs. Quais outros conceitos poderiam ser "owned" pela Ana Paula neste nicho?
+
+**ANÁLISE DE TESTE A/B RECOMENDADO**
+Com base nos dados de performance, quais variáveis testar nas próximas 4 semanas?
+- Tom: acolhedor vs irônico/provocativo
+- Gancho: pergunta vs afirmação vs dado
+- CTA: DM vs link na bio vs comentar
+
+**AMEAÇAS E OPORTUNIDADES**
+O que o mercado está fazendo que pode afetar a posição da Ana Paula? O que está sendo ignorado pelos concorrentes?
+
+Em português.`
+    },
+    okr: {
+      title: '🎯 Metas, OKRs e Monitoramento',
+      prompt: `${dataBase}${ctx}
+
+Crie um FRAMEWORK DE METAS E OKRs para os próximos 90 dias:
+
+**DIAGNÓSTICO DE PONTO DE PARTIDA**
+- Engajamento atual: ${avgEng}% (meta: 1% em 90 dias, 3% em 6 meses)
+- Score de saúde: ${health?health.total+'/100':'calcular'}
+- Lacunas principais identificadas nos dados
+
+**OKRs — PRÓXIMOS 90 DIAS**
+Defina 3 Objectives com 3 Key Results cada, baseados nos dados reais da conta. Sejam específicos e mensuráveis.
+
+Exemplo de estrutura:
+- O1: Aumentar qualidade do engajamento
+  - KR1: Taxa de salvamento de X% para Y%
+  - KR2: % de posts com mais de Z comentários
+  - KR3: Crescimento de seguidores de X para Y
+
+**MÉTRICAS SEMANAIS A MONITORAR**
+Quais 5 números olhar toda segunda-feira para saber se está no caminho certo?
+
+**ALERTAS DE DESVIO**
+Quais sinais indicam que a estratégia precisa ser ajustada?
+
+**PLANO DE 90 DIAS — FASES**
+- Semanas 1-4: foco em X
+- Semanas 5-8: foco em Y  
+- Semanas 9-12: foco em Z
+
+Em português.`
+    },
+    relatorio: {
+      title: '📋 Relatório Executivo Mensal',
+      prompt: `${dataBase}${ctx}
+
+Gere um RELATÓRIO EXECUTIVO MENSAL completo no formato de agência sênior:
+
+## RESUMO EXECUTIVO
+3 linhas: o que aconteceu, o principal resultado, a decisão mais importante.
+
+## SCORE DE SAÚDE: ${health?health.total+'/100':'—'}
+Evolução vs mês anterior (quando disponível). Principais variações por indicador.
+
+## PERFORMANCE DO PERÍODO
+- Melhor post: por que funcionou?
+- Pior post: o que aprendemos?
+- Formato campeão do mês
+- Tema campeão do mês
+
+## O QUE FUNCIONOU
+Top 3 decisões/conteúdos que geraram resultado. Com dados específicos.
+
+## O QUE NÃO FUNCIONOU
+Top 3 erros ou oportunidades perdidas. Com análise de causa.
+
+## APRENDIZADOS ESTRATÉGICOS
+O que esse mês revelou sobre a audiência que não sabíamos antes?
+
+## PLANO DO PRÓXIMO MÊS
+- Meta principal (específica e mensurável)
+- Mix de conteúdo recomendado
+- 3 experimentos a testar
+- 5 ações prioritárias
+
+## SAÚDE FINANCEIRA DO CONTEÚDO
+Estimativa de leads gerados e impacto estimado na receita.
+
+Seja específico, use os dados reais, sem enrolação. Em português.`
+    }
+  };
+
+  const analysis = prompts[tipo];
+  if(!analysis) return;
+
+  title.textContent = analysis.title;
+  outContent.innerHTML = '<div style="text-align:center;padding:2rem"><span class="spin"></span><div style="margin-top:.75rem;font-size:13px;color:#666">Gerando análise de agência sênior...<br><small style="color:#999">Isso pode levar 20-30 segundos</small></div></div>';
+
+  try{
+    const r = await callClaude(analysis.prompt);
+    const f = r.replace(/## (.*?)\n/g,'<h3 style="font-size:14px;font-weight:700;margin:1rem 0 .4rem;color:#111">$1</h3>\n')
+               .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
+               .replace(/\n/g,'<br>');
+    outContent.innerHTML = f;
+  }catch(e){
+    outContent.innerHTML = `<p style="color:#b91c1c;font-size:13px">⚠️ Erro: ${e.message}</p>`;
   }
 }
 
