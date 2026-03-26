@@ -963,14 +963,14 @@ NIVEL DO FUNIL | FORMATO (incluir se Trial Reel) | GANCHO (0-3s) | TRADUCAO EMOC
 Publico: Mulheres 25-45, casais em crise | Produtos: R$250/R$420/R$497-597`
 
 async function callClaude(msg, extraSystem=''){
-  const ctx = getContextoAtual ? getContextoAtual() : '';
+  const ctx = (typeof getContextoAtual === 'function') ? getContextoAtual() : '';
   const sys = SYSTEM_PROMPT + ctx + (extraSystem ? '\n\n' + extraSystem : '');
   const r=await fetch(`${BACKEND}/claude`,{method:'POST',headers:{'Content-Type':'application/json','x-agent-secret':AGENT_SECRET},body:JSON.stringify({system:sys,messages:[{role:'user',content:msg}]})});
   const d=await r.json();if(d.error)throw new Error(d.error);return d.text||'';
 }
 
 async function callClaudeChat(sys,msgs){
-  const ctx = getContextoAtual ? getContextoAtual() : '';
+  const ctx = (typeof getContextoAtual === 'function') ? getContextoAtual() : '';
   const fullSys = SYSTEM_PROMPT + ctx + (sys ? '\n\n' + sys : '');
   const r=await fetch(`${BACKEND}/claude`,{method:'POST',headers:{'Content-Type':'application/json','x-agent-secret':AGENT_SECRET},body:JSON.stringify({system:fullSys,messages:msgs.map(h=>({role:h.role,content:h.content}))})});
   const d=await r.json();if(d.error)throw new Error(d.error);return d.text||'';
