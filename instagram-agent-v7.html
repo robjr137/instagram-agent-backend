@@ -512,7 +512,8 @@ async function loadPostInsights(mediaId, caption){
       if(aiDiv) aiDiv.innerHTML=aiRes.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
     }catch(aiErr){
       const aiDiv=document.getElementById('post-ai-analysis');
-      if(aiDiv) aiDiv.innerHTML='<span style="color:#888;font-size:12px">Análise de IA indisponível</span>';
+      if(aiDiv) aiDiv.innerHTML='<span style="color:#b91c1c;font-size:12px">⚠️ Erro IA: '+aiErr.message+'</span>';
+      console.error('[callClaude post]', aiErr);
     }
   }catch(e){content.innerHTML=`<p style="color:#b91c1c;font-size:13px">Erro: ${e.message}</p>`;}
 }
@@ -678,7 +679,7 @@ async function runQuickAnal(){
   try{
     const r=await callClaude(sumData()+'\n\nFaca uma analise direta em 3-4 frases: o que esta indo bem, o maior problema e a melhor oportunidade imediata. Em portugues.');
     el.innerHTML=r.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
-  }catch(e){el.innerHTML='<span style="color:#888">Análise indisponível.</span>';}
+  }catch(e){el.innerHTML='<span style="color:#b91c1c;font-size:12px">⚠️ '+e.message+'</span>';console.error('[runQuickAnal]',e);}
 }
 
 async function genStrategy(){
@@ -690,7 +691,7 @@ async function genStrategy(){
     el.innerHTML=`<div class="analysis-box" style="margin-bottom:1rem">${f}</div>`;
     hist=[{role:'assistant',content:'Estratégia pronta! O que quer aprofundar?'}];
     renderChat();
-  }catch(e){el.innerHTML='<p style="color:#888;font-size:14px">Erro ao gerar estratégia.</p>';}
+  }catch(e){el.innerHTML='<p style="color:#b91c1c;font-size:13px">⚠️ Erro: '+e.message+'</p>';console.error('[genStrategy]',e);}
 }
 
 function handleFile(input){
