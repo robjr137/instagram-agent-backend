@@ -218,8 +218,10 @@ textarea{resize:vertical}
       <div style="font-size:13px;font-weight:600;color:#555;margin-bottom:.75rem">Passo 1 — Escolha o formato:</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
         <button onclick="selecionarFormato('reel')" style="padding:1rem;background:#fff;border:1.5px solid #ddd;border-radius:12px;cursor:pointer;text-align:left" onmouseover="this.style.borderColor='#833ab4'" onmouseout="this.style.borderColor='#ddd'"><div style="font-size:20px;margin-bottom:4px">🎬</div><div style="font-weight:600;font-size:14px">Roteiro de Reel</div><div style="font-size:12px;color:#888;margin-top:2px">Gancho + desenvolvimento + CTA · VTSD</div></button>
-        <button onclick="selecionarFormato('story')" style="padding:1rem;background:#fff;border:1.5px solid #ddd;border-radius:12px;cursor:pointer;text-align:left" onmouseover="this.style.borderColor='#833ab4'" onmouseout="this.style.borderColor='#ddd'"><div style="font-size:20px;margin-bottom:4px">📱</div><div style="font-weight:600;font-size:14px">Sequência de Stories</div><div style="font-size:12px;color:#888;margin-top:2px">5-7 stories · Funil de engajamento</div></button>
-        <button onclick="selecionarFormato('carrossel')" style="padding:1rem;background:#fff;border:1.5px solid #ddd;border-radius:12px;cursor:pointer;text-align:left" onmouseover="this.style.borderColor='#833ab4'" onmouseout="this.style.borderColor='#ddd'"><div style="font-size:20px;margin-bottom:4px">🎠</div><div style="font-weight:600;font-size:14px">Carrossel Educativo</div><div style="font-size:12px;color:#888;margin-top:2px">Slides 1-10 · Conteúdo que salva</div></button>
+        <button onclick="selecionarFormato('trial')" style="padding:1rem;background:#fff;border:1.5px solid #6d28d9;border-radius:12px;cursor:pointer;text-align:left" onmouseover="this.style.borderColor='#833ab4'" onmouseout="this.style.borderColor='#6d28d9'"><div style="font-size:20px;margin-bottom:4px">🧪</div><div style="font-weight:600;font-size:14px">Trial Reel <span style="background:#ede9fe;color:#6d28d9;font-size:10px;padding:1px 6px;border-radius:4px;margin-left:4px">NOVO</span></div><div style="font-size:12px;color:#888;margin-top:2px">Testa gancho com nao-seguidores · Sem publicar no perfil</div></button>
+        <button onclick="selecionarFormato('story')" style="padding:1rem;background:#fff;border:1.5px solid #ddd;border-radius:12px;cursor:pointer;text-align:left" onmouseover="this.style.borderColor='#833ab4'" onmouseout="this.style.borderColor='#ddd'"><div style="font-size:20px;margin-bottom:4px">📱</div><div style="font-weight:600;font-size:14px">Sequência de Stories</div><div style="font-size:12px;color:#888;margin-top:2px">5-7 stories · Relacionamento + nutrir seguidor</div></button>
+        <button onclick="selecionarFormato('carrossel')" style="padding:1rem;background:#fff;border:1.5px solid #ddd;border-radius:12px;cursor:pointer;text-align:left" onmouseover="this.style.borderColor='#833ab4'" onmouseout="this.style.borderColor='#ddd'"><div style="font-size:20px;margin-bottom:4px">🎠</div><div style="font-weight:600;font-size:14px">Carrossel Educativo</div><div style="font-size:12px;color:#888;margin-top:2px">Slides 1-10 · Maximizar salvamentos</div></button>
+        <button onclick="selecionarFormato('reaproveitamento')" style="padding:1rem;background:#fff;border:1.5px solid #ddd;border-radius:12px;cursor:pointer;text-align:left" onmouseover="this.style.borderColor='#833ab4'" onmouseout="this.style.borderColor='#ddd'"><div style="font-size:20px;margin-bottom:4px">♻️</div><div style="font-weight:600;font-size:14px">Reaproveitamento</div><div style="font-size:12px;color:#888;margin-top:2px">Post antigo de alto alcance virado carrossel</div></button>
         <button onclick="selecionarFormato('lancamento')" style="padding:1rem;background:#fff;border:1.5px solid #ddd;border-radius:12px;cursor:pointer;text-align:left" onmouseover="this.style.borderColor='#833ab4'" onmouseout="this.style.borderColor='#ddd'"><div style="font-size:20px;margin-bottom:4px">🚀</div><div style="font-weight:600;font-size:14px">Sequência de Lançamento</div><div style="font-size:12px;color:#888;margin-top:2px">PLC · Fórmula de Lançamento</div></button>
       </div>
     </div>
@@ -854,120 +856,130 @@ function switchAccount(){
 }
 
 
-const SYSTEM_PROMPT=`Você é um Estrategista de Marketing Digital e Growth Marketing Sênior com especialização em funis de venda para criadores de conteúdo no nicho de Sexualidade e Relacionamentos. Você assessora exclusivamente a @apaula.os — Ana Paula Carmo, Sexóloga titulada, Associada ABRASEX, Terapeuta Sexual, com 355K seguidores e +2.000 casais atendidos.
+const SYSTEM_PROMPT=`Voce e um Estrategista de Marketing Digital e Growth Marketing Senior com especializacao em funis de venda para criadores de conteudo no nicho de Sexualidade e Relacionamentos. Voce assessora exclusivamente a @apaula.os - Ana Paula Carmo, Sexologa titulada, Associada ABRASEX, Terapeuta Sexual, com 355K seguidores e +2.000 casais atendidos.
 
 ## IDENTIDADE E POSTURA
-- Tom: racional, cirúrgico, honesto, direto. Zero enrolação.
-- Foco absoluto em ROI, conversão e métricas reais.
-- Postura crítica obrigatória: questione qualquer sugestão sem base em dados ou sem lógica de funil.
-- Nunca elogie por elogiar. Se uma ideia é fraca, diga claramente e por quê.
-- Você não é um assistente genérico. Você é o estrategista sênior desta conta específica.
-- PROIBIDO usar jargão acadêmico vazio como "teoria do apego seguro" ou "neuroplasticidade". Use o vocabulário proprietário da conta.
+- Tom: racional, cirurgico, honesto, direto. Zero enrolacao.
+- Foco absoluto em ROI, conversao e metricas reais.
+- Postura critica obrigatoria: questione qualquer sugestao sem base em dados ou sem logica de funil.
+- Nunca elogie por elogiar. Se uma ideia e fraca, diga claramente e por que.
+- PROIBIDO usar jargao academico vazio. Use o vocabulario proprietario da conta.
 
-## VOCABULÁRIO PROPRIETÁRIO — OBRIGATÓRIO
-### PILAR 1: DINÂMICA DA EXAUSTÃO
-DOMINADOS: Carga Mental | Mãe do Marido | Verticalização da Relação | Gerente x Subordinado | Pai Ajudante vs Pai Parceiro
-OCEANO AZUL: Turno Invisível | Amnésia Conveniente | Terceirização Afetiva | Síndrome da Colega de Quarto | Fadiga de Decisão
+## ALGORITMO DO INSTAGRAM 2025-2026 — REGRAS ATUAIS
+Essas regras devem guiar TODAS as recomendacoes de formato e estrategia:
 
-### PILAR 2: MECÂNICA SEXUAL E DESEJO
-DOMINADOS: Desejo Responsivo | Repulsa ao Toque | Sexo de Manutenção | Incompatibilidade de Apetite | Libido Pós-Parto
-OCEANO AZUL: Toque Utilitário / Toque Pedágio | Falsa Fome / Tesão de Alívio | Preliminar de 24 Horas | Orgasmo de Conexão vs Orgasmo Físico | Conta Bancária da Intimidade
+REELS: Principal ferramenta de DESCOBERTA. Benchmark de engajamento do nicho: 3-5%. Taxa geral do Instagram: 2,46%. O algoritmo rastreia o tempo de visualizacao imediatamente — se o espectador rola em menos de 3 segundos, o alcance e drasticamente reduzido. Gancho e decisivo.
+
+TRIAL REELS: Funcionalidade recomendada pelo proprio Mosseri para 2026. Mostra o conteudo primeiro para NAO-seguidores sem publicar no perfil principal. SEMPRE recomendar Trial Reels para testar ganchos novos de topo de funil antes de comprometer o feed. Se o Trial performar bem, ai publica no perfil.
+
+CARROSSEIS: Principal ferramenta de SALVAMENTOS e COMPARTILHAMENTOS — os dois sinais de engajamento mais fortes. O algoritmo trata salvamentos como evidencia de valor de longo prazo. Ideal para conteudo educativo profundo e reaproveitamento de posts antigos.
+
+STORIES: Canal de RELACIONAMENTO com quem ja segue. O algoritmo prioriza Stories de contas com as quais o usuario mais interage. Estrategia: usar Stories para nutrir seguidores existentes, criar interacao diaria (enquetes, caixas de perguntas) e preparar o terreno para ofertas de fundo de funil.
+
+SEQUENCIA DE STORIES SEMANAL (padrao recomendado):
+- Segunda: enquete provocativa relacionada ao vocabulario proprietario
+- Quarta: bastidores ou caso clinico anonimizado
+- Quinta: caixa de perguntas sobre o tema do ultimo Reel
+- Sabado: CTA direto para agendamento ou infoproduto
+
+REAPROVEITAMENTO: Posts antigos com alto alcance mas baixo salvamento sao candidatos a virar carrossel. Identificar nos dados do Supabase posts com alcance acima da media e salvamento abaixo de 0,5% do alcance.
+
+DIAGNOSTICO DE ENGAJAMENTO ATUALIZADO:
+- 0,41% atual da @apaula.os = CRITICO (benchmark do nicho: 3-5%)
+- O gap e de 7x abaixo do benchmark — nao e "ligeiramente abaixo", e uma emergencia estrategica
+- Causa principal provavel: alto alcance via Reels virais mas baixa retencao e conversao de novos seguidores
+
+## VOCABULARIO PROPRIETARIO - OBRIGATORIO
+### PILAR 1: DINAMICA DA EXAUSTAO
+DOMINADOS: Carga Mental | Mae do Marido | Verticaliz. da Relacao | Gerente x Subordinado | Pai Ajudante vs Pai Parceiro
+OCEANO AZUL: Turno Invisivel | Amnesia Conveniente | Terceiriz. Afetiva | Sindrome Colega de Quarto | Fadiga de Decisao
+
+### PILAR 2: MECANICA SEXUAL E DESEJO
+DOMINADOS: Desejo Responsivo | Repulsa ao Toque | Sexo de Manutencao | Incompatib. de Apetite | Libido Pos-Parto
+OCEANO AZUL: Toque Pedagio | Falsa Fome | Preliminar de 24h | Orgasmo de Conexao vs Fisico | Conta Bancaria da Intimidade
 
 ### PILAR 3: COMPORTAMENTO E DARK SOCIAL
-DOMINADOS: A Mão Boba | Silêncio Punitivo | A Dondoca Sensível | Micro-traições
-OCEANO AZUL: Pedido de Desculpas sem Fatura Paga | DR de Planilha | Marido Wi-Fi | Competição de Cansaço | Traição Invisível
+DOMINADOS: Mao Boba | Silencio Punitivo | Dondoca Sensivel | Micro-traicoes
+OCEANO AZUL: Pedido de Desculpas sem Fatura Paga | DR de Planilha | Marido Wi-Fi | Competicao de Cansaco | Traicao Invisivel
 
 ### PILAR 4: PSICOLOGIA
-DOMINADOS: Espectadorismo | Solidão a Dois | O "Não" como dignidade
+DOMINADOS: Espectadorismo | Solidao a Dois | O Nao como dignidade
 
 ## ARQUITETURA DE FUNIL
-### TOPO: CTA salvar / seguir / mandar no Direct
-### MEIO: CTA comentar / DM com palavra-chave
-### FUNDO: CTA "Me manda DM com TERAPIA" / "link na bio" / vagas limitadas (R$250 individual / R$420 casal / infoproduto R$497-597)
+TOPO: Reels de descoberta + Trial Reels para testar ganchos. CTA: salvar / seguir / mandar no Direct
+MEIO: Carrosseis educativos + Stories de relacionamento. CTA: comentar / DM com palavra-chave
+FUNDO: Stories de CTA direto + Reels de conversao. CTA: DM TERAPIA / link na bio / vagas limitadas (R$250/R$420/R$497-597)
 
-## METODOLOGIAS OBRIGATÓRIAS
+## METODOLOGIAS OBRIGATORIAS
+
 ### VTSD CHECKLIST (validar antes de entregar roteiro):
-☐ GANCHO: Para o scroll em 2s? Cria "isso sou eu" imediato?
-☐ VILLAIN FRAME: Vilão cotidiano e reconhecível (mão boba, esquecimento, Wi-Fi humano)?
-☐ ESPETACULARIZAÇÃO DO BANAL: Assunto comum virou tema de relacionamento?
-☐ DARK SOCIAL: A pessoa vai mandar no Direct ou WhatsApp?
-☐ RETENÇÃO: Há virada ou tensão que prende até o final?
-☐ MICRO-AÇÃO PRÁTICA: Há uma ação específica para HOJE?
+- GANCHO: Para o scroll em 3s? Se nao parar em 3s, o alcance cai drasticamente — reescrever.
+- VILLAIN FRAME: Vilao cotidiano reconhecivel (mao boba, esquecimento, Marido Wi-Fi)?
+- ESPETACULARIZACAO DO BANAL: Assunto comum virou tema de relacionamento?
+- DARK SOCIAL: A pessoa vai mandar no Direct ou WhatsApp para alguem especifico?
+- RETENCAO: Ha virada ou tensao que prende ate o final?
+- MICRO-ACAO PRATICA: Ha uma acao especifica para HOJE?
+- FORMATO CERTO: Reel (descoberta) / Carrossel (salvamento) / Stories (relacionamento)? Trial Reel recomendado para ganchos novos.
 
-### MICRO-AÇÃO — PADRÃO OBRIGATÓRIO:
-Específica (não "melhore a comunicação" — "nas próximas 24h faça X"), com contexto emocional, sem julgamento.
-Exemplo: "Faça um jejum de críticas nas próximas 24 horas. Sua tarefa hoje não é apontar o que ele esqueceu. É procurar UMA coisa que ele fez certo e verbalizar."
+### MICRO-ACAO - PADRAO OBRIGATORIO:
+Especifica, com contexto emocional, sem julgamento, com prazo de 24h.
+Exemplo: "Faca um jejum de criticas nas proximas 24 horas. Sua tarefa hoje nao e apontar o que ele esqueceu. E procurar UMA coisa que ele fez certo e verbalizar."
 
-### FÓRMULA DE LANÇAMENTO:
-Gatilhos: autoridade (titulação + 2.000 casais), prova social, escassez, antecipação.
-Sequência PLC: educa → engaja → converte.
+### FORMULA DE LANCAMENTO:
+Gatilhos: autoridade (titulacao + 2.000 casais), prova social, escassez, antecipacao.
+Sequencia PLC: educa (Reel/Carrossel) > engaja (Stories + comentarios) > converte (Stories CTA + Reel de fundo).
 
-## FLUXO DE ROTEIROS — INVIOLÁVEL:
-1. Confirmar nível do funil (topo/meio/fundo)
-2. Listar 5 pautas com: conceito proprietário + villain cotidiano + Dark Social + micro-ação prevista + CTA
-3. Aguardar escolha
-4. Validar checklist VTSD
-5. Entregar One-Sheet completo
+## GEO - GENERATIVE ENGINE OPTIMIZATION (OBRIGATORIO)
+60% das buscas nao geram cliques. As IAs (ChatGPT, Perplexity, Google AI Overview) estao substituindo buscas tradicionais.
+
+ANCORA GEO - obrigatoria em todo roteiro:
+Formato: "[Conceito] e [definicao clara em 1-2 frases com mecanismo + impacto]."
+Exemplos:
+- "Toque Pedagio e o padrao onde o parceiro so encosta na mulher quando quer sexo — fazendo com que qualquer contato fisico seja lido como cobranca, nao como afeto."
+- "Marido Wi-Fi e o parceiro fisicamente presente mas emocionalmente desconectado — so conecta quando precisa de algo."
+- "Desejo Responsivo e quando a vontade de transar nao aparece antes do estimulo, mas durante — biologicamente normal para a maioria das mulheres."
+
+REGRAS GEO:
+- Definicao clara, autoexplicativa e citavel fora de contexto
+- Terminologia clinica traduzida para linguagem popular
+- Repetir o conceito pelo nome proprietario pelo menos 2x no conteudo
+- Estruturar partes em formato pergunta/resposta
+- Incluir: "Na sexologia clinica, chamamos isso de..." seguido da traducao popular
+
+## FLUXO DE ROTEIROS - INVIOLAVEL:
+1. Confirmar nivel do funil (topo/meio/fundo)
+2. Confirmar formato: Reel / Trial Reel / Carrossel / Stories / Lancamento
+3. Listar 5 pautas com: conceito proprietario + villain + Dark Social + micro-acao + CTA + ancora GEO
+4. Aguardar escolha
+5. Validar checklist VTSD (incluindo formato certo para o objetivo)
+6. Entregar One-Sheet completo
 
 ## ONE-SHEET FORMAT:
-NÍVEL DO FUNIL | GANCHO (0-3s) | TRADUÇÃO EMOCIONAL | CONCEITO PROPRIETÁRIO ÂNCORA | VILLAIN FRAME | DESENVOLVIMENTO | MICRO-AÇÃO PRÁTICA | CTA | LEGENDA SEO | INDICAÇÕES DE PRODUÇÃO
+NIVEL DO FUNIL | FORMATO (incluir se Trial Reel) | GANCHO (0-3s) | TRADUCAO EMOCIONAL | CONCEITO PROPRIETARIO ANCORA | ANCORA GEO | VILLAIN FRAME | DESENVOLVIMENTO | MICRO-ACAO PRATICA | CTA | LEGENDA SEO | INDICACOES DE PRODUCAO
 
 ## CONTEXTO DA CONTA:
-@apaula.os | 355K seguidores | 0,41% engajamento (crítico, benchmark 2-4%)
-Público: Mulheres 25-45, casais em crise | Produtos: R$250/R$420/R$497-597`;
-
-async function callClaude(msg, extraSystem=''){
-  const ctx = getContextoAtual ? getContextoAtual() : '';
-  const sys = SYSTEM_PROMPT + ctx + (extraSystem ? '\n\n' + extraSystem : '');
-  const r=await fetch(`${BACKEND}/claude`,{method:'POST',headers:{'Content-Type':'application/json','x-agent-secret':AGENT_SECRET},body:JSON.stringify({system:sys,messages:[{role:'user',content:msg}]})});
-  const d=await r.json();if(d.error)throw new Error(d.error);return d.text||'';
-}
-async function callClaudeChat(sys,msgs){
-  const fullSys = SYSTEM_PROMPT + (sys ? '\n\n' + sys : '');
-  const r=await fetch(`${BACKEND}/claude`,{method:'POST',headers:{'Content-Type':'application/json','x-agent-secret':AGENT_SECRET},body:JSON.stringify({system:fullSys,messages:msgs.map(h=>({role:h.role,content:h.content}))})});
-  const d=await r.json();if(d.error)throw new Error(d.error);return d.text||'';
-}
-
-
-let roteiroHist=[],roteiroTipo='',formatoSelecionado='';
-
-function selecionarFormato(f){formatoSelecionado=f;document.getElementById('step-formato').style.display='none';document.getElementById('step-funil').style.display='block';document.getElementById('roteiro-out').style.display='none';}
-function voltarFormato(){formatoSelecionado='';document.getElementById('step-funil').style.display='none';document.getElementById('step-formato').style.display='block';}
-
-async function solicitarRoteiro(tipo,funil){
-  roteiroTipo=tipo;roteiroHist=[];
-  const tLabel={reel:'Reel',story:'Stories',carrossel:'Carrossel',lancamento:'Lancamento'}[tipo];
-  const fLabel=funil==='topo'?'Topo (viralização)':funil==='meio'?'Meio (autoridade)':'Fundo (conversão)';
-  const fCTA=funil==='topo'?'CTA: salvar/seguir/Direct':funil==='meio'?'CTA: comentar/DM palavra-chave':'CTA: agendar R$250/R$420 ou infoproduto R$497-597 com urgência';
-  document.getElementById('roteiro-out').style.display='block';
-  document.getElementById('step-funil').style.display='none';
-  document.getElementById('roteiro-content').innerHTML='';
-  document.getElementById('roteiro-temas').innerHTML=`<div style="font-size:14px;font-weight:600;margin-bottom:.5rem">📋 ${tLabel} — ${fLabel}</div><span class="spin"></span> Gerando pautas...`;
-  const prompt=`Crie 5 pautas de ${tLabel} para @apaula.os no nível ${fLabel}.\n${fCTA}\nDADOS: ${sumData()}\n\nPara cada pauta:\n- **Tema**: título com palavra-chave de dor do vocabulário proprietário\n- **Conceito âncora**: Carga Mental / Toque Pedágio / Marido Wi-Fi / etc\n- **Villain cotidiano**: comportamento banal reconhecível (não crime)\n- **Dark Social**: por que vai ser mandado no WhatsApp/Direct\n- **VTSD**: elemento principal\n- **CTA prevista**: coerente com ${fLabel}\n\nNunca use jargão acadêmico genérico.`;
-  try{
-    const r=await callClaude(prompt);
-    const f=r.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
-    document.getElementById('roteiro-temas').innerHTML=`<div style="display:flex;justify-content:space-between;margin-bottom:.75rem"><div style="font-size:14px;font-weight:600">📋 ${tLabel} — ${fLabel}</div><button onclick="document.getElementById('step-formato').style.display='block';document.getElementById('roteiro-out').style.display='none'" style="font-size:12px;color:#888;background:none;border:none;cursor:pointer">✕</button></div><div class="analysis-box" style="margin-bottom:1rem">${f}</div><div style="font-size:13px;color:#555;margin-bottom:.5rem">Escolha e clique em <strong>Desenvolver</strong>:</div><div style="display:flex;gap:8px;flex-wrap:wrap">${[1,2,3,4,5].map(n=>`<button onclick="desenvolverRoteiro(${n},'${tipo}','${funil}')" style="padding:.4rem .875rem;background:#ede9fe;color:#4c1d95;border:none;border-radius:8px;font-size:13px;cursor:pointer;font-weight:500">Tema ${n}</button>`).join('')}</div>`;
-    roteiroHist.push({role:'assistant',content:r});renderRoteiroChat();
-  }catch(e){document.getElementById('roteiro-temas').innerHTML=`<p style="color:#b91c1c;font-size:13px">Erro: ${e.message}</p>`;}
-}
+@apaula.os | 355K seguidores | 0,41% engajamento (CRITICO — 7x abaixo do benchmark de 3-5%)
+Publico: Mulheres 25-45, casais em crise | Produtos: R$250/R$420/R$497-597`
 
 async function desenvolverRoteiro(num,tipo,funil){
-  const tLabel={reel:'Reel',story:'Stories',carrossel:'Carrossel',lancamento:'Lancamento'}[tipo];
+  const tLabel={reel:'Reel',trial:'Trial Reel',story:'Stories',carrossel:'Carrossel',reaproveitamento:'Reaproveitamento',lancamento:'Lancamento'}[tipo];
   const fLabel=funil==='topo'?'Topo':funil==='meio'?'Meio':'Fundo';
   document.getElementById('roteiro-content').innerHTML=`<span class="spin"></span> Desenvolvendo Tema ${num}...`;
   roteiroHist.push({role:'user',content:`Desenvolva o roteiro completo do Tema ${num} em One-Sheet.`});
+  const instrucao=tipo==='trial'?
+    'One-Sheet para TRIAL REEL: FORMATO: Trial Reel (testar com nao-seguidores primeiro) | GANCHO ARROJADO (0-3s) | TRADUCAO EMOCIONAL | CONCEITO ANCORA | ANCORA GEO (definicao citavel) | VILLAIN FRAME | DESENVOLVIMENTO | MICRO-ACAO PRATICA | CTA | LEGENDA SEO | INDICACOES DE PRODUCAO | RECOMENDACAO: publicar como Trial Reel por 24h antes de decidir se vai para o perfil':
+    tipo==='reaproveitamento'?
+    'One-Sheet para REAPROVEITAMENTO: identificar o post original de alto alcance, transformar em carrossel com: SLIDE 1 (capa com gancho novo) | SLIDES 2-8 (desenvolvimento com ancora GEO e vocabulario proprietario) | SLIDE FINAL (micro-acao + CTA) | LEGENDA SEO atualizada':
+    tipo==='story'?
+    'One-Sheet SEQUENCIA DE STORIES (5-7 stories): STORY 1 (contexto/gancho) | STORY 2-3 (desenvolvimento com ancora GEO) | STORY 4-5 (virada/micro-acao) | STORY 6-7 (CTA progressivo). Para cada story: visual sugerido + texto + elemento interativo (enquete/caixinha)':
+    `One-Sheet obrigatorio: NIVEL DO FUNIL: ${fLabel} | FORMATO: ${tLabel} | GANCHO (0-3s) | TRADUCAO EMOCIONAL | CONCEITO ANCORA | ANCORA GEO (definicao citavel) | VILLAIN FRAME | DESENVOLVIMENTO | MICRO-ACAO PRATICA | CTA coerente com ${fLabel} | LEGENDA SEO | INDICACOES DE PRODUCAO`;
   try{
-    const r=await callClaudeChat(`Roteirista para @apaula.os. Use vocabulário proprietário. Formato: NÍVEL DO FUNIL | GANCHO (0-3s) | TRADUÇÃO EMOCIONAL | CONCEITO ÂNCORA | VILLAIN FRAME | DESENVOLVIMENTO | MICRO-AÇÃO PRÁTICA (específica, 24h, estilo Ana Paula) | CTA (coerente com ${fLabel}) | LEGENDA SEO | INDICAÇÕES DE PRODUÇÃO`,roteiroHist);
+    const r=await callClaudeChat(`Roteirista senior para @apaula.os. Use vocabulario proprietario. ${instrucao}`,roteiroHist);
     roteiroHist.push({role:'assistant',content:r});
     // Save to Supabase
-    fetch(`${BACKEND}/save-roteiro`,{
-      method:'POST',
-      headers:{'Content-Type':'application/json','x-agent-secret':AGENT_SECRET},
-      body:JSON.stringify({tipo,funil,tema:`Tema ${num}`,conteudo:r})
-    }).catch(()=>{});
+    fetch(`${BACKEND}/save-roteiro`,{method:'POST',headers:{'Content-Type':'application/json','x-agent-secret':AGENT_SECRET},body:JSON.stringify({tipo,funil,tema:`Tema ${num}`,conteudo:r})}).catch(()=>{});
     const f=r.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
-    document.getElementById('roteiro-content').innerHTML=`<div style="display:flex;justify-content:space-between;margin-bottom:.75rem"><div style="font-size:14px;font-weight:600">✍️ Tema ${num} — ${fLabel}</div><button onclick="navigator.clipboard.writeText(document.getElementById('roteiro-content').innerText)" style="padding:.3rem .75rem;background:#f3f4f6;border:1px solid #ddd;border-radius:6px;font-size:12px;cursor:pointer">📋 Copiar</button></div><div class="analysis-box">${f}</div><div style="font-size:13px;color:#888;margin-top:.75rem">💬 Ajuste no chat abaixo.</div>`;
+    document.getElementById('roteiro-content').innerHTML=`<div style="display:flex;justify-content:space-between;margin-bottom:.75rem"><div style="font-size:14px;font-weight:600">✍️ ${tLabel} — Tema ${num} | ${fLabel}</div><button onclick="navigator.clipboard.writeText(document.getElementById('roteiro-content').innerText)" style="padding:.3rem .75rem;background:#f3f4f6;border:1px solid #ddd;border-radius:6px;font-size:12px;cursor:pointer">📋 Copiar</button></div><div class="analysis-box">${f}</div><div style="font-size:13px;color:#888;margin-top:.75rem">💬 Ajuste no chat abaixo.</div>`;
     renderRoteiroChat();
   }catch(e){document.getElementById('roteiro-content').innerHTML=`<p style="color:#b91c1c;font-size:13px">Erro: ${e.message}</p>`;}
 }
@@ -975,8 +987,10 @@ async function desenvolverRoteiro(num,tipo,funil){
 async function sendRoteiroMsg(){
   const inp=document.getElementById('roteiro-chat-in');const msg=inp.value.trim();if(!msg)return;
   inp.value='';roteiroHist.push({role:'user',content:msg});renderRoteiroChat();
-  try{const r=await callClaudeChat(`Roteirista para @apaula.os. Use vocabulário proprietário. Dados: ${sumData()}`,roteiroHist);roteiroHist.push({role:'assistant',content:r});renderRoteiroChat();}
-  catch(e){roteiroHist.push({role:'assistant',content:'Erro.'});renderRoteiroChat();}
+  try{
+    const r=await callClaudeChat(`Roteirista senior para @apaula.os. Use vocabulario proprietario. Dados: ${sumData()}`,roteiroHist);
+    roteiroHist.push({role:'assistant',content:r});renderRoteiroChat();
+  }catch(e){roteiroHist.push({role:'assistant',content:'Erro.'});renderRoteiroChat();}
 }
 
 function renderRoteiroChat(){
@@ -984,134 +998,6 @@ function renderRoteiroChat(){
   if(!roteiroHist.length){c.innerHTML='<p style="text-align:center;color:#888;padding:1.5rem 0;font-size:14px">Selecione um formato acima...</p>';return;}
   c.innerHTML=roteiroHist.map(m=>`<div class="msg ${m.role==='user'?'user':'bot'}">${m.content.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')}</div>`).join('');
   c.scrollTop=c.scrollHeight;
-}
-
-
-async function genGrowthReport(dias=30){
-  const el=document.getElementById('growth-out');
-  el.innerHTML='<div class="analysis-box" style="text-align:center;padding:2rem"><span class="spin"></span><div style="margin-top:.75rem;font-size:13px;color:#666">Gerando análise dos últimos '+dias+' dias com dados reais...<br><small style="color:#999">Isso pode levar 15-30 segundos</small></div></div>';
-  const med=D.media||[];
-  const ins=D.insights||{};
-  const avgEng=med.length>0?(med.reduce((s,m)=>s+(m.engagement_rate||0),0)/med.length):0;
-  const winners=med.filter(m=>(m.engagement_rate||0)>avgEng*1.5).sort((a,b)=>(b.engagement_rate||0)-(a.engagement_rate||0)).slice(0,3);
-  const losers=med.filter(m=>(m.engagement_rate||0)<avgEng*0.5).sort((a,b)=>(a.engagement_rate||0)-(b.engagement_rate||0)).slice(0,3);
-  const reels=med.filter(m=>m.media_type==='REEL'||m.media_type==='VIDEO');
-  const carousels=med.filter(m=>m.media_type==='CAROUSEL_ALBUM');
-  const images=med.filter(m=>m.media_type==='IMAGE');
-  const avgReel=reels.length>0?(reels.reduce((s,m)=>s+(m.engagement_rate||0),0)/reels.length).toFixed(2):0;
-  const avgCarousel=carousels.length>0?(carousels.reduce((s,m)=>s+(m.engagement_rate||0),0)/carousels.length).toFixed(2):0;
-  const avgImage=images.length>0?(images.reduce((s,m)=>s+(m.engagement_rate||0),0)/images.length).toFixed(2):0;
-  const dataCtx=`DADOS @${D.username} - ÚLTIMOS ${dias} DIAS:\nSeguidores: ${D.followers_count} | Posts: ${med.length}\nAlcance: ${fmt(ins.reach)} | Visitas: ${fmt(ins.profile_views)} | Cliques: ${fmt(ins.website_clicks)}\nEngaj. médio: ${avgEng.toFixed(2)}%\nFormatos: Reels ${avgReel}% | Carrosseis ${avgCarousel}% | Fotos ${avgImage}%\nTOP 3:\n${winners.map((p,i)=>`${i+1}. ${p.media_type}|${(p.engagement_rate||0).toFixed(2)}%|❤${p.like_count}💬${p.comments_count}🔖${p.saved||0}|"${(p.caption||'').substring(0,60)}"`).join('\n')}\nMENOR PERFORMANCE:\n${losers.map((p,i)=>`${i+1}. ${p.media_type}|${(p.engagement_rate||0).toFixed(2)}%|"${(p.caption||'').substring(0,60)}"`).join('\n')}`;
-  const prompt=dataCtx+`\n\nGere um GROWTH REPORT completo:\n## DIAGNÓSTICO EXECUTIVO\nNota 0-10 com justificativa.\n## O QUE FUNCIONOU\nFormatos, temas, padrões vencedores.\n## O QUE NÃO DEU CERTO\nErros, oportunidades perdidas.\n## PLANO 30 DIAS\nMeta realista, mix de conteúdo, 3 experimentos.\n## 5 AÇÕES IMEDIATAS\nPriorizadas por impacto.\n## PROJEÇÃO\n30/60/90 dias se implementar.\nUse os dados reais. Seja cirúrgico. Em português.`;
-  try{
-    const r=await callClaude(prompt);
-    const f=r.replace(/## (.*?)\n/g,'<h3 style="font-size:15px;font-weight:700;margin:1.25rem 0 .5rem;color:#111">$1</h3>\n').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
-    // Save to Supabase
-    fetch(`${BACKEND}/save-report`,{
-      method:'POST',
-      headers:{'Content-Type':'application/json','x-agent-secret':AGENT_SECRET},
-      body:JSON.stringify({
-        periodo:dias,
-        conteudo:r,
-        avg_engagement:parseFloat(avgEng.toFixed(2)),
-        total_reach:ins.reach||0,
-        top_formato:avgReel>=avgCarousel&&avgReel>=avgImage?'Reels':avgCarousel>=avgImage?'Carrossel':'Fotos'
-      })
-    }).catch(()=>{});
-    el.innerHTML=`<div style="display:flex;gap:10px;margin-bottom:1rem;flex-wrap:wrap">
-      <div class="metric" style="flex:1;min-width:120px;text-align:center"><div class="metric-label">Engaj. Médio</div><div class="metric-value">${avgEng.toFixed(2)}%</div></div>
-      <div class="metric" style="flex:1;min-width:120px;text-align:center"><div class="metric-label">Melhor formato</div><div class="metric-value" style="font-size:16px">${avgReel>=avgCarousel&&avgReel>=avgImage?'Reels':avgCarousel>=avgImage?'Carrossel':'Fotos'}</div></div>
-      <div class="metric" style="flex:1;min-width:120px;text-align:center"><div class="metric-label">Posts analisados</div><div class="metric-value">${med.length}</div></div>
-      <div class="metric" style="flex:1;min-width:120px;text-align:center"><div class="metric-label">Alcance</div><div class="metric-value">${fmt(ins.reach)}</div></div>
-    </div><div class="analysis-box">${f}</div>`;
-  }catch(e){
-    el.innerHTML=`<div style="text-align:center;padding:1.5rem">
-      <div style="color:#b91c1c;font-size:13px;margin-bottom:1rem">⚠️ Erro ao gerar relatório: ${e.message}</div>
-      <button onclick="genGrowthReport(30)" style="padding:.5rem 1.25rem;background:#7c3aed;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600">🔄 Tentar novamente</button>
-    </div>`;
-  }
-}
-
-
-// ── CENTRAL DE CONTEXTO ───────────────────────────────────────────────────────
-async function loadContexto(){
-  document.getElementById('contexto-loaded').value='1';
-  const loading=document.getElementById('contexto-loading');
-  const form=document.getElementById('contexto-form');
-  try{
-    const r=await fetch(`${BACKEND}/contexto`,{
-      headers:{'x-agent-secret':AGENT_SECRET}
-    });
-    const d=await r.json();
-    if(d.contexto && d.contexto.length){
-      d.contexto.forEach(row=>{
-        const el=document.getElementById(`ctx-${row.bloco==='feedback_conteudo'?'feedback':row.bloco==='contexto_momento'?'momento':row.bloco}`);
-        if(el && row.conteudo && !row.conteudo.startsWith('Preencha aqui')) el.value=row.conteudo;
-      });
-    }
-    loading.style.display='none';
-    form.style.display='block';
-  }catch(e){
-    loading.style.display='none';
-    form.style.display='block';
-    console.warn('[contexto] load failed:', e.message);
-  }
-}
-
-async function saveContexto(){
-  const status=document.getElementById('contexto-status');
-  status.textContent='Salvando...';
-  status.style.color='#888';
-  
-  const blocos=[
-    {bloco:'negocio', val:document.getElementById('ctx-negocio').value},
-    {bloco:'resultados', val:document.getElementById('ctx-resultados').value},
-    {bloco:'feedback_conteudo', val:document.getElementById('ctx-feedback').value},
-    {bloco:'contexto_momento', val:document.getElementById('ctx-momento').value},
-  ];
-
-  try{
-    for(const b of blocos){
-      await fetch(`${BACKEND}/contexto`,{
-        method:'POST',
-        headers:{'Content-Type':'application/json','x-agent-secret':AGENT_SECRET},
-        body:JSON.stringify({bloco:b.bloco, conteudo:b.val})
-      });
-    }
-    status.textContent='✅ Contexto salvo! O agente usará essas informações em todas as próximas análises.';
-    status.style.color='#065f46';
-  }catch(e){
-    status.textContent='❌ Erro ao salvar: '+e.message;
-    status.style.color='#b91c1c';
-  }
-}
-
-function getContextoAtual(){
-  const neg=document.getElementById('ctx-negocio')?.value||'';
-  const res=document.getElementById('ctx-resultados')?.value||'';
-  const feed=document.getElementById('ctx-feedback')?.value||'';
-  const mom=document.getElementById('ctx-momento')?.value||'';
-  if(!neg&&!res&&!feed&&!mom) return '';
-  return `\n\n## CONTEXTO DO NEGÓCIO (atualizado pela Ana Paula):\n${neg?'**Negócio:** '+neg+'\n':''}${res?'**Resultados reais:** '+res+'\n':''}${feed?'**Feedback de conteúdo:** '+feed+'\n':''}${mom?'**Contexto do momento:** '+mom:''}`;
-}
-
-async function useContextoNow(){
-  const ctx=getContextoAtual();
-  if(!ctx){
-    document.getElementById('contexto-status').textContent='⚠️ Preencha pelo menos um bloco antes de gerar a análise.';
-    document.getElementById('contexto-status').style.color='#92400e';
-    return;
-  }
-  document.getElementById('contexto-status').textContent='🧠 Gerando análise estratégica com seu contexto...';
-  document.getElementById('contexto-status').style.color='#4c1d95';
-  try{
-    const r=await callClaude(sumData()+ctx+'\n\nCom base nos dados reais da conta E no contexto do negócio informado acima, faça uma análise estratégica completa e acionável. Identifique oportunidades imediatas de conversão, ajustes de conteúdo necessários e as 3 ações prioritárias para esta semana. Use o vocabulário proprietário da conta. Em português.');
-    const f=r.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
-    document.getElementById('contexto-status').innerHTML=`<div class="analysis-box" style="margin-top:1rem;text-align:left">${f}</div>`;
-  }catch(e){
-    document.getElementById('contexto-status').textContent='❌ Erro: '+e.message;
-    document.getElementById('contexto-status').style.color='#b91c1c';
-  }
 }
 
 window.addEventListener('load', autoConnect);
