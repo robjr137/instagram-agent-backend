@@ -339,7 +339,7 @@ app.post('/claude', async (req, res) => {
   const { messages, system } = req.body;
   if (!ANTHROPIC_API_KEY) return res.status(500).json({ error: 'Chave API não configurada' });
   try {
-    const body = { model: 'claude-sonnet-4-5', max_tokens: 2000, messages };
+    const body = { model: 'claude-sonnet-4-6', max_tokens: 2000, messages };
     if (system) body.system = system;
     const r = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
